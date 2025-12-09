@@ -1,0 +1,172 @@
+<div class="container">
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">
+      <span class="animate-spin-slow">🔄</span>
+      cURL to Postman Converter
+    </h1>
+    <p class="text-gray-400 text-lg">Convierte comandos cURL del navegador a colecciones de Postman con variables automáticas</p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex flex-col gap-8">
+    <!-- Input Section -->
+    <section class="card">
+      <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
+        <h2 class="text-2xl font-semibold text-gray-100">📥 Input</h2>
+        <button (click)="clear()" class="btn btn-secondary">
+          Limpiar
+        </button>
+      </div>
+      
+      <div class="flex flex-col gap-3">
+        <textarea 
+          [(ngModel)]="curlInput"
+          class="textarea"
+          placeholder="Pega aquí tus comandos cURL (uno o varios)...
+
+Ejemplo:
+curl 'https://api.example.com/users' \
+  -H 'Authorization: Bearer eyJhbGc...' \
+  -H 'Content-Type: application/json'
+
+curl 'https://api.example.com/posts' \
+  -H 'Authorization: Bearer eyJhbGc...'"></textarea>
+        <p class="text-gray-400 text-sm">{{ curlCount() }}</p>
+      </div>
+    </section>
+
+    <!-- Convert Button -->
+    <div class="text-center py-6">
+      <button 
+        (click)="convert()" 
+        class="btn btn-primary text-lg px-8 py-3">
+        <span class="text-xl">⚡</span>
+        Convertir a Postman
+      </button>
+    </div>
+
+    <!-- Output Section -->
+    @if (showOutput()) {
+      <section class="card animate-fadeIn">
+        <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
+          <h2 class="text-2xl font-semibold text-gray-100">📤 Output</h2>
+          <div class="flex gap-3 flex-wrap-mobile">
+            <button (click)="copyToClipboard()" class="btn btn-secondary">
+              <span>📋</span>
+              Copiar JSON
+            </button>
+            <button (click)="download()" class="btn btn-primary">
+              <span>💾</span>
+              Descargar
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button 
+            (click)="switchTab('collection')" 
+            [class.active]="currentTab() === 'collection'"
+            class="tab">
+            Colección Postman
+          </button>
+          <button 
+            (click)="switchTab('environment')" 
+            [class.active]="currentTab() === 'environment'"
+            class="tab">
+            Entornos
+          </button>
+          <button 
+            (click)="switchTab('variables')" 
+            [class.active]="currentTab() === 'variables'"
+            class="tab">
+            Variables Detectadas
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        @if (currentTab() === 'collection') {
+          <div class="animate-fadeIn">
+            <pre class="code-block"><code>{{ collectionJson() }}</code></pre>
+          </div>
+        }
+
+        @if (currentTab() === 'environment') {
+          <div class="flex flex-col gap-6 animate-fadeIn">
+            @for (env of currentEnvironments(); track env.name) {
+              <div class="env-card">
+                <h4>🌍 {{ env.name }}</h4>
+                <pre class="code-block"><code>{{ env | json }}</code></pre>
+              </div>
+            }
+          </div>
+        }
+
+        @if (currentTab() === 'variables') {
+          <div class="flex flex-col gap-6 animate-fadeIn">
+            @if (getHostVariablesList().length > 0) {
+              <div class="var-group">
+                <h4 class="text-gray-100 mb-4 text-lg font-semibold">🌐 Host Variables</h4>
+                <ul class="var-list">
+                  @for (variable of getHostVariablesList(); track variable.name) {
+                    <li class="var-item">
+                      <span class="var-name">{{ variable.name }}</span>
+                      <span class="var-value">{{ variable.value }} (usado {{ variable.count }} veces)</span>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+
+            @if (getTokenVariablesList().length > 0) {
+              <div class="var-group">
+                <h4 class="text-gray-100 mb-4 text-lg font-semibold">🔑 Token Variables</h4>
+                <ul class="var-list">
+                  @for (variable of getTokenVariablesList(); track variable.name) {
+                    <li class="var-item">
+                      <span class="var-name">{{ variable.name }}</span>
+                      <span class="var-value">{{ variable.value }} (usado {{ variable.count }} veces)</span>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Info Section -->
+    <section class="card">
+      <h3 class="text-xl font-semibold text-gray-100 mb-4">ℹ️ Características</h3>
+      <ul class="feature-list">
+        <li class="feature-item">
+          ✅ Detecta automáticamente hosts repetidos y crea variables
+        </li>
+        <li class="feature-item">
+          ✅ Identifica tokens de autenticación y genera variables de entorno
+        </li>
+        <li class="feature-item">
+          ✅ Crea entornos separados para localhost y dominios remotos
+        </li>
+        <li class="feature-item">
+          ✅ Genera colecciones compatibles con Postman Collection v2.1
+        </li>
+        <li class="feature-item">
+          ✅ Soporta múltiples comandos cURL en una sola conversión
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Toast Notification -->
+  @if (showToast()) {
+    <div 
+      [class.success]="toastType() === 'success'"
+      [class.error]="toastType() === 'error'"
+      class="toast">
+      {{ toastMessage() }}
+    </div>
+  }
+</div>
