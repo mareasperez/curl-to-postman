@@ -53,8 +53,8 @@ curl 'https://api.example.com/posts' \
 
 ### Prerequisites
 
-- Node.js (with npm 10.9.4 or higher)
-- Angular CLI
+- Node.js 18+ (comes with npm 10.9.4 or higher)
+- Angular CLI (will be installed with npm install)
 
 ### Installation
 
