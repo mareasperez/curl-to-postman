@@ -1,6 +1,8 @@
 import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { CurlParserService, ParsedRequest } from './services/curl-parser.service';
 import { VariableDetectorService, VariableAnalysis } from './services/variable-detector.service';
 import { PostmanGeneratorService, PostmanCollection, PostmanEnvironment } from './services/postman-generator.service';
@@ -16,6 +18,24 @@ export class App {
   private curlParser = new CurlParserService();
   private variableDetector = new VariableDetectorService();
   private postmanGenerator = new PostmanGeneratorService();
+  private router = new Router();
+
+  // Route detection
+  isResultsView = signal(false);
+
+  constructor() {
+    // Detect route changes
+    this.updateRouteState();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateRouteState();
+    });
+  }
+
+  private updateRouteState() {
+    this.isResultsView.set(this.router.url.includes('/results'));
+  }
 
   // State
   curlInput = signal('');
@@ -85,6 +105,9 @@ export class App {
       this.showOutput.set(true);
       
       this.displayToast('Conversion successful! 🎉', 'success');
+      
+      // Navigate to results view
+      this.router.navigate(['/results']);
     } catch (error) {
       console.error('Conversion error:', error);
       this.displayToast('Conversion error: ' + (error as Error).message, 'error');
@@ -101,8 +124,12 @@ export class App {
     this.currentTab.set(tab);
   }
 
-  toggleFeatures() {
+  toggleFeaturesModal() {
     this.showFeaturesModal.set(!this.showFeaturesModal());
+  }
+
+  newConversion() {
+    this.router.navigate(['/']);
   }
 
   copyToClipboard() {
