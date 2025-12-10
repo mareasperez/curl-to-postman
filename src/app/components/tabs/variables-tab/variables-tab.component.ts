@@ -1,11 +1,9 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Variable } from '../../../models/variable.model';
 
-export interface Variable {
-  name: string;
-  value: string;
-  count: number;
-}
+// Re-export for backwards compatibility
+export type { Variable } from '../../../models/variable.model';
 
 @Component({
   selector: 'app-variables-tab',

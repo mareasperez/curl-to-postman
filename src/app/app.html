@@ -7,69 +7,18 @@
     <!-- Input Section - Only on home route -->
     @if (!isResultsView()) {
     <app-input-section [curlInput]="curlInput()" [curlCount]="curlCount()" (curlInputChange)="curlInput.set($event)"
-      (clearClicked)="clear()" (processClicked)="convert()"></app-input-section>
+      (clearClicked)="onClear()" (processClicked)="onConvert()"></app-input-section>
     }
 
     <!-- Output Section - Only on results route -->
     @if (isResultsView() && showOutput()) {
-    <section class="card animate-fadeIn">
-      <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
-        <div class="flex items-center gap-4">
-          <h2 class="text-2xl font-semibold text-gray-100">📤 Output</h2>
-          <app-format-selector [formats]="availableFormats()" [selectedFormatId]="selectedFormatId()"
-            (formatChanged)="selectFormat($event)"></app-format-selector>
-        </div>
-        <div class="flex gap-3 flex-wrap-mobile">
-          <button (click)="copyToClipboard()" class="btn btn-secondary">
-            <span>📋</span>
-            Copy JSON
-          </button>
-          <button (click)="download()" class="btn btn-primary">
-            <span>💾</span>
-            Download
-          </button>
-          <button (click)="newConversion()" class="btn btn-secondary">
-            <span>←</span>
-            New Conversion
-          </button>
-        </div>
-      </div>
-
-      <div class="tabs">
-        <button (click)="switchTab('summary')" [class.active]="currentTab() === 'summary'" class="tab">
-          Summary
-        </button>
-        <button (click)="switchTab('collection')" [class.active]="currentTab() === 'collection'" class="tab">
-          {{ currentFormat()?.name || 'Output' }}
-        </button>
-        <button (click)="switchTab('environment')" [class.active]="currentTab() === 'environment'" class="tab">
-          Environments
-        </button>
-        <button (click)="switchTab('variables')" [class.active]="currentTab() === 'variables'" class="tab">
-          Detected Variables
-        </button>
-      </div>
-
-      <!-- Tab Content -->
-      @if (currentTab() === 'summary') {
-      <app-summary-tab [summaryData]="getSummaryData()" [editableRequestNames]="editableRequestNames()"
-        [editableEnvNames]="editableEnvNames()" (requestNameChanged)="updateRequestName($event.index, $event.name)"
-        (envNameChanged)="updateEnvironmentName($event.oldName, $event.newName)"></app-summary-tab>
-      }
-
-      @if (currentTab() === 'collection') {
-      <app-output-viewer-tab [content]="outputJson()"></app-output-viewer-tab>
-      }
-
-      @if (currentTab() === 'environment') {
-      <app-additional-files-tab [files]="currentAdditionalFiles()"></app-additional-files-tab>
-      }
-
-      @if (currentTab() === 'variables') {
-      <app-variables-tab [hostVariables]="getHostVariablesList()"
-        [tokenVariables]="getTokenVariablesList()"></app-variables-tab>
-      }
-    </section>
+    <app-output-section [output]="currentOutput()" [additionalFiles]="currentAdditionalFiles()"
+      [variables]="currentVariables()" [requests]="currentRequests()" [editableRequestNames]="editableRequestNames()"
+      [editableEnvNames]="editableEnvNames()" [currentFormat]="currentFormat()" [availableFormats]="availableFormats()"
+      [currentTab]="currentTab()" (formatChanged)="onFormatChanged($event)"
+      (requestNameChanged)="onRequestNameChanged($event)" (envNameChanged)="onEnvNameChanged($event)"
+      (newConversionClicked)="onNewConversion()" (copyRequested)="onCopyToClipboard($event)"
+      (downloadRequested)="onDownload($event)"></app-output-section>
     }
   </main>
 

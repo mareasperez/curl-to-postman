@@ -1,11 +1,9 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AdditionalFile } from '../../../models/additional-file.model';
 
-export interface AdditionalFile {
-  name: string;
-  data: any;
-  mimeType: string;
-}
+// Re-export for backwards compatibility
+export type { AdditionalFile } from '../../../models/additional-file.model';
 
 @Component({
   selector: 'app-additional-files-tab',

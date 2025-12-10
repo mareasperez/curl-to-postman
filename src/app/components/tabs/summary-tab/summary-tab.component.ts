@@ -1,16 +1,10 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StatsGridComponent, Stat } from '../../shared/stats-grid/stats-grid.component';
-import { EditableListComponent, EditableItem } from '../../shared/editable-list/editable-list.component';
-
-export interface SummaryData {
-  totalRequests: number;
-  totalHosts: number;
-  totalTokens: number;
-  totalEnvironments: number;
-  requests: any[];
-  environments: any[];
-}
+import { StatsGridComponent } from '../../shared/stats-grid/stats-grid.component';
+import { EditableListComponent } from '../../shared/editable-list/editable-list.component';
+import { Stat } from '../../../models/stat.model';
+import { EditableItem } from '../../../models/editable-item.model';
+import { SummaryData } from '../../../models/summary-data.model';
 
 @Component({
   selector: 'app-summary-tab',

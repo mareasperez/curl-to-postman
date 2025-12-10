@@ -1,16 +1,14 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Stat } from '../../../models/stat.model';
 
-export interface Stat {
-    icon: string;
-    value: number;
-    label: string;
-}
+// Re-export for backwards compatibility
+export type { Stat } from '../../../models/stat.model';
 
 @Component({
-    selector: 'app-stats-grid',
-    imports: [CommonModule],
-    template: `
+  selector: 'app-stats-grid',
+  imports: [CommonModule],
+  template: `
     <div class="stats-grid">
       @for (stat of stats(); track stat.label) {
       <div class="stat-card">
@@ -21,7 +19,7 @@ export interface Stat {
       }
     </div>
   `,
-    styles: [`
+  styles: [`
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -70,5 +68,5 @@ export interface Stat {
   `]
 })
 export class StatsGridComponent {
-    stats = input<Stat[]>([]);
+  stats = input<Stat[]>([]);
 }

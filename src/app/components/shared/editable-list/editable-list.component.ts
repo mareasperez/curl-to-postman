@@ -1,21 +1,16 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { EditableItem } from '../../../models/editable-item.model';
 
-export interface EditableItem {
-    badge?: {
-        text: string;
-        class: string;
-    };
-    name: string;
-    preview?: string;
-}
+// Re-export for backwards compatibility
+export type { EditableItem } from '../../../models/editable-item.model';
 
 @Component({
-    selector: 'app-editable-list',
-    imports: [CommonModule],
-    template: `
+  selector: 'app-editable-list',
+  imports: [CommonModule],
+  template: `
     <div class="editable-list">
-      @for (item of items; track $index) {
+      @for (item of items(); track $index) {
       <div class="editable-item">
         @if (item.badge) {
         <span [class]="'badge ' + item.badge.class">{{ item.badge.text }}</span>
@@ -34,7 +29,7 @@ export interface EditableItem {
       }
     </div>
   `,
-    styles: [`
+  styles: [`
     .editable-list {
       display: flex;
       flex-direction: column;
@@ -150,10 +145,10 @@ export interface EditableItem {
   `]
 })
 export class EditableListComponent {
-    @Input() items: EditableItem[] = [];
-    @Output() itemChanged = new EventEmitter<{ index: number; value: string }>();
+  items = input<EditableItem[]>([]);
+  itemChanged = output<{ index: number; value: string }>();
 
-    onItemChange(index: number, value: string) {
-        this.itemChanged.emit({ index, value });
-    }
+  onItemChange(index: number, value: string) {
+    this.itemChanged.emit({ index, value });
+  }
 }
