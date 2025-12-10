@@ -822,3 +822,4 @@ body {
         grid-column: 1;
     }
 }
+@import "tailwindcss";
