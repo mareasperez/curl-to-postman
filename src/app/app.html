@@ -50,28 +50,6 @@ curl 'https://api.example.com/posts' \\
           Convert to Postman
         </button>
       </div>
-
-      <!-- Info Section -->
-      <section class="card">
-        <h3 class="text-xl font-semibold text-gray-100 mb-4">ℹ️ Features</h3>
-        <ul class="feature-list">
-          <li class="feature-item">
-            ✅ Automatically detects repeated hosts and creates variables
-          </li>
-          <li class="feature-item">
-            ✅ Identifies authentication tokens and generates environment variables
-          </li>
-          <li class="feature-item">
-            ✅ Creates separate environments for localhost and remote domains
-          </li>
-          <li class="feature-item">
-            ✅ Generates collections compatible with Postman Collection v2.1
-          </li>
-          <li class="feature-item">
-            ✅ Supports multiple cURL commands in a single conversion
-          </li>
-        </ul>
-      </section>
     </div>
 
     <!-- Right Column: Output -->
@@ -235,6 +213,35 @@ curl 'https://api.example.com/posts' \\
       }
     </div>
   </main>
+
+  <!-- Features Modal -->
+  @if (showFeaturesModal()) {
+  <div class="modal-overlay" (click)="toggleFeatures()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="text-2xl font-semibold text-gray-100">ℹ️ Features</h3>
+        <button (click)="toggleFeatures()" class="modal-close">✕</button>
+      </div>
+      <ul class="feature-list">
+        <li class="feature-item">
+          ✅ Automatically detects repeated hosts and creates variables
+        </li>
+        <li class="feature-item">
+          ✅ Identifies authentication tokens and generates environment variables
+        </li>
+        <li class="feature-item">
+          ✅ Creates separate environments for localhost and remote domains
+        </li>
+        <li class="feature-item">
+          ✅ Generates collections compatible with Postman Collection v2.1
+        </li>
+        <li class="feature-item">
+          ✅ Supports multiple cURL commands in a single conversion
+        </li>
+      </ul>
+    </div>
+  </div>
+  }
 
   <!-- Toast Notification -->
   @if (showToast()) {

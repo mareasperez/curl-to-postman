@@ -24,6 +24,7 @@ export class App {
   toastMessage = signal('');
   toastType = signal<'success' | 'error'>('success');
   showToast = signal(false);
+  showFeaturesModal = signal(false);
 
   // Results
   currentCollection = signal<PostmanCollection | null>(null);
@@ -98,6 +99,10 @@ export class App {
 
   switchTab(tab: 'collection' | 'environment' | 'variables' | 'summary') {
     this.currentTab.set(tab);
+  }
+
+  toggleFeatures() {
+    this.showFeaturesModal.set(!this.showFeaturesModal());
   }
 
   copyToClipboard() {
