@@ -62,7 +62,12 @@ export interface PostmanEnvironment {
 })
 export class PostmanGeneratorService {
   
-  generate(requests: ParsedRequest[], variables: VariableAnalysis, getHostVariable: (host: string) => string): PostmanCollection {
+  generate(
+    requests: ParsedRequest[], 
+    variables: VariableAnalysis, 
+    getHostVariable: (host: string) => string,
+    customNames?: Map<number, string>
+  ): PostmanCollection {
     const collection: PostmanCollection = {
       info: {
         name: "Converted from cURL",
@@ -87,7 +92,7 @@ export class PostmanGeneratorService {
 
     // Generate requests
     requests.forEach((request, index) => {
-      const item = this.createPostmanItem(request, index, variables, getHostVariable);
+      const item = this.createPostmanItem(request, index, variables, getHostVariable, customNames);
       collection.item.push(item);
     });
 
@@ -98,7 +103,8 @@ export class PostmanGeneratorService {
     request: ParsedRequest, 
     index: number, 
     variables: VariableAnalysis,
-    getHostVariable: (host: string) => string
+    getHostVariable: (host: string) => string,
+    customNames?: Map<number, string>
   ): PostmanItem {
     let url = request.url;
     
@@ -117,8 +123,10 @@ export class PostmanGeneratorService {
       console.error('Error processing URL:', e);
     }
 
+    const requestName = customNames?.get(index) || this.generateRequestName(request, index);
+
     const item: PostmanItem = {
-      name: `Request ${index + 1}`,
+      name: requestName,
       request: {
         method: request.method,
         header: [],
@@ -165,6 +173,39 @@ export class PostmanGeneratorService {
     return item;
   }
 
+  private generateRequestName(request: ParsedRequest, index: number): string {
+    try {
+      const urlObj = new URL(request.url);
+      const pathSegments = urlObj.pathname.split('/').filter(p => p);
+      
+      // Get the last meaningful segment or use a default
+      let endpoint = pathSegments.length > 0 
+        ? pathSegments[pathSegments.length - 1] 
+        : 'root';
+      
+      // Remove common file extensions and query parameters
+      endpoint = endpoint.replace(/\.(json|xml|html)$/i, '');
+      
+      // Clean up the endpoint name
+      endpoint = endpoint
+        .replace(/[^a-zA-Z0-9_-]/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '');
+      
+      // If endpoint is a number or UUID, use the parent segment
+      if (/^[0-9a-f-]+$/i.test(endpoint) && pathSegments.length > 1) {
+        const parentSegment = pathSegments[pathSegments.length - 2];
+        endpoint = parentSegment.replace(/[^a-zA-Z0-9_-]/g, '_');
+      }
+      
+      // Combine method with endpoint
+      const method = request.method.toLowerCase();
+      return endpoint ? `${method}_${endpoint}` : `${method}_request_${index + 1}`;
+    } catch (e) {
+      return `${request.method.toLowerCase()}_request_${index + 1}`;
+    }
+  }
+
   private parseHost(url: string): string[] {
     try {
       if (url.includes('{{')) {
@@ -189,14 +230,29 @@ export class PostmanGeneratorService {
     }
   }
 
-  generateEnvironments(variables: VariableAnalysis, getHostVariable: (host: string) => string): PostmanEnvironment[] {
+  generateEnvironments(
+    variables: VariableAnalysis, 
+    getHostVariable: (host: string) => string,
+    customEnvNames?: Map<string, string>
+  ): PostmanEnvironment[] {
     const environments: PostmanEnvironment[] = [];
 
     variables.environments.forEach((env, envName) => {
+      const finalEnvName = customEnvNames?.get(envName) || envName;
+      
       const environment: PostmanEnvironment = {
-        name: envName,
+        name: finalEnvName,
         values: []
       };
+
+      // Add protocol variable
+      const protocolVarName = `${envName}_protocol`;
+      environment.values.push({
+        key: protocolVarName,
+        value: env.protocol,
+        type: "default",
+        enabled: true
+      });
 
       // Add host variable
       const hostVarName = getHostVariable(env.host);

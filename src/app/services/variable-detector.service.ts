@@ -16,6 +16,7 @@ export interface TokenData {
 export interface EnvironmentData {
   name: string;
   isLocal: boolean;
+  protocol: string;
   host: string;
   variables: Record<string, string>;
 }
@@ -52,7 +53,8 @@ export class VariableDetectorService {
           environments.set(envName, {
             name: envName,
             isLocal: isLocal,
-            host: host,
+            protocol: url.protocol.replace(':', ''),
+            host: url.host,
             variables: {}
           });
         }
