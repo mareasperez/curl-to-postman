@@ -8,9 +8,32 @@ import { VariableDetectorService, VariableAnalysis } from './services/variable-d
 import { ExportProviderService } from './services/providers/export-provider.service';
 import { ExportFormat } from './services/providers/export-provider.interface';
 
+// Import components
+import { HeaderComponent } from './components/header/header.component';
+import { InputSectionComponent } from './components/input-section/input-section.component';
+import { ModalComponent } from './components/shared/modal/modal.component';
+import { ToastComponent } from './components/shared/toast/toast.component';
+import { FormatSelectorComponent } from './components/shared/format-selector/format-selector.component';
+import { SummaryTabComponent } from './components/tabs/summary-tab/summary-tab.component';
+import { OutputViewerTabComponent } from './components/tabs/output-viewer-tab/output-viewer-tab.component';
+import { VariablesTabComponent, Variable } from './components/tabs/variables-tab/variables-tab.component';
+import { AdditionalFilesTabComponent } from './components/tabs/additional-files-tab/additional-files-tab.component';
+
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HeaderComponent,
+    InputSectionComponent,
+    ModalComponent,
+    ToastComponent,
+    FormatSelectorComponent,
+    SummaryTabComponent,
+    OutputViewerTabComponent,
+    VariablesTabComponent,
+    AdditionalFilesTabComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

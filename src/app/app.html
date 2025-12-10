@@ -1,53 +1,13 @@
 <div class="container">
-  <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <h1 class="title">
-        <span class="animate-spin-slow">🔄</span>
-        cURL to Postman Converter
-      </h1>
-      <div class="header-actions">
-        <p class="subtitle">Convert browser cURL commands to Postman collections with automatic variables</p>
-        <button (click)="toggleFeaturesModal()" class="btn-info" title="View features">
-          ℹ️ Info
-        </button>
-      </div>
-    </div>
-  </header>
+  <!-- Header Component -->
+  <app-header (infoClicked)="toggleFeaturesModal()"></app-header>
 
   <!-- Main Content -->
   <main class="flex flex-col gap-8">
     <!-- Input Section - Only on home route -->
     @if (!isResultsView()) {
-    <section class="card">
-      <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
-        <h2 class="text-2xl font-semibold text-gray-100">📥 Input</h2>
-        <button (click)="clear()" class="btn btn-secondary">
-          Clear
-        </button>
-      </div>
-
-      <div class="flex flex-col gap-3">
-        <textarea [(ngModel)]="curlInput" class="textarea" placeholder="Paste your cURL commands here (one or multiple)...
-
-Example:
-curl 'https://api.example.com/users' \\
-  -H 'Authorization: Bearer eyJhbGc...' \\
-  -H 'Content-Type: application/json'
-
-curl 'https://api.example.com/posts' \\
-  -H 'Authorization: Bearer eyJhbGc...'"></textarea>
-        <p class="text-gray-400 text-sm">{{ curlCount() }}</p>
-      </div>
-    </section>
-
-    <!-- Process Button -->
-    <div class="text-center py-6">
-      <button (click)="convert()" class="btn btn-primary text-lg px-8 py-3">
-        <span class="text-xl">⚡</span>
-        Process
-      </button>
-    </div>
+    <app-input-section [curlInput]="curlInput()" [curlCount]="curlCount()" (curlInputChange)="curlInput.set($event)"
+      (clearClicked)="clear()" (processClicked)="convert()"></app-input-section>
     }
 
     <!-- Output Section - Only on results route -->
@@ -56,11 +16,8 @@ curl 'https://api.example.com/posts' \\
       <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
         <div class="flex items-center gap-4">
           <h2 class="text-2xl font-semibold text-gray-100">📤 Output</h2>
-          <select [(ngModel)]="selectedFormatId" (change)="selectFormat(selectedFormatId())" class="format-selector">
-            @for (format of availableFormats(); track format.id) {
-            <option [value]="format.id">{{ format.name }} {{ format.version }}</option>
-            }
-          </select>
+          <app-format-selector [formats]="availableFormats()" [selectedFormatId]="selectedFormatId()"
+            (formatChanged)="selectFormat($event)"></app-format-selector>
         </div>
         <div class="flex gap-3 flex-wrap-mobile">
           <button (click)="copyToClipboard()" class="btn btn-secondary">
@@ -95,173 +52,60 @@ curl 'https://api.example.com/posts' \\
 
       <!-- Tab Content -->
       @if (currentTab() === 'summary') {
-      <div class="animate-fadeIn">
-        <div class="summary-container">
-          <!-- Statistics -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon">📊</div>
-              <div class="stat-value">{{ getSummaryData().totalRequests }}</div>
-              <div class="stat-label">Requests</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">🌐</div>
-              <div class="stat-value">{{ getSummaryData().totalHosts }}</div>
-              <div class="stat-label">Hosts</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">🔑</div>
-              <div class="stat-value">{{ getSummaryData().totalTokens }}</div>
-              <div class="stat-label">Tokens</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">🌍</div>
-              <div class="stat-value">{{ getSummaryData().totalEnvironments }}</div>
-              <div class="stat-label">Environments</div>
-            </div>
-          </div>
-
-          <!-- Requests List with Editable Names -->
-          @if (getSummaryData().requests.length > 0) {
-          <div class="section-card">
-            <h4 class="section-title">📋 Requests</h4>
-            <div class="editable-list">
-              @for (request of getSummaryData().requests; track $index) {
-              <div class="editable-item">
-                <span class="method-badge" [class]="request.request.method.toLowerCase()">{{ request.request.method
-                  }}</span>
-                <input type="text" class="editable-input" [value]="request.name"
-                  (blur)="updateRequestName($index, $any($event.target).value)"
-                  (keyup.enter)="$any($event.target).blur()" />
-                <span class="url-preview">{{ request.request.url.raw }}</span>
-              </div>
-              }
-            </div>
-          </div>
-          }
-
-          <!-- Environments List with Editable Names -->
-          @if (getSummaryData().environments.length > 0) {
-          <div class="section-card">
-            <h4 class="section-title">🌍 Environments</h4>
-            <div class="editable-list">
-              @for (env of getSummaryData().environments; track env.name) {
-              <div class="editable-item">
-                <span class="env-badge" [class.local]="env.isLocal">{{ env.isLocal ? 'Local' : 'Remote' }}</span>
-                <input type="text" class="editable-input" [value]="editableEnvNames().get(env.name) || env.name"
-                  (blur)="updateEnvironmentName(env.name, $any($event.target).value)"
-                  (keyup.enter)="$any($event.target).blur()" />
-                <span class="url-preview">{{ env.protocol }}://{{ env.host }}</span>
-              </div>
-              }
-            </div>
-          </div>
-          }
-        </div>
-      </div>
+      <app-summary-tab [summaryData]="getSummaryData()" [editableRequestNames]="editableRequestNames()"
+        [editableEnvNames]="editableEnvNames()" (requestNameChanged)="updateRequestName($event.index, $event.name)"
+        (envNameChanged)="updateEnvironmentName($event.oldName, $event.newName)"></app-summary-tab>
       }
 
       @if (currentTab() === 'collection') {
-      <div class="animate-fadeIn">
-        <pre class="code-block"><code>{{ outputJson() }}</code></pre>
-      </div>
+      <app-output-viewer-tab [content]="outputJson()"></app-output-viewer-tab>
       }
 
       @if (currentTab() === 'environment') {
-      <div class="flex flex-col gap-6 animate-fadeIn">
-        @if (currentAdditionalFiles().length > 0) {
-        @for (file of currentAdditionalFiles(); track file.name) {
-        <div class="env-card">
-          <h4>🌍 {{ file.name }}</h4>
-          <pre class="code-block"><code>{{ file.data | json }}</code></pre>
-        </div>
-        }
-        } @else {
-        <div class="text-center text-gray-400 py-8">
-          <p>No additional files for this format</p>
-        </div>
-        }
-      </div>
+      <app-additional-files-tab [files]="currentAdditionalFiles()"></app-additional-files-tab>
       }
 
       @if (currentTab() === 'variables') {
-      <div class="flex flex-col gap-6 animate-fadeIn">
-        @if (getHostVariablesList().length > 0) {
-        <div class="var-group">
-          <h4 class="text-gray-100 mb-4 text-lg font-semibold">🌐 Host Variables</h4>
-          <ul class="var-list">
-            @for (variable of getHostVariablesList(); track variable.name) {
-            <li class="var-item">
-              <span class="var-name">{{ variable.name }}</span>
-              <span class="var-value">{{ variable.value }} (usado {{ variable.count }} veces)</span>
-            </li>
-            }
-          </ul>
-        </div>
-        }
-
-        @if (getTokenVariablesList().length > 0) {
-        <div class="var-group">
-          <h4 class="text-gray-100 mb-4 text-lg font-semibold">🔑 Token Variables</h4>
-          <ul class="var-list">
-            @for (variable of getTokenVariablesList(); track variable.name) {
-            <li class="var-item">
-              <span class="var-name">{{ variable.name }}</span>
-              <span class="var-value">{{ variable.value }} (usado {{ variable.count }} veces)</span>
-            </li>
-            }
-          </ul>
-        </div>
-        }
-      </div>
+      <app-variables-tab [hostVariables]="getHostVariablesList()"
+        [tokenVariables]="getTokenVariablesList()"></app-variables-tab>
       }
     </section>
     }
-
   </main>
 
-  <!-- Features Modal -->
-  @if (showFeaturesModal()) {
-  <div class="modal-overlay" (click)="toggleFeaturesModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>ℹ️ Features</h3>
-        <button (click)="toggleFeaturesModal()" class="modal-close">×</button>
-      </div>
-      <ul class="feature-list">
-        <li class="feature-item">
-          ✅ Automatically detects repeated hosts and creates variables
-        </li>
-        <li class="feature-item">
-          ✅ Identifies authentication tokens and generates environment variables
-        </li>
-        <li class="feature-item">
-          ✅ Creates separate environments for localhost and remote domains
-        </li>
-        <li class="feature-item">
-          ✅ Generates collections compatible with Postman Collection v2.1
-        </li>
-        <li class="feature-item">
-          ✅ Supports multiple cURL commands in a single conversion
-        </li>
-        <li class="feature-item">
-          ✅ Smart request naming based on HTTP method and endpoint
-        </li>
-        <li class="feature-item">
-          ✅ Editable request and environment names
-        </li>
-        <li class="feature-item">
-          ✅ Separate protocol and host variables for flexibility
-        </li>
-      </ul>
-    </div>
-  </div>
-  }
+  <!-- Features Modal Component -->
+  <app-modal [show]="showFeaturesModal()" [title]="'ℹ️ Features'" (closeClicked)="toggleFeaturesModal()">
+    <ul class="feature-list">
+      <li class="feature-item">
+        ✅ Automatically detects repeated hosts and creates variables
+      </li>
+      <li class="feature-item">
+        ✅ Identifies authentication tokens and generates environment variables
+      </li>
+      <li class="feature-item">
+        ✅ Creates separate environments for localhost and remote domains
+      </li>
+      <li class="feature-item">
+        ✅ Generates collections compatible with Postman Collection v2.1
+      </li>
+      <li class="feature-item">
+        ✅ Supports multiple cURL commands in a single conversion
+      </li>
+      <li class="feature-item">
+        ✅ Smart request naming based on HTTP method and endpoint
+      </li>
+      <li class="feature-item">
+        ✅ Editable request and environment names
+      </li>
+      <li class="feature-item">
+        ✅ Separate protocol and host variables for flexibility
+      </li>
+      <li class="feature-item">
+        ✅ Export to multiple formats (Postman, OpenAPI 3.0, Swagger 2.0)
+      </li>
+    </ul>
+  </app-modal>
 
-  <!-- Toast Notification -->
-  @if (showToast()) {
-  <div [class.success]="toastType() === 'success'" [class.error]="toastType() === 'error'" class="toast">
-    {{ toastMessage() }}
-  </div>
-  }
+  <!-- Toast Component -->
+  <app-toast [message]="toastMessage()" [type]="toastType()" [show]="showToast()"></app-toast>
 </div>
