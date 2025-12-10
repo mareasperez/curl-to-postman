@@ -54,7 +54,14 @@ curl 'https://api.example.com/posts' \\
     @if (isResultsView() && showOutput()) {
     <section class="card animate-fadeIn">
       <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
-        <h2 class="text-2xl font-semibold text-gray-100">📤 Output</h2>
+        <div class="flex items-center gap-4">
+          <h2 class="text-2xl font-semibold text-gray-100">📤 Output</h2>
+          <select [(ngModel)]="selectedFormatId" (change)="selectFormat(selectedFormatId())" class="format-selector">
+            @for (format of availableFormats(); track format.id) {
+            <option [value]="format.id">{{ format.name }} {{ format.version }}</option>
+            }
+          </select>
+        </div>
         <div class="flex gap-3 flex-wrap-mobile">
           <button (click)="copyToClipboard()" class="btn btn-secondary">
             <span>📋</span>
@@ -76,7 +83,7 @@ curl 'https://api.example.com/posts' \\
           Summary
         </button>
         <button (click)="switchTab('collection')" [class.active]="currentTab() === 'collection'" class="tab">
-          Postman Collection
+          {{ currentFormat()?.name || 'Output' }}
         </button>
         <button (click)="switchTab('environment')" [class.active]="currentTab() === 'environment'" class="tab">
           Environments
@@ -156,16 +163,22 @@ curl 'https://api.example.com/posts' \\
 
       @if (currentTab() === 'collection') {
       <div class="animate-fadeIn">
-        <pre class="code-block"><code>{{ collectionJson() }}</code></pre>
+        <pre class="code-block"><code>{{ outputJson() }}</code></pre>
       </div>
       }
 
       @if (currentTab() === 'environment') {
       <div class="flex flex-col gap-6 animate-fadeIn">
-        @for (env of currentEnvironments(); track env.name) {
+        @if (currentAdditionalFiles().length > 0) {
+        @for (file of currentAdditionalFiles(); track file.name) {
         <div class="env-card">
-          <h4>🌍 {{ env.name }}</h4>
-          <pre class="code-block"><code>{{ env | json }}</code></pre>
+          <h4>🌍 {{ file.name }}</h4>
+          <pre class="code-block"><code>{{ file.data | json }}</code></pre>
+        </div>
+        }
+        } @else {
+        <div class="text-center text-gray-400 py-8">
+          <p>No additional files for this format</p>
         </div>
         }
       </div>

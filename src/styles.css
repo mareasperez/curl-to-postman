@@ -804,12 +804,42 @@ body {
 }
 
 .url-preview {
-    color: #94a3b8;
-    font-size: 0.875rem;
+    color: #64748b;
+    font-size: 0.75rem;
     font-family: 'Courier New', monospace;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Format Selector */
+.format-selector {
+    padding: 0.5rem 1rem;
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 0.5rem;
+    color: #f1f5f9;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+.format-selector:hover {
+    border-color: #8b5cf6;
+}
+
+.format-selector:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.format-selector option {
+    background: #1e293b;
+    color: #f1f5f9;
+    padding: 0.5rem;
 }
 
 @media (max-width: 1024px) {
@@ -822,4 +852,5 @@ body {
         grid-column: 1;
     }
 }
+
 @import "tailwindcss";

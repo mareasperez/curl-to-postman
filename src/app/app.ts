@@ -1,11 +1,12 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CurlParserService, ParsedRequest } from './services/curl-parser.service';
 import { VariableDetectorService, VariableAnalysis } from './services/variable-detector.service';
-import { PostmanGeneratorService, PostmanCollection, PostmanEnvironment } from './services/postman-generator.service';
+import { ExportProviderService } from './services/providers/export-provider.service';
+import { ExportFormat } from './services/providers/export-provider.interface';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class App {
   // Services
   private curlParser = new CurlParserService();
   private variableDetector = new VariableDetectorService();
-  private postmanGenerator = new PostmanGeneratorService();
+  private exportProvider = inject(ExportProviderService);
   private router = new Router();
 
   // Route detection
@@ -45,14 +46,22 @@ export class App {
   toastType = signal<'success' | 'error'>('success');
   showToast = signal(false);
   showFeaturesModal = signal(false);
+  selectedFormatId = signal('postman');
 
   // Results
-  currentCollection = signal<PostmanCollection | null>(null);
-  currentEnvironments = signal<PostmanEnvironment[]>([]);
+  currentOutput = signal<any>(null);
+  currentAdditionalFiles = signal<any[]>([]);
   currentVariables = signal<VariableAnalysis | null>(null);
   currentRequests = signal<ParsedRequest[]>([]);
   editableRequestNames = signal<Map<number, string>>(new Map());
   editableEnvNames = signal<Map<string, string>>(new Map());
+
+  // Computed
+  availableFormats = computed(() => this.exportProvider.getAvailableFormats());
+
+  currentFormat = computed(() =>
+    this.availableFormats().find(f => f.id === this.selectedFormatId())
+  );
 
   // Computed
   curlCount = computed(() => {
@@ -60,13 +69,13 @@ export class App {
     return `${count} command${count !== 1 ? 's' : ''} detected`;
   });
 
-  collectionJson = computed(() => 
-    this.currentCollection() ? JSON.stringify(this.currentCollection(), null, 2) : ''
+  outputJson = computed(() =>
+    this.currentOutput() ? JSON.stringify(this.currentOutput(), null, 2) : ''
   );
 
   convert() {
     const input = this.curlInput().trim();
-    
+
     if (!input) {
       this.displayToast('Please enter at least one cURL command', 'error');
       return;
@@ -75,7 +84,7 @@ export class App {
     try {
       // Parse cURL commands
       const requests = this.curlParser.parseMultiple(input);
-      
+
       if (requests.length === 0) {
         this.displayToast('No valid cURL commands detected', 'error');
         return;
@@ -84,28 +93,30 @@ export class App {
       // Detect variables
       const variables = this.variableDetector.analyze(requests);
 
-      // Generate Postman collection
-      const collection = this.postmanGenerator.generate(
-        requests, 
-        variables, 
-        (host) => this.variableDetector.getHostVariable(host),
-        this.editableRequestNames()
-      );
-      const environments = this.postmanGenerator.generateEnvironments(
+      // Export using selected format
+      const result = this.exportProvider.export(this.selectedFormatId(), {
+        requests,
         variables,
-        (host) => this.variableDetector.getHostVariable(host),
-        this.editableEnvNames()
-      );
+        getHostVariable: (host) => this.variableDetector.getHostVariable(host),
+        customRequestNames: this.editableRequestNames(),
+        customEnvNames: this.editableEnvNames()
+      });
+
+      if (!result) {
+        this.displayToast('Export failed: format not found', 'error');
+        return;
+      }
 
       // Update state
-      this.currentCollection.set(collection);
-      this.currentEnvironments.set(environments);
+      this.currentOutput.set(result.data);
+      this.currentAdditionalFiles.set(result.additionalFiles || []);
       this.currentVariables.set(variables);
       this.currentRequests.set(requests);
       this.showOutput.set(true);
-      
-      this.displayToast('Conversion successful! 🎉', 'success');
-      
+
+      const format = this.currentFormat();
+      this.displayToast(`Exported as ${format?.name || 'Unknown'} 🎉`, 'success');
+
       // Navigate to results view
       this.router.navigate(['/results']);
     } catch (error) {
@@ -133,7 +144,7 @@ export class App {
   }
 
   copyToClipboard() {
-    const text = this.collectionJson();
+    const text = this.outputJson();
     navigator.clipboard.writeText(text).then(() => {
       this.displayToast('Copied to clipboard! 📋', 'success');
     }).catch(() => {
@@ -142,20 +153,35 @@ export class App {
   }
 
   download() {
-    const data = {
-      collection: this.currentCollection(),
-      environments: this.currentEnvironments()
-    };
+    const format = this.currentFormat();
+    if (!format) return;
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const data = this.currentOutput();
+    const additionalFiles = this.currentAdditionalFiles();
+
+    // Download main file
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: format.mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'postman-collection.json';
+    a.download = `export.${format.extension}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+
+    // Download additional files (e.g., environments)
+    additionalFiles.forEach(file => {
+      const fileBlob = new Blob([JSON.stringify(file.data, null, 2)], { type: file.mimeType });
+      const fileUrl = URL.createObjectURL(fileBlob);
+      const fileLink = document.createElement('a');
+      fileLink.href = fileUrl;
+      fileLink.download = file.name;
+      document.body.appendChild(fileLink);
+      fileLink.click();
+      document.body.removeChild(fileLink);
+      URL.revokeObjectURL(fileUrl);
+    });
 
     this.displayToast('Download started! 💾', 'success');
   }
@@ -164,7 +190,7 @@ export class App {
     this.toastMessage.set(message);
     this.toastType.set(type);
     this.showToast.set(true);
-    
+
     setTimeout(() => {
       this.showToast.set(false);
     }, 3000);
@@ -173,7 +199,7 @@ export class App {
   getHostVariablesList() {
     const vars = this.currentVariables();
     if (!vars) return [];
-    
+
     return Array.from(vars.hosts.entries()).map(([host, indices]) => ({
       name: this.variableDetector.getHostVariable(host),
       value: host,
@@ -184,7 +210,7 @@ export class App {
   getTokenVariablesList() {
     const vars = this.currentVariables();
     if (!vars) return [];
-    
+
     return Array.from(vars.tokens.entries()).map(([key, data]) => ({
       name: key,
       value: data.value.substring(0, 50) + (data.value.length > 50 ? '...' : ''),
@@ -196,58 +222,59 @@ export class App {
     const names = new Map(this.editableRequestNames());
     names.set(index, newName);
     this.editableRequestNames.set(names);
-    
-    // Regenerate collection with new names
-    this.regenerateCollection();
+
+    // Regenerate output with new names
+    this.regenerateOutput();
   }
 
   updateEnvironmentName(oldName: string, newName: string) {
     const names = new Map(this.editableEnvNames());
     names.set(oldName, newName);
     this.editableEnvNames.set(names);
-    
-    // Regenerate environments with new names
-    this.regenerateEnvironments();
+
+    // Regenerate output with new names
+    this.regenerateOutput();
   }
 
-  private regenerateCollection() {
+  private regenerateOutput() {
     const requests = this.currentRequests();
     const variables = this.currentVariables();
     if (requests.length === 0 || !variables) return;
 
-    const collection = this.postmanGenerator.generate(
+    const result = this.exportProvider.export(this.selectedFormatId(), {
       requests,
       variables,
-      (host) => this.variableDetector.getHostVariable(host),
-      this.editableRequestNames()
-    );
-    this.currentCollection.set(collection);
-  }
+      getHostVariable: (host) => this.variableDetector.getHostVariable(host),
+      customRequestNames: this.editableRequestNames(),
+      customEnvNames: this.editableEnvNames()
+    });
 
-  private regenerateEnvironments() {
-    const variables = this.currentVariables();
-    if (!variables) return;
-
-    const environments = this.postmanGenerator.generateEnvironments(
-      variables,
-      (host) => this.variableDetector.getHostVariable(host),
-      this.editableEnvNames()
-    );
-    this.currentEnvironments.set(environments);
+    if (result) {
+      this.currentOutput.set(result.data);
+      this.currentAdditionalFiles.set(result.additionalFiles || []);
+    }
   }
 
   getSummaryData() {
     const requests = this.currentRequests();
     const variables = this.currentVariables();
-    const collection = this.currentCollection();
-    
+    const output = this.currentOutput();
+
     return {
       totalRequests: requests.length,
       totalHosts: variables?.hosts.size || 0,
       totalTokens: variables?.tokens.size || 0,
       totalEnvironments: variables?.environments.size || 0,
-      requests: collection?.item || [],
+      requests: output?.item || output?.paths || [],
       environments: Array.from(variables?.environments.values() || [])
     };
+  }
+
+  selectFormat(formatId: string) {
+    this.selectedFormatId.set(formatId);
+    // Regenerate with new format if we have data
+    if (this.currentRequests().length > 0) {
+      this.regenerateOutput();
+    }
   }
 }
