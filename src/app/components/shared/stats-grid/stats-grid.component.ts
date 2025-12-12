@@ -23,12 +23,12 @@ export type { Stat } from '../../../models/stat.model';
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .stat-card {
       background: linear-gradient(135deg, #1e293b, #0f172a);
-      padding: 1.5rem;
+      padding: 1rem;
       border-radius: 0.75rem;
       border: 1px solid #334155;
       text-align: center;
@@ -42,19 +42,19 @@ export type { Stat } from '../../../models/stat.model';
     }
 
     .stat-icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #a78bfa;
+      font-size: 1.5rem;
       margin-bottom: 0.25rem;
     }
 
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #a78bfa;
+      margin-bottom: 0.125rem;
+    }
+
     .stat-label {
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       color: #94a3b8;
       text-transform: uppercase;
       letter-spacing: 0.05em;
