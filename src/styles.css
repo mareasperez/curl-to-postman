@@ -110,8 +110,6 @@ app-results-page {
 }
 
 .textarea {
-    min-height: 200px;
-    max-height: 50vh;
     resize: vertical;
 }
 
