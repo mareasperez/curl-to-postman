@@ -53,25 +53,57 @@
 
                 <!-- General Tab -->
                 @if (internalTab() === 'general') {
-                <div class="form-row">
-                    <div class="form-group method-group">
-                        <label class="label">Method</label>
-                        <select [ngModel]="editMethod()" (ngModelChange)="editMethod.set($event)"
-                            class="input-control method-select">
-                            <option value="GET">GET</option>
-                            <option value="POST">POST</option>
-                            <option value="PUT">PUT</option>
-                            <option value="PATCH">PATCH</option>
-                            <option value="DELETE">DELETE</option>
-                            <option value="OPTIONS">OPTIONS</option>
-                            <option value="HEAD">HEAD</option>
-                        </select>
+                <div class="h-full flex flex-col min-h-0">
+                    <div class="form-row flex-shrink-0 mb-4">
+                        <div class="form-group method-group">
+                            <label class="label">Method</label>
+                            <select [ngModel]="editMethod()" (ngModelChange)="editMethod.set($event)"
+                                class="input-control method-select">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="PATCH">PATCH</option>
+                                <option value="DELETE">DELETE</option>
+                                <option value="OPTIONS">OPTIONS</option>
+                                <option value="HEAD">HEAD</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group url-group">
+                            <label class="label">URL</label>
+                            <input [ngModel]="editUrl()" (ngModelChange)="updateUrl($event)"
+                                class="input-control font-mono" />
+                        </div>
                     </div>
 
-                    <div class="form-group url-group">
-                        <label class="label">URL</label>
-                        <input [ngModel]="editUrl()" (ngModelChange)="editUrl.set($event)"
-                            class="input-control font-mono" />
+                    <!-- Query Params Editor (Embedded in General) -->
+                    <div class="form-group flex-1 flex flex-col min-h-0">
+                        <div class="flex justify-between items-center mb-2 flex-shrink-0">
+                            <label class="label mb-0">Query Parameters</label>
+                            <button class="btn-xs" (click)="addQueryParam()">+ Add Param</button>
+                        </div>
+
+                        <div class="headers-editor flex-1 min-h-0 overflow-y-auto">
+                            @if (editQueryParams().length === 0) {
+                            <div
+                                class="flex flex-col items-center justify-center h-32 text-slate-500 border border-dashed border-slate-700 rounded-lg">
+                                <p class="mb-2">No query parameters</p>
+                                <button class="text-purple-400 hover:text-purple-300 text-sm"
+                                    (click)="addQueryParam()">Add
+                                    one now</button>
+                            </div>
+                            }
+                            @for (param of editQueryParams(); track $index) {
+                            <div class="header-row mb-2 last:mb-0">
+                                <input [(ngModel)]="param.key" (ngModelChange)="updateQueryParam()" placeholder="Key"
+                                    class="input-control header-key" />
+                                <input [(ngModel)]="param.value" (ngModelChange)="updateQueryParam()"
+                                    placeholder="Value" class="input-control header-value" />
+                                <button class="btn-remove" (click)="removeQueryParam($index)"
+                                    title="Remove">&times;</button>
+                            </div>
+                            }
+                        </div>
                     </div>
                 </div>
                 }

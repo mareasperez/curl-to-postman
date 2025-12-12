@@ -24,3 +24,5 @@ export type {
     OpenAPISpec,
     OpenAPIOperation
 } from './export-output.model';
+
+export type { KeyValueItem, HeaderItem, QueryParam } from './ui.model';

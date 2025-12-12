@@ -1,12 +1,7 @@
 import { Component, input, output, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ParsedRequest } from '../../../models';
-
-interface HeaderItem {
-    key: string;
-    value: string;
-}
+import { ParsedRequest, HeaderItem, QueryParam } from '../../../models';
 
 @Component({
     selector: 'app-request-details-modal',
@@ -35,13 +30,14 @@ export class RequestDetailsModalComponent {
     editUrl = signal('');
     editBody = signal('');
     editHeaders = signal<HeaderItem[]>([]);
+    editQueryParams = signal<QueryParam[]>([]);
 
     constructor() {
         effect(() => {
             const req = this.request();
             if (req && this.isOpen()) {
                 this.editMethod.set(req.method);
-                this.editUrl.set(req.url);
+                this.updateUrl(req.url, true);
                 this.editBody.set(req.body || '');
                 this.editHeaders.set(
                     Object.entries(req.headers || {}).map(([key, value]) => ({ key, value }))
@@ -113,6 +109,118 @@ export class RequestDetailsModalComponent {
 
     removeHeader(index: number) {
         this.editHeaders.update(headers => headers.filter((_, i) => i !== index));
+    }
+
+    // Query Params Logic
+    updateUrl(url: string, syncParams = true) {
+        this.editUrl.set(url);
+        if (syncParams) {
+            this.parseParamsFromUrl(url);
+        }
+    }
+
+    parseParamsFromUrl(url: string) {
+        try {
+            // Handle URL parsing safely even if it's just a path or partial URL
+            const dummyBase = 'http://example.com';
+            let urlObj: URL;
+
+            if (url.startsWith('http')) {
+                urlObj = new URL(url);
+            } else if (url.startsWith('/')) {
+                urlObj = new URL(url, dummyBase);
+            } else {
+                // Determine if it looks like there's a domain or just path
+                urlObj = new URL(url.includes('://') ? url : `${dummyBase}/${url}`);
+            }
+
+            const params: QueryParam[] = [];
+
+            // If the original URL had query params, parse them
+            if (url.includes('?')) {
+                const searchPart = url.split('?')[1];
+                const searchParams = new URLSearchParams(searchPart);
+                searchParams.forEach((value, key) => {
+                    params.push({ key, value });
+                });
+            } else {
+                // Try standard URL parsing if no manual split worked
+                urlObj.searchParams.forEach((value, key) => {
+                    params.push({ key, value });
+                });
+            }
+
+            // Deduplicate if needed? No, standard behavior allows duplicates. 
+            // BUT Map/forEach might deduplicate keys. URLSearchParams supports multiple values for same key.
+            // My implementation above using forEach on searchParams handles multiples correctly.
+
+            // Reset only if we found something or if URL has no query.
+            // Actually, if we type, we should replace entirely.
+            this.editQueryParams.set(params);
+
+        } catch (e) {
+            // Fallback for simple string parsing
+            if (url.includes('?')) {
+                try {
+                    const search = url.split('?')[1];
+                    const searchParams = new URLSearchParams(search);
+                    const params: QueryParam[] = [];
+                    searchParams.forEach((value, key) => {
+                        params.push({ key, value });
+                    });
+                    this.editQueryParams.set(params);
+                } catch {
+                    this.editQueryParams.set([]);
+                }
+            } else {
+                this.editQueryParams.set([]);
+            }
+        }
+    }
+
+    updateUrlFromParams() {
+        const currentUrl = this.editUrl();
+        const baseUrl = currentUrl ? currentUrl.split('?')[0] : '';
+        const params = this.editQueryParams();
+
+        if (params.length === 0) {
+            // If no params, just usage base
+            if (currentUrl.includes('?')) {
+                this.editUrl.set(baseUrl);
+            }
+            return;
+        }
+
+        const searchParams = new URLSearchParams();
+        params.forEach(p => {
+            if (p.key) searchParams.append(p.key, p.value);
+        });
+
+        const queryString = searchParams.toString();
+        // If query string is empty (e.g. keys empty), handle it
+        if (!queryString) {
+            this.editUrl.set(baseUrl);
+            return;
+        }
+
+        this.editUrl.set(`${baseUrl}?${queryString}`);
+    }
+
+    addQueryParam() {
+        this.editQueryParams.update(params => [...params, { key: '', value: '' }]);
+        // Do NOT update URL yet, usually wait for input? Or update immediately with empty?
+        // Updating immediately might result in `?=` or `?&`.
+        // Better to update.
+        // this.updateUrlFromParams(); 
+    }
+
+    removeQueryParam(index: number) {
+        this.editQueryParams.update(params => params.filter((_, i) => i !== index));
+        this.updateUrlFromParams();
+    }
+
+    updateQueryParam() {
+        this.updateUrlFromParams();
     }
 
     save() {
