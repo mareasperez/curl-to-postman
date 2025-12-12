@@ -3,6 +3,7 @@
     <app-output-section [output]="appState.conversionState().output"
         [additionalFiles]="appState.conversionState().additionalFiles"
         [variables]="appState.conversionState().variables" [requests]="appState.conversionState().requests"
+        [originalRequests]="appState.conversionState().originalRequests || []"
         [editableRequestNames]="appState.editableState().requestNames"
         [editableEnvNames]="appState.editableState().envNames" [hasModifiedRequests]="appState.hasModifiedRequests()"
         [duplicateNames]="appState.conversionState().duplicateNames" [currentFormat]="currentFormat()"

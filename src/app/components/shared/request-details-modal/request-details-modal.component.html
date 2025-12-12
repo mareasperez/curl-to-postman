@@ -161,7 +161,12 @@
         <!-- Actions (Sticky Footer) -->
         <div class="modal-actions">
             @if (activeTab() === 'parsed') {
-            <button class="btn-reset" (click)="reset()" [disabled]="!hasChanges()">↩ Revert Changes</button>
+            @if (hasChanges()) {
+            <button class="btn-reset" (click)="discardChanges()" style="color: #fbbf24; border-color: #fbbf24">↩ Undo
+                Draft</button>
+            } @else if (isModifiedFromOriginal()) {
+            <button class="btn-reset" (click)="reset()">↩ Reset to Original</button>
+            }
             <div class="flex gap-4 ml-auto">
                 <button class="btn-cancel" (click)="onClose()">Cancel</button>
                 <button class="btn-save" (click)="save()">Save Changes</button>

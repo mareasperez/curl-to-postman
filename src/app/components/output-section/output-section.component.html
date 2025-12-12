@@ -61,7 +61,7 @@
     <app-variables-tab [hostVariables]="hostVariables()" [tokenVariables]="tokenVariables()"></app-variables-tab>
     }
     <app-request-details-modal [isOpen]="isDetailsModalOpen()" [request]="selectedRequest()"
-        [requestName]="selectedRequestName()" [rawOutput]="selectedRawOutput()" (close)="closeDetailsModal()"
-        (requestUpdated)="onModalRequestUpdated($event)"
+        [originalRequest]="selectedOriginalRequest()" [requestName]="selectedRequestName()"
+        [rawOutput]="selectedRawOutput()" (close)="closeDetailsModal()" (requestUpdated)="onModalRequestUpdated($event)"
         (resetRequested)="onModalResetRequested()"></app-request-details-modal>
 </section>

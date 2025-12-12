@@ -59,7 +59,7 @@ export class InputSectionComponent {
       requests: result.requests || [],
       generatedNames: result.generatedNames || new Map(),
       duplicateNames: result.duplicateNames || new Map()
-    });
+    }, true);
 
     // Initialize editable names if empty
     if (this.appState.editableState().requestNames.size === 0 && result.generatedNames) {

@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormatSelectorComponent } from '../shared/format-selector/format-selector.component';
 import { SummaryTabComponent } from '../tabs/summary-tab/summary-tab.component';
@@ -32,6 +32,7 @@ export class OutputSectionComponent {
   additionalFiles = input<AdditionalFile[]>([]);
   variables = input<VariableAnalysis | null>(null);
   requests = input<ParsedRequest[]>([]);
+  originalRequests = input<ParsedRequest[]>([]);
   editableRequestNames = input<Map<number, string>>(new Map());
   duplicateNames = input<Map<string, number[]>>(new Map());
   editableEnvNames = input<Map<string, string>>(new Map());
@@ -58,11 +59,43 @@ export class OutputSectionComponent {
 
   // Modal State
   // Modal State
-  selectedRequest = signal<ParsedRequest | null>(null);
-  selectedRequestName = signal<string>('');
+  // Modal State
   selectedRequestIndex = signal<number>(-1);
-  selectedRawOutput = signal<unknown>(null);
   isDetailsModalOpen = signal(false);
+
+  selectedRequest = computed(() => {
+    const index = this.selectedRequestIndex();
+    const reqs = this.requests();
+    if (index >= 0 && index < reqs.length) {
+      return reqs[index];
+    }
+    return null;
+  });
+
+  selectedOriginalRequest = computed(() => {
+    const index = this.selectedRequestIndex();
+    const originals = this.originalRequests();
+    if (index >= 0 && originals && index < originals.length) {
+      return originals[index];
+    }
+    return null;
+  });
+
+  selectedRequestName = computed(() => {
+    const index = this.selectedRequestIndex();
+    const req = this.selectedRequest();
+    if (!req) return '';
+    return this.editableRequestNames().get(index) || `${req.method} ${req.url}`;
+  });
+
+  selectedRawOutput = computed(() => {
+    const index = this.selectedRequestIndex();
+    const out = this.output() as { item?: unknown[] };
+    if (out && Array.isArray(out.item) && out.item[index]) {
+      return out.item[index];
+    }
+    return null;
+  });
 
   // Computed
   outputJson = (): string => {
@@ -143,20 +176,7 @@ export class OutputSectionComponent {
   onRequestClick(index: number) {
     const req = this.requests()[index];
     if (req) {
-      this.selectedRequest.set(req);
       this.selectedRequestIndex.set(index);
-
-      const name = this.editableRequestNames().get(index) || `${req.method} ${req.url}`;
-      this.selectedRequestName.set(name);
-
-      // Try to get raw output item (Postman format structure)
-      const out = this.output() as { item?: unknown[] };
-      if (out && Array.isArray(out.item) && out.item[index]) {
-        this.selectedRawOutput.set(out.item[index]);
-      } else {
-        this.selectedRawOutput.set(null);
-      }
-
       this.isDetailsModalOpen.set(true);
     }
   }

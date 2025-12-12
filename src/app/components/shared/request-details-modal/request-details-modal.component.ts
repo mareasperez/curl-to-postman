@@ -12,6 +12,7 @@ import { ParsedRequest, HeaderItem, QueryParam } from '../../../models';
 export class RequestDetailsModalComponent {
     // Inputs
     request = input<ParsedRequest | null>(null);
+    originalRequest = input<ParsedRequest | null>(null);
     requestName = input<string>('');
     rawOutput = input<unknown>(null);
     isOpen = input<boolean>(false);
@@ -82,6 +83,16 @@ export class RequestDetailsModalComponent {
         }
 
         return false;
+    });
+
+    isModifiedFromOriginal = computed(() => {
+        const current = this.request();
+        const original = this.originalRequest();
+
+        if (!current || !original) return false;
+
+        // Simple JSON comparison for deep object equality
+        return JSON.stringify(current) !== JSON.stringify(original);
     });
 
     onClose() {
@@ -221,6 +232,18 @@ export class RequestDetailsModalComponent {
 
     updateQueryParam() {
         this.updateUrlFromParams();
+    }
+
+    discardChanges() {
+        const req = this.request();
+        if (req && this.isOpen()) {
+            this.editMethod.set(req.method);
+            this.updateUrl(req.url, true);
+            this.editBody.set(req.body || '');
+            this.editHeaders.set(
+                Object.entries(req.headers || {}).map(([key, value]) => ({ key, value }))
+            );
+        }
     }
 
     save() {

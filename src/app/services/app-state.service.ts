@@ -89,16 +89,15 @@ export class AppStateService {
 
     // ==================== ACTIONS - CONVERSION ====================
 
-    setConversionResult(result: Partial<ConversionState>): void {
+    setConversionResult(result: Partial<ConversionState>, isNewConversion: boolean = false): void {
         this._conversionState.update(state => {
             const newState = {
                 ...state,
                 ...result
             };
 
-            // If new requests are coming in, set them as original requests too (snapshot)
-            // But only if we assume this is a fresh conversion, not a partial update
-            if (result.requests) {
+            // Only set original requests if this is a new conversion
+            if (isNewConversion && result.requests) {
                 newState.originalRequests = JSON.parse(JSON.stringify(result.requests));
             }
 
