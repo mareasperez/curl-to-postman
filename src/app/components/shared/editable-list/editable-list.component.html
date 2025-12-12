@@ -1,0 +1,22 @@
+<div class="editable-list">
+    @for (item of items(); track $index) {
+    <div class="editable-item" [class.duplicate]="item.isDuplicate">
+        <div class="header-section">
+            @if (item.badge) {
+            <span [class]="'badge ' + item.badge.class">{{ item.badge.text }}</span>
+            }
+
+            @if (item.isDuplicate) {
+            <span class="duplicate-badge" title="Duplicate request name">⚠️ Duplicate</span>
+            }
+        </div>
+
+        <input type="text" class="editable-input" [value]="item.name"
+            (blur)="onItemChange($index, $any($event.target).value)" (keyup.enter)="$any($event.target).blur()" />
+
+        @if (item.preview) {
+        <span class="url-preview">{{ item.preview }}</span>
+        }
+    </div>
+    }
+</div>

@@ -128,7 +128,7 @@ export class PostmanGeneratorService {
     return item;
   }
 
-  private generateRequestName(request: ParsedRequest, index: number): string {
+  public generateRequestName(request: ParsedRequest, index: number): string {
     try {
       // Extract path from URL, handling both regular URLs and those with variables
       let pathname = '';

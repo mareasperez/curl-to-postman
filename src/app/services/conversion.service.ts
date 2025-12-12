@@ -3,6 +3,8 @@ import { CurlParserService } from './curl-parser.service';
 import { VariableDetectorService } from './variable-detector.service';
 import { ExportProviderService } from './providers/export-provider.service';
 import { ConversionRequest, ConversionResult } from '../models/conversion.model';
+import { PostmanGeneratorService } from './postman-generator.service';
+import { ParsedRequest } from '../models';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +13,8 @@ export class ConversionService {
     constructor(
         private curlParser: CurlParserService,
         private variableDetector: VariableDetectorService,
-        private exportProvider: ExportProviderService
+        private exportProvider: ExportProviderService,
+        private nameGenerator: PostmanGeneratorService
     ) { }
 
     convert(request: ConversionRequest): ConversionResult {
@@ -39,6 +42,12 @@ export class ConversionService {
             // Detect variables
             const variables = this.variableDetector.analyze(requests);
 
+            // Generate names and detect duplicates
+            const { generatedNames, duplicateNames } = this.generateNamesAndDuplicates(
+                requests,
+                request.customRequestNames
+            );
+
             // Export using selected format
             const result = this.exportProvider.export(request.formatId, {
                 requests,
@@ -60,7 +69,9 @@ export class ConversionService {
                 data: result.data,
                 additionalFiles: result.additionalFiles || [],
                 variables,
-                requests
+                requests,
+                generatedNames,
+                duplicateNames
             };
         } catch (error) {
             console.error('Conversion error:', error);
@@ -77,5 +88,39 @@ export class ConversionService {
 
     countCommands(input: string): number {
         return (input.match(/curl\s+/g) || []).length;
+    }
+
+    private generateNamesAndDuplicates(
+        requests: ParsedRequest[],
+        customNames: Map<number, string> | undefined
+    ): {
+        generatedNames: Map<number, string>;
+        duplicateNames: Map<string, number[]>;
+    } {
+        const generatedNames = new Map<number, string>();
+        const nameToIndices = new Map<string, number[]>();
+        const duplicateNames = new Map<string, number[]>();
+
+        requests.forEach((req, index) => {
+            // Use custom name if provided, otherwise generate one
+            const name = customNames?.get(index) ||
+                this.nameGenerator.generateRequestName(req, index);
+
+            generatedNames.set(index, name);
+
+            // Track indices for each name
+            const indices = nameToIndices.get(name) || [];
+            indices.push(index);
+            nameToIndices.set(name, indices);
+        });
+
+        // Filter for duplicates (names appearing more than once)
+        nameToIndices.forEach((indices, name) => {
+            if (indices.length > 1) {
+                duplicateNames.set(name, indices);
+            }
+        });
+
+        return { generatedNames, duplicateNames };
     }
 }

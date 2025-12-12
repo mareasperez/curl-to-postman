@@ -9,73 +9,8 @@ import { SummaryData } from '../../../models/summary-data.model';
 @Component({
   selector: 'app-summary-tab',
   imports: [CommonModule, StatsGridComponent, EditableListComponent],
-  template: `
-    <div class="animate-fadeIn">
-      <div class="summary-container">
-        <!-- Statistics -->
-        <app-stats-grid [stats]="stats()"></app-stats-grid>
-
-        <!-- Requests List with Editable Names -->
-        @if (summaryData().requests.length > 0) {
-        <div class="section-card">
-          <h4 class="section-title">📋 Requests</h4>
-          <app-editable-list 
-            [items]="requestItems()" 
-            (itemChanged)="onRequestNameChange($event)"
-          ></app-editable-list>
-        </div>
-        }
-
-        <!-- Environments List with Editable Names -->
-        @if (summaryData().environments.length > 0) {
-        <div class="section-card">
-          <h4 class="section-title">🌍 Environments</h4>
-          <app-editable-list 
-            [items]="environmentItems()" 
-            (itemChanged)="onEnvironmentNameChange($event)"
-          ></app-editable-list>
-        </div>
-        }
-      </div>
-    </div>
-  `,
-  styles: [`
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-fadeIn {
-      animation: fadeIn 0.25s ease;
-    }
-
-    .summary-container {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .section-card {
-      background: #0f172a;
-      padding: 1.5rem;
-      border-radius: 0.75rem;
-      border: 1px solid #334155;
-    }
-
-    .section-title {
-      color: #a78bfa;
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-      margin-top: 0;
-      font-weight: 600;
-    }
-  `]
+  templateUrl: './summary-tab.component.html',
+  styleUrl: './summary-tab.component.css'
 })
 export class SummaryTabComponent {
   summaryData = input<SummaryData>({
@@ -87,6 +22,7 @@ export class SummaryTabComponent {
     environments: []
   });
   editableRequestNames = input<Map<number, string>>(new Map());
+  duplicateNames = input<Map<string, number[]>>(new Map());
   editableEnvNames = input<Map<string, string>>(new Map());
 
   requestNameChanged = output<{ index: number; name: string }>();
@@ -103,14 +39,24 @@ export class SummaryTabComponent {
   };
 
   requestItems = (): EditableItem[] => {
-    return this.summaryData().requests.map((request, index) => ({
-      badge: {
-        text: request.request.method,
-        class: request.request.method.toLowerCase()
-      },
-      name: request.name,
-      preview: request.request.url.raw
-    }));
+    const duplicates = this.duplicateNames();
+
+    return this.summaryData().requests.map((request, index) => {
+      const name = this.editableRequestNames().get(index) || request.name;
+      // Check if this name is in the duplicates map AND if this index is one of the duplicate occurrences
+      const isDuplicate = duplicates.has(name) &&
+        (duplicates.get(name)?.includes(index) ?? false);
+
+      return {
+        badge: {
+          text: request.request.method,
+          class: request.request.method.toLowerCase()
+        },
+        name: name,
+        preview: request.request.url.raw,
+        isDuplicate: isDuplicate
+      };
+    });
   };
 
   environmentItems = (): EditableItem[] => {

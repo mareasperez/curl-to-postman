@@ -1,0 +1,23 @@
+<div class="animate-fadeIn">
+    <div class="summary-container">
+        <!-- Statistics -->
+        <app-stats-grid [stats]="stats()"></app-stats-grid>
+
+        <!-- Requests List with Editable Names -->
+        @if (summaryData().requests.length > 0) {
+        <div class="section-card">
+            <h4 class="section-title">📋 Requests</h4>
+            <app-editable-list [items]="requestItems()" (itemChanged)="onRequestNameChange($event)"></app-editable-list>
+        </div>
+        }
+
+        <!-- Environments List with Editable Names -->
+        @if (summaryData().environments.length > 0) {
+        <div class="section-card">
+            <h4 class="section-title">🌍 Environments</h4>
+            <app-editable-list [items]="environmentItems()"
+                (itemChanged)="onEnvironmentNameChange($event)"></app-editable-list>
+        </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<section class="card animate-fadeIn">
+    <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
+        <div class="flex items-center gap-4">
+            <h2 class="text-2xl font-semibold text-gray-100">📤 Output</h2>
+            <app-format-selector [formats]="availableFormats()" [selectedFormatId]="currentFormat().id"
+                (formatChanged)="onFormatChange($event)"></app-format-selector>
+        </div>
+        <div class="flex gap-3 flex-wrap-mobile">
+            <button (click)="onCopyToClipboard()" class="btn btn-secondary">
+                <span>📋</span>
+                Copy JSON
+            </button>
+            <button (click)="onDownload()" class="btn btn-primary">
+                <span>💾</span>
+                Download
+            </button>
+            <button (click)="onNewConversion()" class="btn btn-secondary">
+                <span>←</span>
+                New Conversion
+            </button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button (click)="switchTab('summary')" [class.active]="activeTab() === 'summary'" class="tab">
+            Summary
+        </button>
+        <button (click)="switchTab('collection')" [class.active]="activeTab() === 'collection'" class="tab">
+            {{ currentFormat().name }}
+        </button>
+        <button (click)="switchTab('environment')" [class.active]="activeTab() === 'environment'" class="tab">
+            Environments
+        </button>
+        <button (click)="switchTab('variables')" [class.active]="activeTab() === 'variables'" class="tab">
+            Detected Variables
+        </button>
+    </div>
+
+    <!-- Tab Content -->
+    @if (activeTab() === 'summary') {
+    <app-summary-tab [summaryData]="summaryData()" [editableRequestNames]="editableRequestNames()"
+        [editableEnvNames]="editableEnvNames()" [duplicateNames]="duplicateNames()"
+        (requestNameChanged)="onRequestNameChanged($event)"
+        (envNameChanged)="onEnvNameChanged($event)"></app-summary-tab>
+    }
+
+    @if (activeTab() === 'collection') {
+    <app-output-viewer-tab [content]="outputJson()"></app-output-viewer-tab>
+    }
+
+    @if (activeTab() === 'environment') {
+    <app-additional-files-tab [files]="additionalFiles()"></app-additional-files-tab>
+    }
+
+    @if (activeTab() === 'variables') {
+    <app-variables-tab [hostVariables]="hostVariables()" [tokenVariables]="tokenVariables()"></app-variables-tab>
+    }
+</section>
