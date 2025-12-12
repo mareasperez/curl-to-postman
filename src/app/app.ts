@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 // Import components
 import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/shared/toast/toast.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 /**
  * Root application component
@@ -16,7 +17,8 @@ import { ToastComponent } from './components/shared/toast/toast.component';
     CommonModule,
     RouterOutlet,
     HeaderComponent,
-    ToastComponent
+    ToastComponent,
+    FooterComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

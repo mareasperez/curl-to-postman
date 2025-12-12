@@ -1,0 +1,6 @@
+/* Using Tailwind utility classes mostly, minimal custom CSS */
+:host {
+    display: block;
+    width: 100%;
+    z-index: 10;
+}
