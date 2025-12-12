@@ -61,10 +61,10 @@ export interface PostmanEnvironment {
   providedIn: 'root'
 })
 export class PostmanGeneratorService {
-  
+
   generate(
-    requests: ParsedRequest[], 
-    variables: VariableAnalysis, 
+    requests: ParsedRequest[],
+    variables: VariableAnalysis,
     getHostVariable: (host: string) => string,
     customNames?: Map<number, string>
   ): PostmanCollection {
@@ -100,27 +100,38 @@ export class PostmanGeneratorService {
   }
 
   private createPostmanItem(
-    request: ParsedRequest, 
-    index: number, 
+    request: ParsedRequest,
+    index: number,
     variables: VariableAnalysis,
     getHostVariable: (host: string) => string,
     customNames?: Map<number, string>
   ): PostmanItem {
     let url = request.url;
-    
+    let protocol = 'https';
+    let useVariable = false;
+
     // Replace host with variable if applicable
     try {
       const urlObj = new URL(request.url);
+      protocol = urlObj.protocol.replace(':', '');
       const host = urlObj.origin;
-      
+
       variables.hosts.forEach((requestIndices, hostValue) => {
         if (hostValue === host && requestIndices.length > 1) {
           const varName = getHostVariable(host);
-          url = request.url.replace(host, `{{${varName}}}`);
+          useVariable = true;
+          // Replace the entire origin (protocol + host) with just the variable
+          // This creates: {{varName}}/path instead of https://{{varName}}/path
+          url = `{{${varName}}}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
         }
       });
     } catch (e) {
       console.error('Error processing URL:', e);
+      // Try to extract protocol from URL string if parsing failed
+      const protocolMatch = request.url.match(/^(https?):\/\//);
+      if (protocolMatch) {
+        protocol = protocolMatch[1];
+      }
     }
 
     const requestName = customNames?.get(index) || this.generateRequestName(request, index);
@@ -132,7 +143,7 @@ export class PostmanGeneratorService {
         header: [],
         url: {
           raw: url,
-          protocol: url.startsWith('https') ? 'https' : 'http',
+          protocol: protocol,
           host: this.parseHost(url),
           path: this.parsePath(url)
         }
@@ -142,7 +153,7 @@ export class PostmanGeneratorService {
     // Add headers with variable replacement
     Object.entries(request.headers).forEach(([key, value]) => {
       let headerValue = value;
-      
+
       // Replace token with variable if applicable
       variables.tokens.forEach((tokenData, tokenKey) => {
         if (tokenData.value === value && tokenData.requests.length > 1) {
@@ -175,29 +186,39 @@ export class PostmanGeneratorService {
 
   private generateRequestName(request: ParsedRequest, index: number): string {
     try {
-      const urlObj = new URL(request.url);
-      const pathSegments = urlObj.pathname.split('/').filter(p => p);
-      
+      // Extract path from URL, handling both regular URLs and those with variables
+      let pathname = '';
+      try {
+        const urlObj = new URL(request.url);
+        pathname = urlObj.pathname;
+      } catch {
+        // If URL parsing fails (e.g., contains {{variables}}), extract path manually
+        const pathMatch = request.url.match(/\/\/[^\/]+(\/ [^?#]*)/);
+        pathname = pathMatch ? pathMatch[1] : '';
+      }
+
+      const pathSegments = pathname.split('/').filter(p => p);
+
       // Get the last meaningful segment or use a default
-      let endpoint = pathSegments.length > 0 
-        ? pathSegments[pathSegments.length - 1] 
+      let endpoint = pathSegments.length > 0
+        ? pathSegments[pathSegments.length - 1]
         : 'root';
-      
+
       // Remove common file extensions and query parameters
       endpoint = endpoint.replace(/\.(json|xml|html)$/i, '');
-      
+
       // Clean up the endpoint name
       endpoint = endpoint
         .replace(/[^a-zA-Z0-9_-]/g, '_')
         .replace(/_+/g, '_')
         .replace(/^_|_$/g, '');
-      
+
       // If endpoint is a number or UUID, use the parent segment
       if (/^[0-9a-f-]+$/i.test(endpoint) && pathSegments.length > 1) {
         const parentSegment = pathSegments[pathSegments.length - 2];
         endpoint = parentSegment.replace(/[^a-zA-Z0-9_-]/g, '_');
       }
-      
+
       // Combine method with endpoint
       const method = request.method.toLowerCase();
       return endpoint ? `${method}_${endpoint}` : `${method}_request_${index + 1}`;
@@ -223,15 +244,22 @@ export class PostmanGeneratorService {
 
   private parsePath(url: string): string[] {
     try {
+      // Try standard URL parsing first
       const urlObj = new URL(url);
       return urlObj.pathname.split('/').filter(p => p);
     } catch (e) {
+      // If URL contains variables like {{api}}, extract path manually
+      // Match everything after }}/ or after host/
+      const pathMatch = url.match(/(?:}}|\/\/[^\/]+)(\/[^?#]*)/);
+      if (pathMatch && pathMatch[1]) {
+        return pathMatch[1].split('/').filter(p => p);
+      }
       return [];
     }
   }
 
   generateEnvironments(
-    variables: VariableAnalysis, 
+    variables: VariableAnalysis,
     getHostVariable: (host: string) => string,
     customEnvNames?: Map<string, string>
   ): PostmanEnvironment[] {
@@ -239,7 +267,7 @@ export class PostmanGeneratorService {
 
     variables.environments.forEach((env, envName) => {
       const finalEnvName = customEnvNames?.get(envName) || envName;
-      
+
       const environment: PostmanEnvironment = {
         name: finalEnvName,
         values: []
@@ -263,16 +291,14 @@ export class PostmanGeneratorService {
         enabled: true
       });
 
-      // Add token variables
+      // Add token variables for this environment
       variables.tokens.forEach((tokenData, tokenKey) => {
-        if (tokenData.requests.length > 1) {
-          environment.values.push({
-            key: tokenKey,
-            value: tokenData.value,
-            type: "secret",
-            enabled: true
-          });
-        }
+        environment.values.push({
+          key: tokenKey,
+          value: tokenData.value,
+          type: "secret",
+          enabled: true
+        });
       });
 
       environments.push(environment);

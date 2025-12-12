@@ -11,11 +11,11 @@ export interface ParsedRequest {
   providedIn: 'root'
 })
 export class CurlParserService {
-  
+
   parse(curlCommand: string): ParsedRequest {
     const lines = curlCommand.trim().split('\n').map(line => line.trim());
     const fullCommand = lines.join(' ').replace(/\\\s+/g, ' ');
-    
+
     const request: ParsedRequest = {
       method: 'GET',
       url: '',
@@ -23,16 +23,29 @@ export class CurlParserService {
       body: null
     };
 
-    // Extract URL
-    const urlMatch = fullCommand.match(/curl\s+['"]?([^'"\s]+)['"]?/);
+    // Extract URL - improved to handle more cases
+    // Try multiple patterns
+    let urlMatch = fullCommand.match(/curl\s+(?:-[^\s]+\s+)*['"]([^'"]+)['"]/);
+    if (!urlMatch) {
+      urlMatch = fullCommand.match(/curl\s+(?:-[^\s]+\s+)*([^\s]+)/);
+    }
+    if (!urlMatch) {
+      // Fallback: look for anything that looks like a URL
+      urlMatch = fullCommand.match(/(https?:\/\/[^\s'"]+)/);
+    }
     if (urlMatch) {
       request.url = urlMatch[1];
     }
 
-    // Extract method
-    const methodMatch = fullCommand.match(/-X\s+(\w+)/);
+    // Extract method - support both -X and --request
+    let methodMatch = fullCommand.match(/(?:-X|--request)\s+(\w+)/);
     if (methodMatch) {
-      request.method = methodMatch[1];
+      request.method = methodMatch[1].toUpperCase();
+    } else {
+      // Infer method from --data presence
+      if (fullCommand.includes('--data') || fullCommand.includes('-d ')) {
+        request.method = 'POST';
+      }
     }
 
     // Extract headers
@@ -48,8 +61,12 @@ export class CurlParserService {
       }
     }
 
-    // Extract body data
-    const dataMatch = fullCommand.match(/--data(?:-raw)?\s+['"](.+?)['"]/);
+    // Extract body data - support multiple formats
+    let dataMatch = fullCommand.match(/(?:--data-raw|--data|-d)\s+['"](.+?)['"]/);
+    if (!dataMatch) {
+      // Try without quotes
+      dataMatch = fullCommand.match(/(?:--data-raw|--data|-d)\s+(\S+)/);
+    }
     if (dataMatch) {
       request.body = dataMatch[1];
     }
