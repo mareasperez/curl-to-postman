@@ -1,51 +1,57 @@
-import { Component, input, output, signal, computed } from '@angular/core';
+import { Component, input, output, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ParsedRequest } from '../../../models';
 
+interface HeaderItem {
+    key: string;
+    value: string;
+}
 
 @Component({
     selector: 'app-request-details-modal',
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     templateUrl: './request-details-modal.component.html',
     styleUrl: './request-details-modal.component.css'
 })
 export class RequestDetailsModalComponent {
     // Inputs
     request = input<ParsedRequest | null>(null);
+    requestName = input<string>('');
     rawOutput = input<unknown>(null);
     isOpen = input<boolean>(false);
 
     // Outputs
     close = output<void>();
+    requestUpdated = output<ParsedRequest>();
+    resetRequested = output<void>();
 
     // State
     activeTab = signal<'parsed' | 'raw'>('parsed');
 
+    // Editable State
+    editMethod = signal('');
+    editUrl = signal('');
+    editBody = signal('');
+    editHeaders = signal<HeaderItem[]>([]);
+
+    constructor() {
+        effect(() => {
+            const req = this.request();
+            if (req && this.isOpen()) {
+                this.editMethod.set(req.method);
+                this.editUrl.set(req.url);
+                this.editBody.set(req.body || '');
+                this.editHeaders.set(
+                    Object.entries(req.headers || {}).map(([key, value]) => ({ key, value }))
+                );
+            }
+        });
+    }
+
     // Computed
-    hasBody = computed(() => !!this.request()?.body);
-
-    headersList = computed(() => {
-        const req = this.request();
-        if (!req) return [];
-        return Object.entries(req.headers).map(([key, value]) => ({ key, value }));
-    });
-
     rawOutputJson = computed(() => {
         return JSON.stringify(this.rawOutput(), null, 2);
-    });
-
-    parsedBodyJson = computed(() => {
-        const body = this.request()?.body;
-        if (!body) return '';
-        try {
-            // Try to format if it's JSON
-            if (typeof body === 'string' && (body.startsWith('{') || body.startsWith('['))) {
-                return JSON.stringify(JSON.parse(body), null, 2);
-            }
-            return body;
-        } catch {
-            return body;
-        }
     });
 
     onClose() {
@@ -60,5 +66,42 @@ export class RequestDetailsModalComponent {
         if ((event.target as HTMLElement).classList.contains('modal-overlay')) {
             this.onClose();
         }
+    }
+
+    // Editing Actions
+    addHeader() {
+        this.editHeaders.update(headers => [...headers, { key: '', value: '' }]);
+    }
+
+    removeHeader(index: number) {
+        this.editHeaders.update(headers => headers.filter((_, i) => i !== index));
+    }
+
+    save() {
+        const original = this.request();
+        if (!original) return;
+
+        // Reconstruct headers object
+        const headersObj: Record<string, string> = {};
+        this.editHeaders().forEach(h => {
+            if (h.key.trim()) {
+                headersObj[h.key] = h.value;
+            }
+        });
+
+        const updatedRequest: ParsedRequest = {
+            ...original,
+            method: this.editMethod(),
+            url: this.editUrl(),
+            body: this.editBody(),
+            headers: headersObj
+        };
+
+        this.requestUpdated.emit(updatedRequest);
+        this.onClose();
+    }
+
+    reset() {
+        this.resetRequested.emit();
     }
 }

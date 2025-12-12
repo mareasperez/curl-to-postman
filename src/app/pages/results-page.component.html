@@ -4,10 +4,12 @@
         [additionalFiles]="appState.conversionState().additionalFiles"
         [variables]="appState.conversionState().variables" [requests]="appState.conversionState().requests"
         [editableRequestNames]="appState.editableState().requestNames"
-        [editableEnvNames]="appState.editableState().envNames"
+        [editableEnvNames]="appState.editableState().envNames" [hasModifiedRequests]="appState.hasModifiedRequests()"
         [duplicateNames]="appState.conversionState().duplicateNames" [currentFormat]="currentFormat()"
         [availableFormats]="availableFormats" (formatChanged)="onFormatChanged($event)"
         (requestNameChanged)="onRequestNameChanged($event)" (envNameChanged)="onEnvNameChanged($event)"
+        (requestDetailsUpdated)="onRequestDetailsUpdated($event)"
+        (requestResetRequested)="onRequestResetRequested($event)" (resetAllRequested)="onResetAllRequested()"
         (newConversionClicked)="onNewConversion()" (copyRequested)="onCopy($event)"
         (downloadRequested)="onDownload($event)"></app-output-section>
     } @else {

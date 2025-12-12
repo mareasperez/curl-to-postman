@@ -7,6 +7,7 @@ import { ExportProviderService } from '../services/providers/export-provider.ser
 import { ConversionService } from '../services/conversion.service';
 import { ExportFormat } from '../services/providers/export-provider.interface';
 import { AdditionalFile } from '../models/additional-file.model';
+import { ParsedRequest } from '../models';
 
 @Component({
   selector: 'app-results-page',
@@ -29,7 +30,7 @@ export class ResultsPageComponent {
 
   onFormatChanged(formatId: string) {
     this.appState.setSelectedFormat(formatId);
-    this.reconvert();
+    this.regenerate();
   }
 
   onRequestNameChanged(event: { index: number; name: string }) {
@@ -41,7 +42,22 @@ export class ResultsPageComponent {
 
   onEnvNameChanged(event: { oldName: string; newName: string }) {
     this.appState.setEnvName(event.oldName, event.newName);
-    this.reconvert();
+    this.regenerate();
+  }
+
+  onRequestDetailsUpdated(event: { index: number; request: ParsedRequest }) {
+    this.appState.updateRequest(event.index, event.request);
+    this.regenerate();
+  }
+
+  onRequestResetRequested(event: { index: number }) {
+    this.appState.resetRequest(event.index);
+    this.regenerate();
+  }
+
+  onResetAllRequested() {
+    this.appState.resetAllRequests();
+    this.regenerate();
   }
 
   onNewConversion() {
@@ -68,18 +84,38 @@ export class ResultsPageComponent {
   }
 
   private reconvert() {
-    // Re-run conversion with current state
-    const input = this.appState.curlInput();
-    const formatId = this.appState.uiState().selectedFormatId;
-    const requestNames = this.appState.editableState().requestNames;
-    const envNames = this.appState.editableState().envNames;
+    this.regenerate();
+  }
 
-    const result = this.conversionService.convert({
-      input,
+  private regenerate() {
+    const currentState = this.appState.conversionState();
+    const formatId = this.appState.uiState().selectedFormatId;
+
+    // Check if we have requests to regenerate
+    if (!currentState.requests || currentState.requests.length === 0) {
+      // Fallback to original parsing if no requests (shouldn't happen on results page)
+      const input = this.appState.curlInput();
+      const requestNames = this.appState.editableState().requestNames;
+      const envNames = this.appState.editableState().envNames;
+
+      const result = this.conversionService.convert({
+        input,
+        formatId,
+        customRequestNames: requestNames,
+        customEnvNames: envNames
+      });
+      if (result.success) {
+        this.appState.setConversionResult(result);
+      }
+      return;
+    }
+
+    const result = this.conversionService.regenerate(
+      currentState.requests,
       formatId,
-      customRequestNames: requestNames,
-      customEnvNames: envNames
-    });
+      this.appState.editableState().requestNames,
+      this.appState.editableState().envNames
+    );
 
     if (result.success) {
       this.appState.setConversionResult(result);

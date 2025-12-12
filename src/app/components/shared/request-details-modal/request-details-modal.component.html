@@ -5,7 +5,7 @@
         <div class="modal-header">
             <h3 class="flex items-center gap-3">
                 <span [class]="'method-badge ' + request()?.method?.toLowerCase()">{{ request()?.method }}</span>
-                <span class="url-truncate" [title]="request()?.url">{{ request()?.url }}</span>
+                <span class="url-truncate" [title]="requestName()">{{ requestName() }}</span>
             </h3>
             <button class="modal-close" (click)="onClose()">&times;</button>
         </div>
@@ -13,7 +13,7 @@
         <!-- Tabs -->
         <div class="modal-tabs">
             <button class="tab-btn" [class.active]="activeTab() === 'parsed'" (click)="setTab('parsed')">
-                Parsed Details
+                Edit Details
             </button>
             <button class="tab-btn" [class.active]="activeTab() === 'raw'" (click)="setTab('raw')">
                 Raw Export
@@ -24,34 +24,64 @@
         <div class="modal-body">
             @if (activeTab() === 'parsed') {
             <div class="details-section">
-                <h4>Headers</h4>
-                @if (headersList().length > 0) {
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Key</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (header of headersList(); track header.key) {
-                            <tr>
-                                <td class="key-col">{{ header.key }}</td>
-                                <td class="value-col">{{ header.value }}</td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                } @else {
-                <p class="empty-text">No headers found.</p>
-                }
 
-                @if (hasBody()) {
-                <h4 class="mt-4">Body</h4>
-                <pre class="code-block">{{ parsedBodyJson() }}</pre>
-                }
+                <!-- Method & URL -->
+                <div class="form-row">
+                    <div class="form-group method-group">
+                        <label class="label">Method</label>
+                        <select [ngModel]="editMethod()" (ngModelChange)="editMethod.set($event)"
+                            class="input-control method-select">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="OPTIONS">OPTIONS</option>
+                            <option value="HEAD">HEAD</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group url-group">
+                        <label class="label">URL</label>
+                        <input [ngModel]="editUrl()" (ngModelChange)="editUrl.set($event)"
+                            class="input-control font-mono" />
+                    </div>
+                </div>
+
+                <!-- Headers -->
+                <div class="form-group mt-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="label">Headers</label>
+                        <button class="btn-xs" (click)="addHeader()">+ Add Header</button>
+                    </div>
+
+                    <div class="headers-editor">
+                        @if (editHeaders().length === 0) {
+                        <p class="empty-text">No headers.</p>
+                        }
+                        @for (header of editHeaders(); track $index) {
+                        <div class="header-row">
+                            <input [(ngModel)]="header.key" placeholder="Key" class="input-control header-key" />
+                            <input [(ngModel)]="header.value" placeholder="Value" class="input-control header-value" />
+                            <button class="btn-remove" (click)="removeHeader($index)" title="Remove">&times;</button>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="form-group mt-4">
+                    <label class="label">Body</label>
+                    <textarea [ngModel]="editBody()" (ngModelChange)="editBody.set($event)"
+                        class="input-control code-area" rows="6"></textarea>
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-reset" (click)="reset()">↩ Revert Changes</button>
+                <button class="btn-cancel" (click)="onClose()">Cancel</button>
+                <button class="btn-save" (click)="save()">Save Changes</button>
             </div>
             }
 

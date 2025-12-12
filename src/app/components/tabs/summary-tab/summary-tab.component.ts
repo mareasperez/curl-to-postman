@@ -55,6 +55,7 @@ export class SummaryTabComponent {
         },
         name: name,
         preview: request.request.url.raw,
+        meta: `Headers (${Object.keys(request.request.headers || {}).length})`,
         isDuplicate: isDuplicate
       };
     });

@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import type { ConversionState, UIState, EditableState } from '../models';
+import type { ConversionState, UIState, EditableState, ParsedRequest } from '../models';
 
 /**
  * Centralized state management service using Angular signals
@@ -22,7 +22,8 @@ export class AppStateService {
         variables: null,
         requests: [],
         generatedNames: new Map(),
-        duplicateNames: new Map()
+        duplicateNames: new Map(),
+        originalRequests: []
     });
     readonly conversionState = this._conversionState.asReadonly();
 
@@ -66,6 +67,15 @@ export class AppStateService {
         this.conversionState().requests.length
     );
 
+    /** Whether there are modified requests compared to original */
+    readonly hasModifiedRequests = computed(() => {
+        const state = this.conversionState();
+        if (!state.originalRequests || state.originalRequests.length === 0) return false;
+
+        // Simple JSON comparison might be expensive but effective for deep objects
+        return JSON.stringify(state.requests) !== JSON.stringify(state.originalRequests);
+    });
+
     // ==================== ACTIONS - INPUT ====================
 
     setCurlInput(input: string): void {
@@ -80,10 +90,20 @@ export class AppStateService {
     // ==================== ACTIONS - CONVERSION ====================
 
     setConversionResult(result: Partial<ConversionState>): void {
-        this._conversionState.update(state => ({
-            ...state,
-            ...result
-        }));
+        this._conversionState.update(state => {
+            const newState = {
+                ...state,
+                ...result
+            };
+
+            // If new requests are coming in, set them as original requests too (snapshot)
+            // But only if we assume this is a fresh conversion, not a partial update
+            if (result.requests) {
+                newState.originalRequests = JSON.parse(JSON.stringify(result.requests));
+            }
+
+            return newState;
+        });
     }
 
     clearConversion(): void {
@@ -93,9 +113,38 @@ export class AppStateService {
             variables: null,
             requests: [],
             generatedNames: new Map(),
-            duplicateNames: new Map()
+            duplicateNames: new Map(),
+            originalRequests: []
         });
         this._uiState.update(state => ({ ...state, showOutput: false }));
+    }
+
+    updateRequest(index: number, request: ParsedRequest): void {
+        this._conversionState.update(state => {
+            const requests = [...state.requests];
+            requests[index] = request;
+            return { ...state, requests };
+        });
+    }
+
+    resetRequest(index: number): void {
+        this._conversionState.update(state => {
+            if (!state.originalRequests || !state.originalRequests[index]) return state;
+
+            const requests = [...state.requests];
+            requests[index] = JSON.parse(JSON.stringify(state.originalRequests[index]));
+            return { ...state, requests };
+        });
+    }
+
+    resetAllRequests(): void {
+        this._conversionState.update(state => {
+            if (!state.originalRequests) return state;
+            return {
+                ...state,
+                requests: JSON.parse(JSON.stringify(state.originalRequests))
+            };
+        });
     }
 
     // ==================== ACTIONS - UI ====================

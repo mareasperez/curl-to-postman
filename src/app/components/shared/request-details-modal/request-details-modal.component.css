@@ -117,57 +117,177 @@
     flex: 1;
 }
 
-.details-section h4 {
-    color: #a78bfa;
-    margin: 0 0 0.75rem 0;
-    font-size: 0.95rem;
+/* Forms & Inputs */
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.method-group {
+    width: 120px;
+    flex-shrink: 0;
+}
+
+.url-group {
+    flex: 1;
+    min-width: 0;
+}
+
+.label {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-.mt-4 {
-    margin-top: 1.5rem;
-}
-
-.table-container {
-    border: 1px solid #334155;
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.data-table {
+.input-control {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-
-.data-table th,
-.data-table td {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #334155;
-}
-
-.data-table th {
+    padding: 0.75rem;
     background: #0f172a;
-    color: #94a3b8;
-    font-weight: 600;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
 }
 
-.data-table tr:last-child td {
-    border-bottom: none;
+.input-control:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.2);
 }
 
-.key-col {
+.font-mono {
+    font-family: 'Courier New', monospace;
+}
+
+.code-area {
+    font-family: 'Courier New', monospace;
+    resize: vertical;
+    line-height: 1.5;
+    min-height: 150px;
+}
+
+/* Headers Editor */
+.headers-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.header-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.header-key {
+    flex: 1;
     color: #60a5fa;
     font-family: 'Courier New', monospace;
-    width: 30%;
-    font-weight: 600;
 }
 
-.value-col {
+.header-value {
+    flex: 2;
+    font-family: 'Courier New', monospace;
+}
+
+.btn-remove {
+    background: transparent;
+    border: none;
+    color: #94ab38;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    color: #ef4444;
+    transition: all 0.2s;
+}
+
+.btn-remove:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 4px;
+}
+
+.btn-xs {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid #334155;
+    background: #1e293b;
     color: #cbd5e1;
-    word-break: break-all;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-xs:hover {
+    border-color: #64748b;
+    color: white;
+    background: #334155;
+}
+
+/* Actions */
+.modal-actions {
+    padding: 1.5rem 0 0;
+    border-top: 1px solid #334155;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.btn-cancel {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid #475569;
+    color: #cbd5e1;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+    border-color: #cbd5e1;
+    color: #fff;
+}
+
+.btn-reset {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid #f59e0b;
+    color: #f59e0b;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-right: auto;
+}
+
+.btn-reset:hover {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.btn-save {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.btn-save:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.3);
 }
 
 .code-block {
@@ -187,9 +307,18 @@
 .empty-text {
     color: #64748b;
     font-style: italic;
+    font-size: 0.9rem;
 }
 
-/* Method Badges */
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.75rem;
+}
+
+/* Method Badges for header */
 .method-badge {
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
@@ -236,11 +365,12 @@
         padding: 0.5rem;
     }
 
-    .modal-header h3 {
-        font-size: 1rem;
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    .key-col {
-        width: 40%;
+    .method-group {
+        width: 100%;
     }
 }

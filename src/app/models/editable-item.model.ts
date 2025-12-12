@@ -5,5 +5,6 @@ export interface EditableItem {
     };
     name: string;
     preview?: string;
+    meta?: string;
     isDuplicate?: boolean;
 }

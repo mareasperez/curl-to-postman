@@ -35,6 +35,7 @@ export class OutputSectionComponent {
   editableRequestNames = input<Map<number, string>>(new Map());
   duplicateNames = input<Map<string, number[]>>(new Map());
   editableEnvNames = input<Map<string, string>>(new Map());
+  hasModifiedRequests = input<boolean>(false);
   currentFormat = input<ExportFormat>({ id: '', name: '', version: '', extension: '', mimeType: '', description: '' });
   availableFormats = input<ExportFormat[]>([]);
   currentTab = input<'collection' | 'environment' | 'variables' | 'summary'>('summary');
@@ -44,14 +45,22 @@ export class OutputSectionComponent {
   requestNameChanged = output<{ index: number; name: string }>();
   envNameChanged = output<{ oldName: string; newName: string }>();
   newConversionClicked = output<void>();
+  requestResetRequested = output<{ index: number }>();
+  resetAllRequested = output<void>();
   copyRequested = output<string>();
   downloadRequested = output<{ format: ExportFormat; data: unknown; additionalFiles: AdditionalFile[] }>();
+  requestDetailsUpdated = output<{ index: number; request: ParsedRequest }>();
+
+  // Local state for active tab
 
   // Local state for active tab
   activeTab = signal<'collection' | 'environment' | 'variables' | 'summary'>('summary');
 
   // Modal State
+  // Modal State
   selectedRequest = signal<ParsedRequest | null>(null);
+  selectedRequestName = signal<string>('');
+  selectedRequestIndex = signal<number>(-1);
   selectedRawOutput = signal<unknown>(null);
   isDetailsModalOpen = signal(false);
 
@@ -135,6 +144,10 @@ export class OutputSectionComponent {
     const req = this.requests()[index];
     if (req) {
       this.selectedRequest.set(req);
+      this.selectedRequestIndex.set(index);
+
+      const name = this.editableRequestNames().get(index) || `${req.method} ${req.url}`;
+      this.selectedRequestName.set(name);
 
       // Try to get raw output item (Postman format structure)
       const out = this.output() as { item?: unknown[] };
@@ -150,5 +163,28 @@ export class OutputSectionComponent {
 
   closeDetailsModal() {
     this.isDetailsModalOpen.set(false);
+  }
+
+  onModalRequestUpdated(updatedReq: ParsedRequest) {
+    if (this.selectedRequestIndex() !== -1) {
+      this.requestDetailsUpdated.emit({
+        index: this.selectedRequestIndex(),
+        request: updatedReq
+      });
+    }
+  }
+
+  onModalResetRequested() {
+    if (this.selectedRequestIndex() !== -1) {
+      this.requestResetRequested.emit({
+        index: this.selectedRequestIndex()
+      });
+    }
+  }
+
+  onResetAll() {
+    if (confirm('Are you sure you want to discard all changes to requests?')) {
+      this.resetAllRequested.emit();
+    }
   }
 }

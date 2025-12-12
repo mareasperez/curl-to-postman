@@ -82,6 +82,56 @@ export class ConversionService {
         }
     }
 
+    regenerate(
+        requests: ParsedRequest[],
+        formatId: string,
+        customRequestNames?: Map<number, string>,
+        customEnvNames?: Map<string, string>
+    ): ConversionResult {
+        try {
+            // Re-analyze variables as content might have changed
+            const variables = this.variableDetector.analyze(requests);
+
+            // Re-calculate names and duplicates
+            const { generatedNames, duplicateNames } = this.generateNamesAndDuplicates(
+                requests,
+                customRequestNames
+            );
+
+            // Export using selected format
+            const result = this.exportProvider.export(formatId, {
+                requests,
+                variables,
+                getHostVariable: (host) => this.variableDetector.getHostVariable(host),
+                customRequestNames: customRequestNames || new Map(),
+                customEnvNames: customEnvNames || new Map()
+            });
+
+            if (!result) {
+                return {
+                    success: false,
+                    error: 'Regeneration failed: format not found'
+                };
+            }
+
+            return {
+                success: true,
+                data: result.data,
+                additionalFiles: result.additionalFiles || [],
+                variables,
+                requests,
+                generatedNames,
+                duplicateNames
+            };
+        } catch (error) {
+            console.error('Regeneration error:', error);
+            return {
+                success: false,
+                error: (error as Error).message
+            };
+        }
+    }
+
     validateInput(input: string): boolean {
         return input.trim().length > 0 && input.includes('curl');
     }

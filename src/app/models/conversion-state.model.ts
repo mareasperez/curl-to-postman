@@ -22,4 +22,7 @@ export interface ConversionState {
 
     /** Duplicate request names detected */
     duplicateNames: Map<string, number[]>;
+
+    /** Original parsed requests for reset functionality */
+    originalRequests?: ParsedRequest[];
 }

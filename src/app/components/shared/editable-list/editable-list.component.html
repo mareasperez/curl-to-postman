@@ -1,6 +1,7 @@
 <div class="editable-list">
     @for (item of items(); track $index) {
-    <div class="editable-item" [class.duplicate]="item.isDuplicate">
+    <div class="editable-item cursor-pointer" [class.duplicate]="item.isDuplicate" (click)="onItemClick($index)"
+        title="Click to view details">
         <div class="header-section">
             @if (item.badge) {
             <span [class]="'badge ' + item.badge.class">{{ item.badge.text }}</span>
@@ -12,15 +13,16 @@
         </div>
 
         <input type="text" class="editable-input" [value]="item.name"
-            (blur)="onItemChange($index, $any($event.target).value)" (keyup.enter)="$any($event.target).blur()" />
+            (blur)="onItemChange($index, $any($event.target).value)" (keyup.enter)="$any($event.target).blur()"
+            (click)="$event.stopPropagation()" />
 
         @if (item.preview) {
         <span class="url-preview">{{ item.preview }}</span>
         }
 
-        <button class="icon-btn" (click)="onItemClick($index)" title="View Details">
-            👁️
-        </button>
+        @if (item.meta) {
+        <span class="meta-info">{{ item.meta }}</span>
+        }
     </div>
     }
 </div>
