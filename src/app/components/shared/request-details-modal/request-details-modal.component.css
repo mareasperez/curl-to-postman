@@ -20,7 +20,8 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 800px;
-    max-height: 85vh;
+    height: 85vh;
+    /* Fixed height as requested */
     display: flex;
     flex-direction: column;
 }
@@ -113,8 +114,12 @@
 
 .modal-body {
     padding: 1.5rem;
-    overflow-y: auto;
     flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Prevent body scroll */
 }
 
 /* Forms & Inputs */
@@ -176,6 +181,29 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    /* Removed fixed max-height, let flex handle it */
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+    border: 1px solid #334155;
+    /* background: #0f172a; */
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+
+
+/* ... existing Header Row styles ... */
+/* NOTE: I need to keep header-row styles too, but replacement chuck covers it all? 
+   Original had `headers-editor` then `header-row`. I need to be careful.
+   The tool shows lines 174-242 cover headers editor AND buttons. I should target specific blocks.
+*/
+.headers-editor::-webkit-scrollbar {
+    width: 6px;
+}
+
+.headers-editor::-webkit-scrollbar-thumb {
+    background-color: #475569;
+    border-radius: 3px;
 }
 
 .header-row {
@@ -234,12 +262,15 @@
 
 /* Actions */
 .modal-actions {
-    padding: 1.5rem 0 0;
+    padding: 1.5rem;
     border-top: 1px solid #334155;
-    margin-top: 1.5rem;
+    margin-top: 0;
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+    background: #1e293b;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 }
 
 .btn-cancel {
@@ -272,6 +303,14 @@
 
 .btn-reset:hover {
     background: rgba(245, 158, 11, 0.1);
+}
+
+.btn-reset:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: transparent;
+    border-color: #64748b;
+    color: #64748b;
 }
 
 .btn-save {

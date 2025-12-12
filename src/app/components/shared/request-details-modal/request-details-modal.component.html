@@ -23,9 +23,36 @@
         <!-- Content -->
         <div class="modal-body">
             @if (activeTab() === 'parsed') {
-            <div class="details-section">
+            <div class="details-section h-full flex flex-col">
 
-                <!-- Method & URL -->
+                <!-- Internal Tabs -->
+                <div class="internal-tabs mb-4 border-b border-slate-700 flex gap-4">
+                    <button class="pb-2 px-1 text-sm font-medium transition-colors border-b-2"
+                        [class.text-purple-400]="internalTab() === 'general'"
+                        [class.border-purple-500]="internalTab() === 'general'"
+                        [class.text-slate-400]="internalTab() !== 'general'"
+                        [class.border-transparent]="internalTab() !== 'general'" (click)="setInternalTab('general')">
+                        General
+                    </button>
+                    <button class="pb-2 px-1 text-sm font-medium transition-colors border-b-2"
+                        [class.text-purple-400]="internalTab() === 'headers'"
+                        [class.border-purple-500]="internalTab() === 'headers'"
+                        [class.text-slate-400]="internalTab() !== 'headers'"
+                        [class.border-transparent]="internalTab() !== 'headers'" (click)="setInternalTab('headers')">
+                        Headers <span class="text-xs bg-slate-700 px-1.5 py-0.5 rounded-full ml-1">{{
+                            editHeaders().length }}</span>
+                    </button>
+                    <button class="pb-2 px-1 text-sm font-medium transition-colors border-b-2"
+                        [class.text-purple-400]="internalTab() === 'body'"
+                        [class.border-purple-500]="internalTab() === 'body'"
+                        [class.text-slate-400]="internalTab() !== 'body'"
+                        [class.border-transparent]="internalTab() !== 'body'" (click)="setInternalTab('body')">
+                        Body
+                    </button>
+                </div>
+
+                <!-- General Tab -->
+                @if (internalTab() === 'general') {
                 <div class="form-row">
                     <div class="form-group method-group">
                         <label class="label">Method</label>
@@ -47,20 +74,27 @@
                             class="input-control font-mono" />
                     </div>
                 </div>
+                }
 
-                <!-- Headers -->
-                <div class="form-group mt-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="label">Headers</label>
+                <!-- Headers Tab -->
+                @if (internalTab() === 'headers') {
+                <div class="form-group h-full flex flex-col min-h-0">
+                    <div class="flex justify-between items-center mb-2 flex-shrink-0">
+                        <label class="label mb-0">Headers</label>
                         <button class="btn-xs" (click)="addHeader()">+ Add Header</button>
                     </div>
 
-                    <div class="headers-editor">
+                    <div class="headers-editor flex-1 min-h-0 overflow-y-auto">
                         @if (editHeaders().length === 0) {
-                        <p class="empty-text">No headers.</p>
+                        <div
+                            class="flex flex-col items-center justify-center h-32 text-slate-500 border border-dashed border-slate-700 rounded-lg">
+                            <p class="mb-2">No headers defined</p>
+                            <button class="text-purple-400 hover:text-purple-300 text-sm" (click)="addHeader()">Add one
+                                now</button>
+                        </div>
                         }
                         @for (header of editHeaders(); track $index) {
-                        <div class="header-row">
+                        <div class="header-row mb-2 last:mb-0">
                             <input [(ngModel)]="header.key" placeholder="Key" class="input-control header-key" />
                             <input [(ngModel)]="header.value" placeholder="Value" class="input-control header-value" />
                             <button class="btn-remove" (click)="removeHeader($index)" title="Remove">&times;</button>
@@ -68,20 +102,20 @@
                         }
                     </div>
                 </div>
+                }
 
-                <!-- Body -->
-                <div class="form-group mt-4">
-                    <label class="label">Body</label>
+                <!-- Body Tab -->
+                @if (internalTab() === 'body') {
+                <div class="form-group h-full flex flex-col min-h-0">
+                    <div class="flex justify-between items-center mb-2 flex-shrink-0">
+                        <label class="label mb-0">Body Content</label>
+                    </div>
                     <textarea [ngModel]="editBody()" (ngModelChange)="editBody.set($event)"
-                        class="input-control code-area" rows="6"></textarea>
+                        class="input-control code-area flex-1 min-h-0 resize-none"
+                        placeholder="No body content"></textarea>
                 </div>
+                }
 
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn-reset" (click)="reset()">↩ Revert Changes</button>
-                <button class="btn-cancel" (click)="onClose()">Cancel</button>
-                <button class="btn-save" (click)="save()">Save Changes</button>
             </div>
             }
 
@@ -89,6 +123,19 @@
             <div class="details-section">
                 <pre class="code-block">{{ rawOutputJson() }}</pre>
             </div>
+            }
+        </div>
+
+        <!-- Actions (Sticky Footer) -->
+        <div class="modal-actions">
+            @if (activeTab() === 'parsed') {
+            <button class="btn-reset" (click)="reset()" [disabled]="!hasChanges()">↩ Revert Changes</button>
+            <div class="flex gap-4 ml-auto">
+                <button class="btn-cancel" (click)="onClose()">Cancel</button>
+                <button class="btn-save" (click)="save()">Save Changes</button>
+            </div>
+            } @else {
+            <button class="btn-cancel ml-auto" (click)="onClose()">Close</button>
             }
         </div>
     </div>

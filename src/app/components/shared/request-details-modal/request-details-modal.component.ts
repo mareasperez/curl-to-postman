@@ -28,6 +28,7 @@ export class RequestDetailsModalComponent {
 
     // State
     activeTab = signal<'parsed' | 'raw'>('parsed');
+    internalTab = signal<'general' | 'headers' | 'body'>('general');
 
     // Editable State
     editMethod = signal('');
@@ -45,6 +46,8 @@ export class RequestDetailsModalComponent {
                 this.editHeaders.set(
                     Object.entries(req.headers || {}).map(([key, value]) => ({ key, value }))
                 );
+                // Reset internal tab on open
+                this.internalTab.set('general');
             }
         });
     }
@@ -54,12 +57,47 @@ export class RequestDetailsModalComponent {
         return JSON.stringify(this.rawOutput(), null, 2);
     });
 
+    hasChanges = computed(() => {
+        const original = this.request();
+        if (!original) return false;
+
+        // Check primitives
+        if (this.editMethod() !== original.method) return true;
+        if (this.editUrl() !== original.url) return true;
+        if ((this.editBody() || '') !== (original.body || '')) return true;
+
+        // Check headers
+        const originalHeaders = original.headers || {};
+        const currentHeaders = this.editHeaders();
+
+        // Convert array back to object for comparison (ignoring empty keys)
+        const currentHeadersObj: Record<string, string> = {};
+        currentHeaders.forEach(h => {
+            if (h.key.trim()) currentHeadersObj[h.key] = h.value;
+        });
+
+        const origKeys = Object.keys(originalHeaders);
+        const currKeys = Object.keys(currentHeadersObj);
+
+        if (origKeys.length !== currKeys.length) return true;
+
+        for (const key of origKeys) {
+            if (originalHeaders[key] !== currentHeadersObj[key]) return true;
+        }
+
+        return false;
+    });
+
     onClose() {
         this.close.emit();
     }
 
     setTab(tab: 'parsed' | 'raw') {
         this.activeTab.set(tab);
+    }
+
+    setInternalTab(tab: 'general' | 'headers' | 'body') {
+        this.internalTab.set(tab);
     }
 
     onBackdropClick(event: MouseEvent) {
