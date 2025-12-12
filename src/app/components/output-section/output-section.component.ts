@@ -6,8 +6,7 @@ import { OutputViewerTabComponent } from '../tabs/output-viewer-tab/output-viewe
 import { VariablesTabComponent } from '../tabs/variables-tab/variables-tab.component';
 import { AdditionalFilesTabComponent } from '../tabs/additional-files-tab/additional-files-tab.component';
 import { ExportFormat } from '../../services/providers/export-provider.interface';
-import { VariableAnalysis } from '../../services/variable-detector.service';
-import { ParsedRequest } from '../../services/curl-parser.service';
+import { VariableAnalysis, ParsedRequest } from '../../models';
 import { Variable } from '../../models/variable.model';
 import { SummaryData } from '../../models/summary-data.model';
 

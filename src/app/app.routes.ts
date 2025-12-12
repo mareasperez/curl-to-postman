@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { App } from './app';
+import { HomePageComponent } from './pages/home-page.component';
+import { ResultsPageComponent } from './pages/results-page.component';
 
 export const routes: Routes = [
-  { path: '', component: App },
-  { path: 'results', component: App }
+  { path: '', component: HomePageComponent },
+  { path: 'results', component: ResultsPageComponent }
 ];
