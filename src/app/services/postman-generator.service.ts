@@ -193,11 +193,23 @@ export class PostmanGeneratorService {
         pathname = urlObj.pathname;
       } catch {
         // If URL parsing fails (e.g., contains {{variables}}), extract path manually
-        const pathMatch = request.url.match(/\/\/[^\/]+(\/ [^?#]*)/);
-        pathname = pathMatch ? pathMatch[1] : '';
+        // First try to match path after variable placeholder like {{host}}/path
+        const varPathMatch = request.url.match(/}}\s*(\/[^?#]*)/);
+        if (varPathMatch) {
+          pathname = varPathMatch[1];
+        } else {
+          // Fallback: try to match path after //host/
+          const pathMatch = request.url.match(/\/\/[^\/]+(\/[^?#]*)/);
+          pathname = pathMatch ? pathMatch[1] : '';
+        }
       }
 
       const pathSegments = pathname.split('/').filter(p => p);
+
+      // If we couldn't extract any path, throw error to use fallback
+      if (!pathname && !request.url.startsWith('http')) {
+        throw new Error('Invalid URL');
+      }
 
       // Get the last meaningful segment or use a default
       let endpoint = pathSegments.length > 0

@@ -23,11 +23,10 @@ export class CurlParserService {
       body: null
     };
 
-    // Extract URL - improved to handle more cases
-    // Try multiple patterns
-    let urlMatch = fullCommand.match(/curl\s+(?:-[^\s]+\s+)*['"]([^'"]+)['"]/);
+    // Extract URL - look for URL after curl command, skipping flags
+    let urlMatch = fullCommand.match(/curl\s+(?:(?:-[A-Z]|--\w+)\s+\S+\s+)*['"]([^'"]+)['"]/);
     if (!urlMatch) {
-      urlMatch = fullCommand.match(/curl\s+(?:-[^\s]+\s+)*([^\s]+)/);
+      urlMatch = fullCommand.match(/curl\s+(?:(?:-[A-Z]|--\w+)\s+\S+\s+)*(https?:\/\/[^\s'"]+)/);
     }
     if (!urlMatch) {
       // Fallback: look for anything that looks like a URL
@@ -61,8 +60,10 @@ export class CurlParserService {
       }
     }
 
-    // Extract body data - support multiple formats
-    let dataMatch = fullCommand.match(/(?:--data-raw|--data|-d)\s+['"](.+?)['"]/);
+    // Extract body data - handle both single and double quotes
+    // Match content within quotes, allowing escaped quotes inside
+    let dataMatch = fullCommand.match(/(?:--data-raw|--data|-d)\s+'([^']*)'/) ||
+      fullCommand.match(/(?:--data-raw|--data|-d)\s+"([^"]*)"/);
     if (!dataMatch) {
       // Try without quotes
       dataMatch = fullCommand.match(/(?:--data-raw|--data|-d)\s+(\S+)/);
