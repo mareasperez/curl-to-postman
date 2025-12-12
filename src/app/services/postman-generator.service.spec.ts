@@ -29,11 +29,11 @@ describe('PostmanGeneratorService', () => {
         });
 
         it('should extract complex path from URL with variable', () => {
-            const url = '{{capstonelogisticstest_b2clogin_com_host}}/capstonelogisticstest.onmicrosoft.com/B2C_1A_CP_QA_SignUp_SignIn_AAD/api/CombinedSigninAndSignup/confirmed';
+            const url = '{{auth_example_com_host}}/example.onmicrosoft.com/B2C_1A_SignUp_SignIn/api/CombinedSigninAndSignup/confirmed';
             const result = (service as any).parsePath(url);
             expect(result).toEqual([
-                'capstonelogisticstest.onmicrosoft.com',
-                'B2C_1A_CP_QA_SignUp_SignIn_AAD',
+                'example.onmicrosoft.com',
+                'B2C_1A_SignUp_SignIn',
                 'api',
                 'CombinedSigninAndSignup',
                 'confirmed'
@@ -79,9 +79,9 @@ describe('PostmanGeneratorService', () => {
         });
 
         it('should handle complex variable names', () => {
-            const url = '{{qa-stockholm_capstonelogistics_com_host}}/en/';
+            const url = '{{qa-app_example_com_host}}/en/';
             const result = (service as any).parseHost(url);
-            expect(result).toEqual(['{{qa-stockholm_capstonelogistics_com_host}}']);
+            expect(result).toEqual(['{{qa-app_example_com_host}}']);
         });
     });
 
