@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ParsedRequest } from './curl-parser.service';
-import { VariableAnalysis } from './variable-detector.service';
+import { ParsedRequest, VariableAnalysis, TokenData, EnvironmentData } from '../models';
 
 export interface OpenAPISpec {
   openapi: string;
@@ -77,9 +76,9 @@ export interface OpenAPISecurity {
   providedIn: 'root'
 })
 export class OpenApiGeneratorService {
-  
+
   generate(
-    requests: ParsedRequest[], 
+    requests: ParsedRequest[],
     variables: VariableAnalysis,
     customNames?: Map<number, string>
   ): OpenAPISpec {
@@ -113,7 +112,7 @@ export class OpenApiGeneratorService {
   private generateServers(variables: VariableAnalysis): OpenAPIServer[] {
     const servers: OpenAPIServer[] = [];
 
-    variables.environments.forEach((env) => {
+    variables.environments.forEach((env: EnvironmentData) => {
       const server: OpenAPIServer = {
         url: `{protocol}://{host}`,
         description: env.isLocal ? 'Local environment' : 'Remote environment',
@@ -139,9 +138,9 @@ export class OpenApiGeneratorService {
 
     const schemes: Record<string, OpenAPISecurityScheme> = {};
 
-    variables.tokens.forEach((tokenData, tokenKey) => {
+    variables.tokens.forEach((tokenData: TokenData, tokenKey: string) => {
       const headerName = tokenData.header.toLowerCase();
-      
+
       if (headerName.includes('authorization') && tokenData.value.startsWith('Bearer ')) {
         schemes[tokenKey] = {
           type: 'http',
@@ -169,7 +168,7 @@ export class OpenApiGeneratorService {
   private generateGlobalSecurity(variables: VariableAnalysis): OpenAPISecurity[] {
     const security: OpenAPISecurity[] = [];
 
-    variables.tokens.forEach((_, tokenKey) => {
+    variables.tokens.forEach((_: TokenData, tokenKey: string) => {
       security.push({ [tokenKey]: [] });
     });
 
@@ -240,21 +239,21 @@ export class OpenApiGeneratorService {
     try {
       const urlObj = new URL(request.url);
       const pathSegments = urlObj.pathname.split('/').filter(p => p);
-      
-      let endpoint = pathSegments.length > 0 
-        ? pathSegments[pathSegments.length - 1] 
+
+      let endpoint = pathSegments.length > 0
+        ? pathSegments[pathSegments.length - 1]
         : 'root';
-      
+
       endpoint = endpoint
         .replace(/[^a-zA-Z0-9_-]/g, '_')
         .replace(/_+/g, '_')
         .replace(/^_|_$/g, '');
-      
+
       if (/^[0-9a-f-]+$/i.test(endpoint) && pathSegments.length > 1) {
         const parentSegment = pathSegments[pathSegments.length - 2];
         endpoint = parentSegment.replace(/[^a-zA-Z0-9_-]/g, '_');
       }
-      
+
       const method = request.method.toLowerCase();
       return endpoint ? `${method}_${endpoint}` : `${method}_request_${index + 1}`;
     } catch (e) {
@@ -264,7 +263,7 @@ export class OpenApiGeneratorService {
 
   private extractQueryParameters(url: URL): OpenAPIParameter[] {
     const params: OpenAPIParameter[] = [];
-    
+
     url.searchParams.forEach((value, key) => {
       params.push({
         name: key,
@@ -285,11 +284,11 @@ export class OpenApiGeneratorService {
 
     Object.entries(request.headers).forEach(([key, value]) => {
       const lowerKey = key.toLowerCase();
-      
+
       // Skip auth headers as they're handled by security schemes
-      const isAuthHeader = authHeaders.has(lowerKey) || 
+      const isAuthHeader = authHeaders.has(lowerKey) ||
         variables.tokens.has(`${lowerKey.replace(/[^a-z0-9]/g, '_')}_token`);
-      
+
       if (!isAuthHeader && !['content-type', 'accept', 'user-agent'].includes(lowerKey)) {
         params.push({
           name: key,

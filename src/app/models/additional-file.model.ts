@@ -1,5 +1,5 @@
 export interface AdditionalFile {
     name: string;
-    data: any;
+    data: unknown;
     mimeType: string;
 }

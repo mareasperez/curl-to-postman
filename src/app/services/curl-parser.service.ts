@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
+import { ParsedRequest } from '../models';
 
-export interface ParsedRequest {
-  method: string;
-  url: string;
-  headers: Record<string, string>;
-  body: string | null;
-}
 
 @Injectable({
   providedIn: 'root'

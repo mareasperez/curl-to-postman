@@ -5,8 +5,7 @@ import {
     ExportResult,
     ExportInput
 } from './export-provider.interface';
-import { ParsedRequest } from '../curl-parser.service';
-import { VariableAnalysis } from '../variable-detector.service';
+import { ParsedRequest, VariableAnalysis, TokenData } from '../../models';
 
 /**
  * Swagger 2.0 specification interface
@@ -125,7 +124,7 @@ export class OpenApiV2ProviderService implements ExportProvider {
 
     private generateGlobalSecurity(variables: VariableAnalysis): any[] {
         const security: any[] = [];
-        variables.tokens.forEach((_, tokenKey) => {
+        variables.tokens.forEach((_: TokenData, tokenKey: string) => {
             security.push({ [tokenKey]: [] });
         });
         return security;

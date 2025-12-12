@@ -1,5 +1,4 @@
-import { VariableAnalysis } from '../services/variable-detector.service';
-import { ParsedRequest } from '../services/curl-parser.service';
+import type { VariableAnalysis, ParsedRequest, ExportOutput, AdditionalFile } from './index';
 
 export interface ConversionRequest {
     input: string;
@@ -10,9 +9,12 @@ export interface ConversionRequest {
 
 export interface ConversionResult {
     success: boolean;
-    data?: any;
-    additionalFiles?: any[];
+    data?: ExportOutput;
+    additionalFiles?: AdditionalFile[];
     variables?: VariableAnalysis;
     requests?: ParsedRequest[];
     error?: string;
+    // Duplicate detection
+    generatedNames?: Map<number, string>;
+    duplicateNames?: Map<string, number[]>;
 }

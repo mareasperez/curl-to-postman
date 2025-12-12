@@ -1,0 +1,29 @@
+<section class="card">
+    <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
+        <h2 class="text-2xl font-semibold text-gray-100">📥 Input</h2>
+        <button (click)="onClear()" class="btn btn-secondary">
+            Clear
+        </button>
+    </div>
+
+    <div class="flex flex-col gap-3">
+        <textarea [ngModel]="curlInput()" (ngModelChange)="onCurlInputChange($event)" class="textarea" placeholder="Paste your cURL commands here (one or multiple)...
+
+Example:
+curl 'https://api.example.com/users' \\
+  -H 'Authorization: Bearer eyJhbGc...' \\
+  -H 'Content-Type: application/json'
+
+curl 'https://api.example.com/posts' \\
+  -H 'Authorization: Bearer eyJhbGc...'"></textarea>
+        <p class="text-gray-400 text-sm">{{ curlCount() }}</p>
+    </div>
+</section>
+
+<!-- Process Button -->
+<div class="text-center py-6">
+    <button (click)="onProcess()" class="btn btn-primary text-lg px-8 py-3">
+        <span class="text-xl">⚡</span>
+        Process
+    </button>
+</div>

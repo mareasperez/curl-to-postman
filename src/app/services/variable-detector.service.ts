@@ -1,31 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ParsedRequest } from './curl-parser.service';
+import { ParsedRequest, VariableAnalysis, TokenData, EnvironmentData } from '../models';
 
-export interface VariableAnalysis {
-  hosts: Map<string, number[]>;
-  tokens: Map<string, TokenData>;
-  environments: Map<string, EnvironmentData>;
-}
-
-export interface TokenData {
-  header: string;
-  value: string;
-  requests: number[];
-}
-
-export interface EnvironmentData {
-  name: string;
-  isLocal: boolean;
-  protocol: string;
-  host: string;
-  variables: Record<string, string>;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class VariableDetectorService {
-  
+
   analyze(requests: ParsedRequest[]): VariableAnalysis {
     const hosts = new Map<string, number[]>();
     const tokens = new Map<string, TokenData>();
@@ -35,7 +16,7 @@ export class VariableDetectorService {
       try {
         const url = new URL(request.url);
         const host = url.origin;
-        
+
         // Track hosts
         if (!hosts.has(host)) {
           hosts.set(host, []);
@@ -43,12 +24,12 @@ export class VariableDetectorService {
         hosts.get(host)!.push(index);
 
         // Detect environment type
-        const isLocal = url.hostname === 'localhost' || 
-                       url.hostname === '127.0.0.1' || 
-                       url.hostname.endsWith('.local');
-        
+        const isLocal = url.hostname === 'localhost' ||
+          url.hostname === '127.0.0.1' ||
+          url.hostname.endsWith('.local');
+
         const envName = isLocal ? 'local' : url.hostname.replace(/\./g, '_');
-        
+
         if (!environments.has(envName)) {
           environments.set(envName, {
             name: envName,
