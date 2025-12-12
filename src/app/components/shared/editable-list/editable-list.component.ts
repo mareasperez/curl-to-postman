@@ -14,8 +14,13 @@ export type { EditableItem } from '../../../models/editable-item.model';
 export class EditableListComponent {
   items = input<EditableItem[]>([]);
   itemChanged = output<{ index: number; value: string }>();
+  itemClicked = output<number>();
 
   onItemChange(index: number, value: string) {
     this.itemChanged.emit({ index, value });
+  }
+
+  onItemClick(index: number) {
+    this.itemClicked.emit(index);
   }
 }

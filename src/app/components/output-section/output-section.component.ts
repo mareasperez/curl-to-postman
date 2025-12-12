@@ -5,6 +5,7 @@ import { SummaryTabComponent } from '../tabs/summary-tab/summary-tab.component';
 import { OutputViewerTabComponent } from '../tabs/output-viewer-tab/output-viewer-tab.component';
 import { VariablesTabComponent } from '../tabs/variables-tab/variables-tab.component';
 import { AdditionalFilesTabComponent } from '../tabs/additional-files-tab/additional-files-tab.component';
+import { RequestDetailsModalComponent } from '../shared/request-details-modal/request-details-modal.component';
 import { ExportFormat } from '../../services/providers/export-provider.interface';
 import { VariableAnalysis, ParsedRequest } from '../../models';
 import { Variable } from '../../models/variable.model';
@@ -19,7 +20,8 @@ import { AdditionalFile } from '../../models/additional-file.model';
     SummaryTabComponent,
     OutputViewerTabComponent,
     VariablesTabComponent,
-    AdditionalFilesTabComponent
+    AdditionalFilesTabComponent,
+    RequestDetailsModalComponent
   ],
   templateUrl: './output-section.component.html',
   styleUrl: './output-section.component.css'
@@ -47,6 +49,11 @@ export class OutputSectionComponent {
 
   // Local state for active tab
   activeTab = signal<'collection' | 'environment' | 'variables' | 'summary'>('summary');
+
+  // Modal State
+  selectedRequest = signal<ParsedRequest | null>(null);
+  selectedRawOutput = signal<unknown>(null);
+  isDetailsModalOpen = signal(false);
 
   // Computed
   outputJson = (): string => {
@@ -122,5 +129,26 @@ export class OutputSectionComponent {
       data: this.output(),
       additionalFiles: this.additionalFiles()
     });
+  }
+
+  onRequestClick(index: number) {
+    const req = this.requests()[index];
+    if (req) {
+      this.selectedRequest.set(req);
+
+      // Try to get raw output item (Postman format structure)
+      const out = this.output() as { item?: unknown[] };
+      if (out && Array.isArray(out.item) && out.item[index]) {
+        this.selectedRawOutput.set(out.item[index]);
+      } else {
+        this.selectedRawOutput.set(null);
+      }
+
+      this.isDetailsModalOpen.set(true);
+    }
+  }
+
+  closeDetailsModal() {
+    this.isDetailsModalOpen.set(false);
   }
 }

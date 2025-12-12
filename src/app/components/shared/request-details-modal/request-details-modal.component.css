@@ -1,0 +1,246 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: #1e293b;
+    border-radius: 1rem;
+    border: 1px solid #334155;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 800px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.animate-slideUp {
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #f1f5f9;
+    font-size: 1.1rem;
+    font-weight: 500;
+    overflow: hidden;
+    max-width: 90%;
+}
+
+.url-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Courier New', monospace;
+    color: #cbd5e1;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #334155;
+    color: #f1f5f9;
+}
+
+.modal-tabs {
+    display: flex;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid #334155;
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.tab-btn {
+    padding: 1rem 1.25rem;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.tab-btn:hover {
+    color: #f1f5f9;
+}
+
+.tab-btn.active {
+    color: #a78bfa;
+    border-bottom-color: #8b5cf6;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.details-section h4 {
+    color: #a78bfa;
+    margin: 0 0 0.75rem 0;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.table-container {
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #334155;
+}
+
+.data-table th {
+    background: #0f172a;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.key-col {
+    color: #60a5fa;
+    font-family: 'Courier New', monospace;
+    width: 30%;
+    font-weight: 600;
+}
+
+.value-col {
+    color: #cbd5e1;
+    word-break: break-all;
+}
+
+.code-block {
+    background: #0f172a;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: #f1f5f9;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    margin: 0;
+    border: 1px solid #334155;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.empty-text {
+    color: #64748b;
+    font-style: italic;
+}
+
+/* Method Badges */
+.method-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    min-width: 3.5rem;
+    text-align: center;
+}
+
+.method-badge.get {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid #10b981;
+}
+
+.method-badge.post {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+}
+
+.method-badge.put {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid #f59e0b;
+}
+
+.method-badge.patch {
+    background: rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+    border: 1px solid #a855f7;
+}
+
+.method-badge.delete {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .modal-overlay {
+        padding: 0.5rem;
+    }
+
+    .modal-header h3 {
+        font-size: 1rem;
+    }
+
+    .key-col {
+        width: 40%;
+    }
+}

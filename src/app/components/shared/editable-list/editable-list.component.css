@@ -6,7 +6,7 @@
 
 .editable-item {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     gap: 1rem;
     align-items: center;
     padding: 1rem;
@@ -125,13 +125,36 @@
     white-space: nowrap;
 }
 
+.icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.1rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+}
+
+.icon-btn:hover {
+    background: #334155;
+    color: #f1f5f9;
+}
+
 @media (max-width: 1024px) {
     .editable-item {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr auto;
         gap: 0.5rem;
     }
 
+    .header-section {
+        grid-column: 1 / -1;
+    }
+
     .url-preview {
-        grid-column: 1;
+        display: none;
     }
 }

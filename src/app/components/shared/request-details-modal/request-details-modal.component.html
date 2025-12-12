@@ -1,0 +1,66 @@
+@if (isOpen()) {
+<div class="modal-overlay" (click)="onBackdropClick($event)">
+    <div class="modal-content animate-slideUp">
+        <!-- Header -->
+        <div class="modal-header">
+            <h3 class="flex items-center gap-3">
+                <span [class]="'method-badge ' + request()?.method?.toLowerCase()">{{ request()?.method }}</span>
+                <span class="url-truncate" [title]="request()?.url">{{ request()?.url }}</span>
+            </h3>
+            <button class="modal-close" (click)="onClose()">&times;</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="modal-tabs">
+            <button class="tab-btn" [class.active]="activeTab() === 'parsed'" (click)="setTab('parsed')">
+                Parsed Details
+            </button>
+            <button class="tab-btn" [class.active]="activeTab() === 'raw'" (click)="setTab('raw')">
+                Raw Export
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="modal-body">
+            @if (activeTab() === 'parsed') {
+            <div class="details-section">
+                <h4>Headers</h4>
+                @if (headersList().length > 0) {
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (header of headersList(); track header.key) {
+                            <tr>
+                                <td class="key-col">{{ header.key }}</td>
+                                <td class="value-col">{{ header.value }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                } @else {
+                <p class="empty-text">No headers found.</p>
+                }
+
+                @if (hasBody()) {
+                <h4 class="mt-4">Body</h4>
+                <pre class="code-block">{{ parsedBodyJson() }}</pre>
+                }
+            </div>
+            }
+
+            @if (activeTab() === 'raw') {
+            <div class="details-section">
+                <pre class="code-block">{{ rawOutputJson() }}</pre>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}

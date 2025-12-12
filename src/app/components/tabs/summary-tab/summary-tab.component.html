@@ -7,7 +7,8 @@
         @if (summaryData().requests.length > 0) {
         <div class="section-card">
             <h4 class="section-title">📋 Requests</h4>
-            <app-editable-list [items]="requestItems()" (itemChanged)="onRequestNameChange($event)"></app-editable-list>
+            <app-editable-list [items]="requestItems()" (itemChanged)="onRequestNameChange($event)"
+                (itemClicked)="onRequestClick($event)"></app-editable-list>
         </div>
         }
 

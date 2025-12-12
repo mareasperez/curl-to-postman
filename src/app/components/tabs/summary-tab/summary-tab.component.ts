@@ -27,6 +27,7 @@ export class SummaryTabComponent {
 
   requestNameChanged = output<{ index: number; name: string }>();
   envNameChanged = output<{ oldName: string; newName: string }>();
+  requestClicked = output<number>();
 
   stats = (): Stat[] => {
     const data = this.summaryData();
@@ -79,5 +80,9 @@ export class SummaryTabComponent {
     if (env) {
       this.envNameChanged.emit({ oldName: env.name, newName: event.value });
     }
+  }
+
+  onRequestClick(index: number) {
+    this.requestClicked.emit(index);
   }
 }

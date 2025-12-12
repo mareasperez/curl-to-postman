@@ -40,8 +40,8 @@
     @if (activeTab() === 'summary') {
     <app-summary-tab [summaryData]="summaryData()" [editableRequestNames]="editableRequestNames()"
         [editableEnvNames]="editableEnvNames()" [duplicateNames]="duplicateNames()"
-        (requestNameChanged)="onRequestNameChanged($event)"
-        (envNameChanged)="onEnvNameChanged($event)"></app-summary-tab>
+        (requestNameChanged)="onRequestNameChanged($event)" (envNameChanged)="onEnvNameChanged($event)"
+        (requestClicked)="onRequestClick($event)"></app-summary-tab>
     }
 
     @if (activeTab() === 'collection') {
@@ -55,4 +55,7 @@
     @if (activeTab() === 'variables') {
     <app-variables-tab [hostVariables]="hostVariables()" [tokenVariables]="tokenVariables()"></app-variables-tab>
     }
+
+    <app-request-details-modal [isOpen]="isDetailsModalOpen()" [request]="selectedRequest()"
+        [rawOutput]="selectedRawOutput()" (close)="closeDetailsModal()"></app-request-details-modal>
 </section>

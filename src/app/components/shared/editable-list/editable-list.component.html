@@ -17,6 +17,10 @@
         @if (item.preview) {
         <span class="url-preview">{{ item.preview }}</span>
         }
+
+        <button class="icon-btn" (click)="onItemClick($index)" title="View Details">
+            👁️
+        </button>
     </div>
     }
 </div>
