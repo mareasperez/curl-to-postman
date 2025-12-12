@@ -175,32 +175,32 @@ export class MyComponent {
 
 ## 🎨 Styling
 
-### CSS Variables
-Use CSS custom properties for theming:
-```css
-:root {
-  --primary-color: #007bff;
-  --border-color: #dee2e6;
-  --border-radius: 8px;
-}
+### Tailwind CSS
+**RULE**: Use Tailwind CSS for styling whenever possible. Avoid writing custom CSS.
 
-.my-component {
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+✅ **CORRECT**:
+```html
+<div class="flex flex-col gap-4 p-4 bg-slate-900 text-white rounded-lg">
+  <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded">Click me</button>
+</div>
+```
+
+❌ **INCORRECT**:
+```css
+.my-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  /* ... */
 }
 ```
 
-### Naming Convention
-```css
-/* Component-level styles */
-.component-name { }
-.component-name__element { }
-.component-name--modifier { }
-
-/* Utility classes */
-.u-margin-top { }
-.u-text-center { }
-```
+### Custom CSS
+Use custom CSS (`.css` files) ONLY for:
+1. Complex animations not supported by Tailwind
+2. Third-party library overrides
+3. Very specific, complex selectors
 
 ---
 
