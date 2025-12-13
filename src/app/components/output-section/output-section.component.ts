@@ -203,8 +203,9 @@ export class OutputSectionComponent {
   }
 
   onResetAll() {
-    if (confirm('Are you sure you want to discard all changes to requests?')) {
-      this.resetAllRequested.emit();
-    }
+    console.log('[OutputSection] Reset All clicked');
+    console.log('[OutputSection] hasModifiedRequests:', this.hasModifiedRequests());
+    console.log('[OutputSection] Emitting resetAllRequested');
+    this.resetAllRequested.emit();
   }
 }

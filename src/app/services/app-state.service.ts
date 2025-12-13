@@ -68,12 +68,38 @@ export class AppStateService {
     );
 
     /** Whether there are modified requests compared to original */
+    /** Whether there are modified requests compared to original */
     readonly hasModifiedRequests = computed(() => {
         const state = this.conversionState();
         if (!state.originalRequests || state.originalRequests.length === 0) return false;
 
-        // Simple JSON comparison might be expensive but effective for deep objects
-        return JSON.stringify(state.requests) !== JSON.stringify(state.originalRequests);
+        // Compare lengths first
+        if (state.requests.length !== state.originalRequests.length) return true;
+
+        // detailed comparison
+        for (let i = 0; i < state.requests.length; i++) {
+            const req1 = state.requests[i];
+            const req2 = state.originalRequests[i];
+
+            if (req1.method !== req2.method) return true;
+            if (req1.url !== req2.url) return true;
+            if ((req1.body || '') !== (req2.body || '')) return true;
+
+            // Header comparison
+            const h1 = req1.headers || {};
+            const h2 = req2.headers || {};
+
+            const k1 = Object.keys(h1).filter(k => !!k.trim() && !!h1[k]);
+            const k2 = Object.keys(h2).filter(k => !!k.trim() && !!h2[k]);
+
+            if (k1.length !== k2.length) return true;
+
+            for (const k of k1) {
+                if (h1[k] !== h2[k]) return true;
+            }
+        }
+
+        return false;
     });
 
     // ==================== ACTIONS - INPUT ====================
@@ -137,13 +163,24 @@ export class AppStateService {
     }
 
     resetAllRequests(): void {
+        console.log('[AppState] resetAllRequests called');
+        console.log('[AppState] Current requests:', this._conversionState().requests);
+        console.log('[AppState] Original requests:', this._conversionState().originalRequests);
+
         this._conversionState.update(state => {
-            if (!state.originalRequests) return state;
+            if (!state.originalRequests) {
+                console.log('[AppState] No original requests found, returning unchanged state');
+                return state;
+            }
+            const resetRequests = JSON.parse(JSON.stringify(state.originalRequests));
+            console.log('[AppState] Resetting to:', resetRequests);
             return {
                 ...state,
-                requests: JSON.parse(JSON.stringify(state.originalRequests))
+                requests: resetRequests
             };
         });
+        this.clearEditableState();
+        console.log('[AppState] After reset:', this._conversionState().requests);
     }
 
     // ==================== ACTIONS - UI ====================

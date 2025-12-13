@@ -6,11 +6,11 @@
                 (formatChanged)="onFormatChange($event)"></app-format-selector>
         </div>
         <div class="flex gap-3 flex-wrap-mobile">
-            @if (hasModifiedRequests()) {
-            <button (click)="onResetAll()" class="btn btn-secondary" style="color: #fbbf24; border-color: #fbbf24">
+            <button (click)="onResetAll()" [disabled]="!hasModifiedRequests()" class="btn btn-secondary"
+                [style.color]="hasModifiedRequests() ? '#fbbf24' : ''"
+                [style.borderColor]="hasModifiedRequests() ? '#fbbf24' : ''">
                 ↩ Reset All
             </button>
-            }
             <button (click)="onCopyToClipboard()" class="btn btn-secondary">
                 <span>📋</span>
                 Copy JSON

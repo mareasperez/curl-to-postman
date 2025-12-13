@@ -56,6 +56,7 @@ export class ResultsPageComponent {
   }
 
   onResetAllRequested() {
+    console.log('[ResultsPage] onResetAllRequested called');
     this.appState.resetAllRequests();
     this.regenerate();
   }
