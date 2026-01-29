@@ -107,20 +107,34 @@ app-results-page {
 
 @media (max-width: 900px) {
     body {
-        height: auto;
-        overflow-y: auto;
+        /* Lock scroll on mobile too */
+        height: 100dvh;
+        overflow: hidden;
     }
 
     .app-layout {
-        height: auto;
-        min-height: 100vh;
+        height: 100dvh;
+        min-height: 100dvh;
+    }
+
+    /* CRITICAL: Ensure the host elements (components) capture the flex height */
+    app-root {
+        display: block;
+        height: 100dvh;
+        overflow: hidden;
     }
 
     .app-layout>main,
     app-home-page,
     app-results-page {
-        padding: 1rem 1rem 1.5rem;
-        overflow-y: visible;
+        /* Flexbox handles layout, no forced padding needed */
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-y: hidden; /* Handle scroll inside components if needed, or let flex grow */
+        min-height: 0; /* Crucial for nested flex scrolling */
+        height: 100%; /* Ensure it tries to fill parent */
     }
 
     .card {

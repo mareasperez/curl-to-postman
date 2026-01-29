@@ -1,67 +1,110 @@
-<section class="card animate-fadeIn">
-    <div class="flex justify-between items-center mb-6 flex-wrap-mobile gap-4">
-        <div class="flex items-center gap-4">
-            <h2 class="text-2xl font-semibold text-gray-100">📤 Output</h2>
-            <app-format-selector [formats]="availableFormats()" [selectedFormatId]="currentFormat().id"
-                (formatChanged)="onFormatChange($event)"></app-format-selector>
+<div class="h-full flex flex-col">
+    <!-- Card Container (Flex-1) -->
+    <section class="card flex-1 min-h-0 flex flex-col p-3 md:p-6 mb-0 md:mb-4 overflow-hidden relative border-none md:border bg-transparent md:bg-[var(--surface)]">
+
+        <!-- Header & Quick Actions -->
+        <div class="flex flex-col gap-4 mb-4 flex-shrink-0">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl md:text-2xl font-semibold text-gray-100 flex items-center gap-2">
+                        <span>📤</span> Output
+                    </h2>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <!-- Format Selector reuse -->
+                    <app-format-selector [formats]="availableFormats()" [selectedFormatId]="currentFormat().id"
+                        (formatChanged)="onFormatChange($event)" class="w-full md:w-auto"></app-format-selector>
+                </div>
+            </div>
+
+            <!-- Mobile Quick Actions Grid -->
+            <div class="grid grid-cols-2 md:flex gap-2">
+                <button (click)="onResetAll()" [disabled]="!hasModifiedRequests()" class="btn btn-secondary flex justify-center text-sm md:text-base items-center gap-2"
+                    [style.color]="hasModifiedRequests() ? '#fbbf24' : ''"
+                    [style.borderColor]="hasModifiedRequests() ? '#fbbf24' : ''">
+                    <span>↩</span> Reset
+                </button>
+                <button (click)="onCopyToClipboard()" class="btn btn-secondary flex justify-center text-sm md:text-base items-center gap-2">
+                    <span>📋</span> Copy
+                </button>
+                <button (click)="onNewConversion()" class="btn btn-secondary col-span-2 md:w-auto flex justify-center text-sm md:text-base items-center gap-2">
+                    <span>←</span> New Conversion
+                </button>
+            </div>
         </div>
-        <div class="flex gap-3 flex-wrap-mobile">
-            <button (click)="onResetAll()" [disabled]="!hasModifiedRequests()" class="btn btn-secondary"
-                [style.color]="hasModifiedRequests() ? '#fbbf24' : ''"
-                [style.borderColor]="hasModifiedRequests() ? '#fbbf24' : ''">
-                ↩ Reset All
-            </button>
-            <button (click)="onCopyToClipboard()" class="btn btn-secondary">
-                <span>📋</span>
-                Copy JSON
-            </button>
-            <button (click)="onDownload()" class="btn btn-primary">
-                <span>💾</span>
-                Download
-            </button>
-            <button (click)="onNewConversion()" class="btn btn-secondary">
-                <span>←</span>
-                New Conversion
-            </button>
+
+        <!-- Scrollable Tabs Content -->
+        <div class="flex-1 overflow-y-auto min-h-0 flex flex-col pr-1 pb-2">
+            <!-- Tabs Header -->
+            <div class="flex border-b border-[var(--border)] sticky top-0 bg-[var(--surface)] z-10 pt-2 mb-4">
+                <button (click)="switchTab('summary')" 
+                    [class.border-transparent]="activeTab() !== 'summary'"
+                    [class.text-[var(--text-muted)]]="activeTab() !== 'summary'"
+                    [class.border-[var(--primary)]]="activeTab() === 'summary'"
+                    [class.text-[var(--primary)]]="activeTab() === 'summary'"
+                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
+                    Summary
+                </button>
+                <button (click)="switchTab('collection')"
+                    [class.border-transparent]="activeTab() !== 'collection'"
+                    [class.text-[var(--text-muted)]]="activeTab() !== 'collection'"
+                    [class.border-[var(--primary)]]="activeTab() === 'collection'"
+                    [class.text-[var(--primary)]]="activeTab() === 'collection'"
+                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
+                    {{ currentFormat().name }}
+                </button>
+                 <button (click)="switchTab('environment')"
+                    [class.border-transparent]="activeTab() !== 'environment'"
+                    [class.text-[var(--text-muted)]]="activeTab() !== 'environment'"
+                    [class.border-[var(--primary)]]="activeTab() === 'environment'"
+                    [class.text-[var(--primary)]]="activeTab() === 'environment'"
+                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
+                    Environments
+                </button>
+                 <button (click)="switchTab('variables')"
+                    [class.border-transparent]="activeTab() !== 'variables'"
+                    [class.text-[var(--text-muted)]]="activeTab() !== 'variables'"
+                    [class.border-[var(--primary)]]="activeTab() === 'variables'"
+                    [class.text-[var(--primary)]]="activeTab() === 'variables'"
+                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
+                    Variables
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            @if (activeTab() === 'summary') {
+            <app-summary-tab [summaryData]="summaryData()" [editableRequestNames]="editableRequestNames()"
+                [editableEnvNames]="editableEnvNames()" [duplicateNames]="duplicateNames()"
+                (requestNameChanged)="onRequestNameChanged($event)" (envNameChanged)="onEnvNameChanged($event)"
+                (requestClicked)="onRequestClick($event)"></app-summary-tab>
+            }
+
+            @if (activeTab() === 'collection') {
+            <app-output-viewer-tab [content]="outputJson()"></app-output-viewer-tab>
+            }
+
+            @if (activeTab() === 'environment') {
+            <app-additional-files-tab [files]="additionalFiles()"></app-additional-files-tab>
+            }
+
+            @if (activeTab() === 'variables') {
+            <app-variables-tab [hostVariables]="hostVariables()" [tokenVariables]="tokenVariables()"></app-variables-tab>
+            }
         </div>
+    </section>
+
+    <!-- Sticky Download Button -->
+    <div class="flex-shrink-0 p-0 md:static md:p-0 md:bg-transparent md:text-center z-40 border-t border-[var(--border)] md:border-none md:pb-6">
+        <button (click)="onDownload()" class="btn btn-primary text-lg w-full md:w-auto px-8 py-3 !rounded-none md:!rounded-full shadow-lg md:shadow-none h-[50px] flex justify-center items-center gap-2">
+            <span class="text-xl">💾</span>
+            Download
+        </button>
     </div>
 
-    <div class="tabs">
-        <button (click)="switchTab('summary')" [class.active]="activeTab() === 'summary'" class="tab">
-            Summary
-        </button>
-        <button (click)="switchTab('collection')" [class.active]="activeTab() === 'collection'" class="tab">
-            {{ currentFormat().name }}
-        </button>
-        <button (click)="switchTab('environment')" [class.active]="activeTab() === 'environment'" class="tab">
-            Environments
-        </button>
-        <button (click)="switchTab('variables')" [class.active]="activeTab() === 'variables'" class="tab">
-            Detected Variables
-        </button>
-    </div>
-
-    <!-- Tab Content -->
-    @if (activeTab() === 'summary') {
-    <app-summary-tab [summaryData]="summaryData()" [editableRequestNames]="editableRequestNames()"
-        [editableEnvNames]="editableEnvNames()" [duplicateNames]="duplicateNames()"
-        (requestNameChanged)="onRequestNameChanged($event)" (envNameChanged)="onEnvNameChanged($event)"
-        (requestClicked)="onRequestClick($event)"></app-summary-tab>
-    }
-
-    @if (activeTab() === 'collection') {
-    <app-output-viewer-tab [content]="outputJson()"></app-output-viewer-tab>
-    }
-
-    @if (activeTab() === 'environment') {
-    <app-additional-files-tab [files]="additionalFiles()"></app-additional-files-tab>
-    }
-
-    @if (activeTab() === 'variables') {
-    <app-variables-tab [hostVariables]="hostVariables()" [tokenVariables]="tokenVariables()"></app-variables-tab>
-    }
+    <!-- Details Modal -->
     <app-request-details-modal [isOpen]="isDetailsModalOpen()" [request]="selectedRequest()"
         [originalRequest]="selectedOriginalRequest()" [requestName]="selectedRequestName()"
         [rawOutput]="selectedRawOutput()" (close)="closeDetailsModal()" (requestUpdated)="onModalRequestUpdated($event)"
         (resetRequested)="onModalResetRequested()"></app-request-details-modal>
-</section>
+</div>
