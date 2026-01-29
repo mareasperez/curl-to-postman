@@ -15,11 +15,12 @@
 }
 
 .card {
-    background: #1e293b;
+    background: linear-gradient(160deg, var(--card-bg) 0%, var(--surface-alt) 100%);
     border-radius: 1rem;
     padding: 2rem;
-    border: 1px solid #334155;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(14px);
 }
 
 .flex {
@@ -55,13 +56,13 @@
 }
 
 .text-gray-100 {
-    color: #f1f5f9;
+    color: var(--text);
 }
 
 .btn {
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;
@@ -72,31 +73,31 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-strong) 100%);
     color: white;
-    box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 10px 20px rgba(124, 58, 237, 0.35);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 14px 24px rgba(124, 58, 237, 0.45);
 }
 
 .btn-secondary {
-    background: #334155;
-    color: #f1f5f9;
-    border: 1px solid #475569;
+    background: var(--button-secondary-bg);
+    color: var(--text);
+    border: 1px solid var(--button-secondary-border);
 }
 
 .btn-secondary:hover {
-    background: #475569;
+    background: color-mix(in srgb, var(--button-secondary-bg) 75%, var(--primary) 25%);
 }
 
 .tabs {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
-    border-bottom: 2px solid #334155;
+    border-bottom: 2px solid var(--border);
     overflow-x: auto;
 }
 
@@ -104,7 +105,7 @@
     padding: 0.75rem 1.5rem;
     background: transparent;
     border: none;
-    color: #94a3b8;
+    color: var(--text-muted);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -115,16 +116,20 @@
 }
 
 .tab:hover {
-    color: #f1f5f9;
+    color: var(--text);
 }
 
 .tab.active {
-    color: #a78bfa;
-    border-bottom-color: #8b5cf6;
+    color: var(--primary);
+    border-bottom-color: var(--primary);
 }
 
 @media (max-width: 768px) {
     .flex-wrap-mobile {
         flex-wrap: wrap;
+    }
+
+    .card {
+        padding: 1.25rem;
     }
 }

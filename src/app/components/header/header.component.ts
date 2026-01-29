@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { AppStateService } from '../../services/app-state.service';
+import { ThemeService } from '../../services/theme.service';
 
 /**
  * Header component - displays app title and info button
@@ -13,8 +14,17 @@ import { AppStateService } from '../../services/app-state.service';
 })
 export class HeaderComponent {
   private appState = inject(AppStateService);
+  private themeService = inject(ThemeService);
 
   onInfoClick(): void {
     this.appState.toggleFeaturesModal();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
+  isDark(): boolean {
+    return this.themeService.currentTheme === 'dark';
   }
 }

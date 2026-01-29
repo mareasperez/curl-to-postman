@@ -6,13 +6,20 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     @if (show()) {
-    <div class="modal-overlay" (click)="onClose()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>{{ title() }}</h3>
-          <button (click)="onClose()" class="modal-close">×</button>
+    <div class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm modal-fade"
+      (click)="onClose()">
+      <div class="w-full max-w-[720px] max-h-[80vh] overflow-y-auto rounded-2xl border border-[var(--border)]
+        bg-[linear-gradient(160deg,_var(--card-bg)_0%,_var(--surface-alt)_100%)] shadow-[var(--shadow-hover)]
+        modal-slide" (click)="$event.stopPropagation()">
+        <div
+          class="sticky top-0 z-[1] flex items-center justify-between border-b border-[var(--border)]
+          bg-[linear-gradient(160deg,_var(--card-bg)_0%,_var(--surface-alt)_100%)] px-6 py-4">
+          <h3 class="m-0 text-xl font-semibold text-[var(--text)]">{{ title() }}</h3>
+          <button (click)="onClose()"
+            class="flex h-8 w-8 items-center justify-center rounded-full text-2xl text-[var(--text-muted)] transition
+            hover:bg-[var(--button-secondary-bg)] hover:text-[var(--text)]">×</button>
         </div>
-        <div class="modal-body">
+        <div class="px-6 pb-6 pt-5">
           <ng-content></ng-content>
         </div>
       </div>
@@ -20,21 +27,6 @@ import { CommonModule } from '@angular/common';
     }
   `,
   styles: [`
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.2s ease;
-      padding: 1rem;
-    }
-
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -42,18 +34,6 @@ import { CommonModule } from '@angular/common';
       to {
         opacity: 1;
       }
-    }
-
-    .modal-content {
-      background: #1e293b;
-      border-radius: 1rem;
-      border: 1px solid #334155;
-      box-shadow: 0 20px 25px rgba(0, 0, 0, 0.5);
-      max-width: 600px;
-      width: 100%;
-      max-height: 80vh;
-      overflow-y: auto;
-      animation: slideUp 0.3s ease;
     }
 
     @keyframes slideUp {
@@ -67,44 +47,12 @@ import { CommonModule } from '@angular/common';
       }
     }
 
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.5rem;
-      border-bottom: 1px solid #334155;
+    .modal-fade {
+      animation: fadeIn 0.25s ease;
     }
 
-    .modal-header h3 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #f1f5f9;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      font-size: 2rem;
-      cursor: pointer;
-      padding: 0;
-      width: 2rem;
-      height: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.25rem;
-      transition: all 0.2s ease;
-      line-height: 1;
-    }
-
-    .modal-close:hover {
-      background: #334155;
-      color: #f1f5f9;
-    }
-
-    .modal-body {
-      padding: 1.5rem;
+    .modal-slide {
+      animation: slideUp 0.3s ease;
     }
   `]
 })

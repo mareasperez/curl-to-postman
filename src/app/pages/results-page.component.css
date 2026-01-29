@@ -13,7 +13,7 @@
 .empty-state {
     text-align: center;
     padding: 4rem;
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
 .btn {
@@ -27,6 +27,6 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-strong) 100%);
     color: white;
 }

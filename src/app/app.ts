@@ -6,6 +6,8 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/shared/toast/toast.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { ModalComponent } from './components/shared/modal/modal.component';
+import { AppStateService } from './services/app-state.service';
 
 /**
  * Root application component
@@ -18,9 +20,12 @@ import { FooterComponent } from './components/footer/footer.component';
     RouterOutlet,
     HeaderComponent,
     ToastComponent,
-    FooterComponent
+    FooterComponent,
+    ModalComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App { }
+export class App {
+  constructor(public appState: AppStateService) {}
+}
