@@ -1,6 +1,10 @@
 # 🔄 cURL to Postman Converter
 
-A powerful web application that converts browser cURL commands into Postman collections with automatic variable detection and environment generation.
+I got tired of manually copying and pasting cURL commands one by one to import them into Postman. I know there are alternatives—like Postman's own browser extension—but I wanted something simpler. I wanted something that would simply allow sharing cURLs directly from the browser without installing anything—no Postman, no extensions, just raw and easy to import.
+
+That's how this project was born. It's the tool I built to save myself from those headaches.
+
+Today, it does much more than just convert cURL to Postman, so the original name might be a bit confusing. I've thought about rebranding it, but honestly, I haven't had the time due to my work schedule.
 
 [![Angular](https://img.shields.io/badge/Angular-21.0-red?logo=angular)](https://angular.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
