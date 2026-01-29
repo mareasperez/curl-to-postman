@@ -6,21 +6,35 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     @if (show()) {
-    <div class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm modal-fade"
+    <div class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md modal-fade"
       (click)="onClose()">
-      <div class="w-full max-w-[720px] max-h-[80vh] overflow-y-auto rounded-2xl border border-[var(--border)]
-        bg-[linear-gradient(160deg,_var(--card-bg)_0%,_var(--surface-alt)_100%)] shadow-[var(--shadow-hover)]
-        modal-slide" (click)="$event.stopPropagation()">
+      <div class="flex flex-col w-full md:w-auto md:min-w-[600px] max-w-6xl min-h-[200px] max-h-[95vh] rounded-3xl
+        border-2 border-[var(--primary)]
+        bg-black/80 backdrop-blur-2xl
+        shadow-[0_0_80px_rgba(139,92,246,0.25)]
+        modal-slide ring-0 relative overflow-hidden" (click)="$event.stopPropagation()">
+        
+        <!-- Top Gradient Highlight -->
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50"></div>
+        
+        <!-- Header -->
         <div
-          class="sticky top-0 z-[1] flex items-center justify-between border-b border-[var(--border)]
-          bg-[linear-gradient(160deg,_var(--card-bg)_0%,_var(--surface-alt)_100%)] px-6 py-4">
-          <h3 class="m-0 text-xl font-semibold text-[var(--text)]">{{ title() }}</h3>
+          class="flex-shrink-0 flex items-center justify-between
+          px-8 py-6 rounded-t-3xl">
+          <h3 class="m-0 text-2xl font-bold text-white tracking-tight">{{ title() }}</h3>
           <button (click)="onClose()"
-            class="flex h-8 w-8 items-center justify-center rounded-full text-2xl text-[var(--text-muted)] transition
-            hover:bg-[var(--button-secondary-bg)] hover:text-[var(--text)]">×</button>
+            class="flex h-10 w-10 items-center justify-center rounded-full text-xl text-white/50 transition
+            hover:bg-white/10 hover:text-white hover:scale-110 active:scale-95">✕</button>
         </div>
-        <div class="px-6 pb-6 pt-5">
+
+        <!-- Body -->
+        <div class="flex-1 overflow-y-auto px-8 py-2">
           <ng-content></ng-content>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex-shrink-0 px-8 py-6 rounded-b-3xl">
+           <ng-content select="[modal-footer]"></ng-content>
         </div>
       </div>
     </div>

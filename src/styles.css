@@ -78,7 +78,7 @@ body * {
 }
 
 /* Utility Classes */
-.container {
+.app-layout {
     width: 100%;
     margin: 0;
     padding: 0;
@@ -88,18 +88,19 @@ body * {
     overflow: hidden;
 }
 
-.container>main,
+.app-layout>main,
 app-home-page,
 app-results-page {
     flex: 1;
     overflow-y: auto;
-    padding: clamp(1rem, 3vw, 3.5rem) clamp(1rem, 6vw, 6rem) 2rem;
+    padding: 1rem 1.5rem 2rem;
     width: 100%;
 }
 
 app-home-page,
 app-results-page {
     width: 100%;
+    max-width: 1024px;
     margin: 0 auto;
     display: block;
 }
@@ -110,12 +111,12 @@ app-results-page {
         overflow-y: auto;
     }
 
-    .container {
+    .app-layout {
         height: auto;
         min-height: 100vh;
     }
 
-    .container>main,
+    .app-layout>main,
     app-home-page,
     app-results-page {
         padding: 1rem 1rem 1.5rem;

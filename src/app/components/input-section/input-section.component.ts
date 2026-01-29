@@ -16,6 +16,13 @@ import { ConversionService } from '../../services/conversion.service';
   styleUrl: './input-section.component.css'
 })
 export class InputSectionComponent {
+  readonly EXAMPLE_CURL = `curl 'https://api.example.com/users' \\
+  -H 'Authorization: Bearer eyJhbGc...' \\
+  -H 'Content-Type: application/json'
+
+curl 'https://api.example.com/posts' \\
+  -H 'Authorization: Bearer eyJhbGc...'`;
+
   private appState = inject(AppStateService);
   private conversionService = inject(ConversionService);
   private router = inject(Router);
@@ -35,6 +42,10 @@ export class InputSectionComponent {
 
   onClear(): void {
     this.appState.clearInput();
+  }
+
+  onPasteExample(): void {
+    this.appState.setCurlInput(this.EXAMPLE_CURL);
   }
 
   onProcess(): void {

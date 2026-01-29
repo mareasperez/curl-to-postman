@@ -1,17 +1,18 @@
-<div class="container">
+<div class="app-layout">
     <app-header />
     <router-outlet />
     <app-modal title="Privacy & Info" [show]="appState.uiState().showFeaturesModal"
         (closeClicked)="appState.toggleFeaturesModal()">
-        <div class="flex flex-col gap-4 text-[var(--text)]">
-            <div
-                class="rounded-2xl border border-[var(--border)] bg-[var(--button-secondary-bg)] px-5 py-4 shadow-sm">
-                <span
-                    class="inline-flex items-center rounded-full bg-[var(--surface)] px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wider text-[var(--accent)]">
-                    100% Client-Side
-                </span>
-                <h4 class="mt-3 text-lg font-semibold text-[var(--text)]">Your data stays on your device</h4>
-                <p class="mt-2 text-sm text-[var(--text-muted)]">
+        <div class="flex flex-col gap-6 text-[var(--text)] items-center text-center">
+            <!-- Hero Section -->
+            <div class="flex flex-col gap-3 items-center">
+                <div class="flex items-center gap-3">
+                     <span class="inline-flex items-center rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-500 ring-1 ring-emerald-500/20">
+                        100% Client-Side
+                    </span>
+                </div>
+                <h4 class="text-2xl font-bold text-[var(--text)]">Your data stays on your device</h4>
+                <p class="text-[var(--text-muted)] leading-relaxed">
                     All conversions run locally in your browser. No backend is used and no data is stored.
                 </p>
             </div>
@@ -23,12 +24,15 @@
                 <li class="flex items-start gap-2"><span class="text-[var(--accent)]">•</span> Close the tab to clear
                     local session state.</li>
             </ul>
-            <div
-                class="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
-                <span class="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">GitHub</span>
-                <a class="text-sm font-semibold text-[var(--accent)] hover:text-[var(--primary)]"
-                    href="https://github.com/mareasperez" target="_blank" rel="noopener noreferrer">@mareasperez</a>
-            </div>
+        </div>
+        <!-- Footer Content -->
+        <div modal-footer class="flex items-center justify-center gap-3">
+            <span class="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Check Source</span>
+            <a class="text-sm font-semibold text-[var(--accent)] hover:text-[var(--primary)] transition-colors flex items-center gap-1"
+                href="https://github.com/mareasperez/curl-to-postman" target="_blank" rel="noopener noreferrer">
+                github.com/mareasperez
+                <span class="text-xs">↗</span>
+            </a>
         </div>
     </app-modal>
     <app-footer class="flex-shrink-0" />

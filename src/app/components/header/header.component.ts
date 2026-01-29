@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppStateService } from '../../services/app-state.service';
 import { ThemeService } from '../../services/theme.service';
 
@@ -15,6 +16,11 @@ import { ThemeService } from '../../services/theme.service';
 export class HeaderComponent {
   private appState = inject(AppStateService);
   private themeService = inject(ThemeService);
+  private router = inject(Router);
+
+  goHome(): void {
+    this.router.navigate(['/']);
+  }
 
   onInfoClick(): void {
     this.appState.toggleFeaturesModal();
