@@ -73,11 +73,9 @@ export type { AdditionalFile } from '../../../models/additional-file.model';
       color: #f1f5f9;
       font-family: 'Courier New', monospace;
       font-size: 0.9rem;
-      overflow-x: auto;
+      overflow-x: hidden;
       white-space: pre-wrap;
-      word-wrap: break-word;
-      max-height: 600px;
-      overflow-y: auto;
+      word-break: break-all;
       margin: 0;
     }
 

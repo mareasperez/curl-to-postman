@@ -32,11 +32,10 @@ import { CommonModule } from '@angular/common';
       color: #f1f5f9;
       font-family: 'Courier New', monospace;
       font-size: 0.9rem;
-      overflow-x: auto;
+      overflow-x: hidden; /* Force wrap, no horizontal scroll */
       white-space: pre-wrap;
-      word-wrap: break-word;
-      max-height: 600px;
-      overflow-y: auto;
+      word-break: break-all;
+      margin: 0;
     }
   `]
 })

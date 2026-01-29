@@ -84,9 +84,22 @@ export type { Variable } from '../../../models/variable.model';
       padding: 0.5rem 0;
       border-bottom: 1px solid #334155;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
+      flex-direction: column; /* Mobile first: Stack */
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .var-item {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+             gap: 1rem;
+        }
+        
+        .var-value {
+             text-align: right;
+        }
     }
 
     .var-item:last-child {
@@ -97,12 +110,14 @@ export type { Variable } from '../../../models/variable.model';
       font-weight: 600;
       color: #60a5fa;
       font-family: 'Courier New', monospace;
+      word-break: break-all;
     }
 
     .var-value {
       color: #94a3b8;
       font-size: 0.875rem;
       word-break: break-all;
+      width: 100%; /* Ensure it breaks properly */
     }
 
     .text-gray-100 {

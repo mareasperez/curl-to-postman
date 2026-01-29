@@ -36,40 +36,43 @@
 
         <!-- Scrollable Tabs Content -->
         <div class="flex-1 overflow-y-auto min-h-0 flex flex-col pr-1 pb-2">
-            <!-- Tabs Header -->
-            <div class="flex border-b border-[var(--border)] sticky top-0 bg-[var(--surface)] z-10 pt-2 mb-4">
-                <button (click)="switchTab('summary')" 
-                    [class.border-transparent]="activeTab() !== 'summary'"
-                    [class.text-[var(--text-muted)]]="activeTab() !== 'summary'"
-                    [class.border-[var(--primary)]]="activeTab() === 'summary'"
-                    [class.text-[var(--primary)]]="activeTab() === 'summary'"
-                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
-                    Summary
-                </button>
-                <button (click)="switchTab('collection')"
-                    [class.border-transparent]="activeTab() !== 'collection'"
-                    [class.text-[var(--text-muted)]]="activeTab() !== 'collection'"
-                    [class.border-[var(--primary)]]="activeTab() === 'collection'"
-                    [class.text-[var(--primary)]]="activeTab() === 'collection'"
-                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
-                    {{ currentFormat().name }}
-                </button>
-                 <button (click)="switchTab('environment')"
-                    [class.border-transparent]="activeTab() !== 'environment'"
-                    [class.text-[var(--text-muted)]]="activeTab() !== 'environment'"
-                    [class.border-[var(--primary)]]="activeTab() === 'environment'"
-                    [class.text-[var(--primary)]]="activeTab() === 'environment'"
-                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
-                    Environments
-                </button>
-                 <button (click)="switchTab('variables')"
-                    [class.border-transparent]="activeTab() !== 'variables'"
-                    [class.text-[var(--text-muted)]]="activeTab() !== 'variables'"
-                    [class.border-[var(--primary)]]="activeTab() === 'variables'"
-                    [class.text-[var(--primary)]]="activeTab() === 'variables'"
-                    class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-1 md:flex-none text-center">
-                    Variables
-                </button>
+            <!-- Tabs Header (Sticky Shell) -->
+            <div class="sticky top-0 bg-[var(--surface)] z-10 pt-2 mb-4 border-b border-[var(--border)]">
+                <!-- Inner Scrollable Container -->
+                <div class="flex overflow-x-auto no-scrollbar">
+                    <button (click)="switchTab('summary')" 
+                        [class.border-transparent]="activeTab() !== 'summary'"
+                        [class.text-[var(--text-muted)]]="activeTab() !== 'summary'"
+                        [class.border-[var(--primary)]]="activeTab() === 'summary'"
+                        [class.text-[var(--primary)]]="activeTab() === 'summary'"
+                        class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-none whitespace-nowrap">
+                        Summary
+                    </button>
+                    <button (click)="switchTab('collection')"
+                        [class.border-transparent]="activeTab() !== 'collection'"
+                        [class.text-[var(--text-muted)]]="activeTab() !== 'collection'"
+                        [class.border-[var(--primary)]]="activeTab() === 'collection'"
+                        [class.text-[var(--primary)]]="activeTab() === 'collection'"
+                        class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-none whitespace-nowrap">
+                        {{ currentFormat().name }}
+                    </button>
+                    <button (click)="switchTab('environment')"
+                        [class.border-transparent]="activeTab() !== 'environment'"
+                        [class.text-[var(--text-muted)]]="activeTab() !== 'environment'"
+                        [class.border-[var(--primary)]]="activeTab() === 'environment'"
+                        [class.text-[var(--primary)]]="activeTab() === 'environment'"
+                        class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-none whitespace-nowrap">
+                        Environments
+                    </button>
+                    <button (click)="switchTab('variables')"
+                        [class.border-transparent]="activeTab() !== 'variables'"
+                        [class.text-[var(--text-muted)]]="activeTab() !== 'variables'"
+                        [class.border-[var(--primary)]]="activeTab() === 'variables'"
+                        [class.text-[var(--primary)]]="activeTab() === 'variables'"
+                        class="px-4 py-2 text-sm font-medium border-b-2 transition-colors flex-none whitespace-nowrap">
+                        Variables
+                    </button>
+                </div>
             </div>
 
             <!-- Tab Content -->
