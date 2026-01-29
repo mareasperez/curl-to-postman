@@ -36,6 +36,8 @@ import { CommonModule } from '@angular/common';
       white-space: pre-wrap;
       word-break: break-all;
       margin: 0;
+      max-height: calc(100dvh - 580px);
+      overflow-y: auto;
     }
   `]
 })

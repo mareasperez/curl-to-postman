@@ -73,10 +73,20 @@ export type { AdditionalFile } from '../../../models/additional-file.model';
       color: #f1f5f9;
       font-family: 'Courier New', monospace;
       font-size: 0.9rem;
-      overflow-x: hidden;
+      /* Desktop: Standard scroll */
+      overflow-x: auto;
       white-space: pre-wrap;
-      word-break: break-all;
-      margin: 0;
+      word-wrap: break-word;
+    }
+
+    /* Mobile: Force wrap and max height */
+    @media (max-width: 768px) {
+      .code-block {
+        overflow-x: hidden;
+        word-break: break-all;
+        max-height: calc(100dvh - 660px);
+        overflow-y: auto;
+      }
     }
 
     .text-center {
