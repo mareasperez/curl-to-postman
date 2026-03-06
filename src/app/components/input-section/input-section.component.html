@@ -7,8 +7,14 @@
                 <p class="subtext">Paste one or many commands. Processing is fully local.</p>
             </div>
             <div class="head-actions">
-                <button type="button" class="ghost-btn" (click)="onPasteExample()">Use example</button>
-                <button type="button" class="ghost-btn" (click)="onClear()">Clear</button>
+                <button type="button" class="ghost-btn" (click)="onPasteExample()">
+                    <span aria-hidden="true">📌</span>
+                    <span>Use example</span>
+                </button>
+                <button type="button" class="ghost-btn" (click)="onClear()">
+                    <span aria-hidden="true">🧹</span>
+                    <span>Clear</span>
+                </button>
             </div>
         </div>
 
@@ -24,6 +30,9 @@
     </section>
 
     <div class="cta-wrap">
-        <button type="button" class="process-btn" (click)="onProcess()">Convert now</button>
+        <button type="button" class="process-btn" (click)="onProcess()">
+            <span aria-hidden="true">⚡</span>
+            <span>Convert now</span>
+        </button>
     </div>
 </div>

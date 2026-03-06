@@ -15,7 +15,8 @@
 
         <div class="header-actions">
             <button type="button" class="action-btn" (click)="onInfoClick()" title="Privacy details">
-                Privacy
+                <span aria-hidden="true">🔒</span>
+                <span>Privacy</span>
             </button>
             <button
                 type="button"
@@ -23,7 +24,8 @@
                 (click)="toggleTheme()"
                 [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
             >
-                {{ isDark() ? 'Light mode' : 'Dark mode' }}
+                <span aria-hidden="true">{{ isDark() ? '☀️' : '🌙' }}</span>
+                <span>{{ isDark() ? 'Light mode' : 'Dark mode' }}</span>
             </button>
         </div>
     </div>

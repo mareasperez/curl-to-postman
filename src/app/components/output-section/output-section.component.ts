@@ -181,6 +181,16 @@ export class OutputSectionComponent {
     }
   }
 
+  onSummaryStatClick(label: string) {
+    if (label === 'Hosts' || label === 'Tokens') {
+      this.switchTab('variables');
+      return;
+    }
+    if (label === 'Environments') {
+      this.switchTab('environment');
+    }
+  }
+
   closeDetailsModal() {
     this.isDetailsModalOpen.set(false);
   }

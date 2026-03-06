@@ -1,6 +1,6 @@
 <div class="animate-fadeIn">
     <div class="summary-container">
-        <app-stats-grid [stats]="stats()"></app-stats-grid>
+        <app-stats-grid [stats]="stats()" (statClicked)="onStatClick($event)"></app-stats-grid>
 
         @if (summaryData().requests.length > 0) {
         <div class="section-card">

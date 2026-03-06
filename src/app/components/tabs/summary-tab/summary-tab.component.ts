@@ -28,6 +28,7 @@ export class SummaryTabComponent {
   requestNameChanged = output<{ index: number; name: string }>();
   envNameChanged = output<{ oldName: string; newName: string }>();
   requestClicked = output<number>();
+  statClicked = output<string>();
 
   stats = (): Stat[] => {
     const data = this.summaryData();
@@ -85,5 +86,9 @@ export class SummaryTabComponent {
 
   onRequestClick(index: number) {
     this.requestClicked.emit(index);
+  }
+
+  onStatClick(label: string) {
+    this.statClicked.emit(label);
   }
 }

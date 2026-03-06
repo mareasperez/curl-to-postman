@@ -15,19 +15,27 @@
         <div class="toolbar">
             <div class="tabs-bar">
                 <button type="button" (click)="switchTab('summary')" [class.active]="activeTab() === 'summary'">
-                    Summary
+                    <span aria-hidden="true">📊</span>
+                    <span>Summary</span>
                 </button>
                 <button type="button" (click)="switchTab('collection')" [class.active]="activeTab() === 'collection'">
-                    {{ currentFormat().name }}
+                    <span aria-hidden="true">🧩</span>
+                    <span>{{ currentFormat().name }}</span>
                 </button>
                 <button type="button" (click)="switchTab('environment')" [class.active]="activeTab() === 'environment'">
-                    Files
+                    <span aria-hidden="true">🗂️</span>
+                    <span>Files</span>
+                </button>
+                <button type="button" (click)="switchTab('variables')" [class.active]="activeTab() === 'variables'">
+                    <span aria-hidden="true">🔑</span>
+                    <span>Variables</span>
                 </button>
             </div>
             <div class="quick-actions">
-                <button type="button" (click)="onCopyToClipboard()">Copy</button>
-                <button type="button" (click)="onResetAll()" [disabled]="!hasModifiedRequests()">Reset</button>
-                <button type="button" (click)="onNewConversion()">New</button>
+                <button type="button" (click)="onCopyToClipboard()"><span aria-hidden="true">📋</span><span>Copy</span></button>
+                <button type="button" (click)="onResetAll()" [disabled]="!hasModifiedRequests()"><span aria-hidden="true">↩</span><span>Reset</span></button>
+                <button type="button" (click)="onNewConversion()"><span aria-hidden="true">➕</span><span>New</span></button>
+                <button type="button" class="download-inline" (click)="onDownload()"><span aria-hidden="true">⬇</span><span>Download</span></button>
             </div>
         </div>
 
@@ -41,6 +49,7 @@
                 (requestNameChanged)="onRequestNameChanged($event)"
                 (envNameChanged)="onEnvNameChanged($event)"
                 (requestClicked)="onRequestClick($event)"
+                (statClicked)="onSummaryStatClick($event)"
             ></app-summary-tab>
             }
 
@@ -57,10 +66,6 @@
             }
         </div>
     </section>
-
-    <div class="download-wrap">
-        <button type="button" class="download-btn" (click)="onDownload()">Download export</button>
-    </div>
 
     <app-request-details-modal
         [isOpen]="isDetailsModalOpen()"

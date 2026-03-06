@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Stat } from '../../../models/stat.model';
 
@@ -11,11 +11,11 @@ export type { Stat } from '../../../models/stat.model';
   template: `
     <div class="stats-grid">
       @for (stat of stats(); track stat.label) {
-      <div class="stat-card">
+      <button type="button" class="stat-card" (click)="onStatClick(stat.label)" [attr.aria-label]="'Open ' + stat.label">
         <div class="stat-icon">{{ stat.icon }}</div>
         <div class="stat-value">{{ stat.value }}</div>
         <div class="stat-label">{{ stat.label }}</div>
-      </div>
+      </button>
       }
     </div>
   `,
@@ -27,12 +27,17 @@ export type { Stat } from '../../../models/stat.model';
     }
 
     .stat-card {
+      appearance: none;
       background: color-mix(in srgb, var(--surface-solid) 88%, transparent 12%);
       padding: 1rem;
       border-radius: 0.75rem;
       border: 1px solid var(--border);
       text-align: center;
       transition: all 0.25s ease;
+      cursor: pointer;
+      width: 100%;
+      color: inherit;
+      font: inherit;
     }
 
     .stat-card:hover {
@@ -68,4 +73,9 @@ export type { Stat } from '../../../models/stat.model';
 })
 export class StatsGridComponent {
   stats = input<Stat[]>([]);
+  statClicked = output<string>();
+
+  onStatClick(label: string): void {
+    this.statClicked.emit(label);
+  }
 }
