@@ -64,6 +64,7 @@ export class PostmanGeneratorService {
   ): PostmanItem {
     let url = request.url;
     let protocol = 'https';
+    let usesHostVariable = false;
 
     // Replace host with variable if applicable
     try {
@@ -71,6 +72,7 @@ export class PostmanGeneratorService {
       protocol = urlObj.protocol.replace(':', '');
       const hostVarName = variables.hostVariableNames.get(urlObj.origin) ?? getHostVariable(urlObj.origin);
       url = `{{${hostVarName}}}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+      usesHostVariable = true;
     } catch (e) {
       console.error('Error processing URL:', e);
       // Try to extract protocol from URL string if parsing failed
@@ -89,7 +91,7 @@ export class PostmanGeneratorService {
         header: [],
         url: {
           raw: url,
-          protocol: protocol,
+          protocol: usesHostVariable ? '' : protocol,
           host: this.parseHost(url),
           path: this.parsePath(url)
         }

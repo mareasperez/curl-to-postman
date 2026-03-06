@@ -10,12 +10,12 @@ export class VariableDetectorService {
     const byHost = new Map<string, string>();
 
     Array.from(hosts.keys()).forEach(hostOrigin => {
-      let base = 'host<default>';
+      let base = 'host_default';
       try {
         const u = new URL(hostOrigin);
-        base = `host<${u.host.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}>`;
+        base = `host_${u.host.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`;
       } catch {
-        base = `host<${hostOrigin.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}>`;
+        base = `host_${hostOrigin.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`;
       }
       byHost.set(hostOrigin, base);
     });
@@ -93,9 +93,9 @@ export class VariableDetectorService {
     try {
       const url = new URL(host);
       const normalized = url.host.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
-      return `host<${normalized}>`;
+      return `host_${normalized}`;
     } catch {
-      return 'host<default>';
+      return 'host_default';
     }
   }
 }
