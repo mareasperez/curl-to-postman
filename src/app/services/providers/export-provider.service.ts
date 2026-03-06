@@ -5,7 +5,7 @@ import {
     ExportResult,
     ExportInput,
     EXPORT_PROVIDER
-} from './export-provider.interface';
+} from '@services/providers/export-provider.interface';
 
 /**
  * Service that manages all registered export providers

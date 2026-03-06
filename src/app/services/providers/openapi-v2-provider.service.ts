@@ -4,8 +4,8 @@ import {
     ExportFormat,
     ExportResult,
     ExportInput
-} from './export-provider.interface';
-import { ParsedRequest, VariableAnalysis, TokenData } from '../../models';
+} from '@services/providers/export-provider.interface';
+import { ParsedRequest, VariableAnalysis, TokenData } from '@app/models';
 
 /**
  * Swagger 2.0 specification interface

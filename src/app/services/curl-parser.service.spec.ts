@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { CurlParserService } from './curl-parser.service';
-import { ParsedRequest } from '../models';
+import { CurlParserService } from '@services/curl-parser.service';
+import { ParsedRequest } from '@app/models';
 
 describe('CurlParserService', () => {
     let service: CurlParserService;

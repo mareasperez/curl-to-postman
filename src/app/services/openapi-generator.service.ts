@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ParsedRequest, VariableAnalysis, TokenData, EnvironmentData } from '../models';
+import { ParsedRequest, VariableAnalysis, TokenData, EnvironmentData } from '@app/models';
 
 export interface OpenAPISpec {
   openapi: string;

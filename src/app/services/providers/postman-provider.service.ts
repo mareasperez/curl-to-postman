@@ -4,8 +4,8 @@ import {
     ExportFormat,
     ExportResult,
     ExportInput
-} from './export-provider.interface';
-import { PostmanGeneratorService } from '../postman-generator.service';
+} from '@services/providers/export-provider.interface';
+import { PostmanGeneratorService } from '@services/postman-generator.service';
 
 /**
  * Export provider for Postman Collection v2.1.0 format

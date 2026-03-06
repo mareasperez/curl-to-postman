@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { PostmanGeneratorService } from './postman-generator.service';
-import { VariableAnalysis, ParsedRequest } from '../models';
+import { PostmanGeneratorService } from '@services/postman-generator.service';
+import { VariableAnalysis, ParsedRequest } from '@app/models';
 
 describe('PostmanGeneratorService', () => {
     let service: PostmanGeneratorService;

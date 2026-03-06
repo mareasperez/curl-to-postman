@@ -1,21 +1,27 @@
-import { Component, input, output, signal, computed, effect } from '@angular/core';
+import {
+    Component,
+    input,
+    output,
+    signal,
+    computed,
+    effect
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ParsedRequest, HeaderItem, QueryParam } from '../../../models';
+import { ParsedRequest, HeaderItem, QueryParam } from '@models/index';
 
 @Component({
-    selector: 'app-request-details-modal',
+    selector: 'app-request-details-editor',
     imports: [CommonModule, FormsModule],
-    templateUrl: './request-details-modal.component.html',
-    styleUrl: './request-details-modal.component.css'
+    templateUrl: './request-details-editor.component.html',
+    styleUrl: './request-details-editor.component.css'
 })
-export class RequestDetailsModalComponent {
+export class RequestDetailsEditorComponent {
     // Inputs
     request = input<ParsedRequest | null>(null);
     originalRequest = input<ParsedRequest | null>(null);
     requestName = input<string>('');
     rawOutput = input<unknown>(null);
-    isOpen = input<boolean>(false);
 
     // Outputs
     close = output<void>();
@@ -36,7 +42,7 @@ export class RequestDetailsModalComponent {
     constructor() {
         effect(() => {
             const req = this.request();
-            if (req && this.isOpen()) {
+            if (req) {
                 this.editMethod.set(req.method);
                 this.updateUrl(req.url, true);
                 this.editBody.set(req.body || '');
@@ -105,12 +111,6 @@ export class RequestDetailsModalComponent {
 
     setInternalTab(tab: 'general' | 'headers' | 'body') {
         this.internalTab.set(tab);
-    }
-
-    onBackdropClick(event: MouseEvent) {
-        if ((event.target as HTMLElement).classList.contains('modal-overlay')) {
-            this.onClose();
-        }
     }
 
     // Editing Actions
@@ -236,7 +236,7 @@ export class RequestDetailsModalComponent {
 
     discardChanges() {
         const req = this.request();
-        if (req && this.isOpen()) {
+        if (req) {
             this.editMethod.set(req.method);
             this.updateUrl(req.url, true);
             this.editBody.set(req.body || '');
@@ -273,4 +273,5 @@ export class RequestDetailsModalComponent {
     reset() {
         this.resetRequested.emit();
     }
+
 }

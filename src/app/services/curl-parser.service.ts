@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ParsedRequest } from '../models';
+import { ParsedRequest } from '@app/models';
 
 
 @Injectable({

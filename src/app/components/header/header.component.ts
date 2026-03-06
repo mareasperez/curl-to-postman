@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppStateService } from '../../services/app-state.service';
-import { ThemeService } from '../../services/theme.service';
+import { AppStateService } from '@services/app-state.service';
+import { ThemeService } from '@services/theme.service';
 
 /**
  * Header component - displays app title and info button

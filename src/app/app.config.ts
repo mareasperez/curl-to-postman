@@ -1,11 +1,11 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
-import { EXPORT_PROVIDER } from './services/providers/export-provider.interface';
-import { PostmanProviderService } from './services/providers/postman-provider.service';
-import { OpenApiV3ProviderService } from './services/providers/openapi-v3-provider.service';
-import { OpenApiV2ProviderService } from './services/providers/openapi-v2-provider.service';
+import { routes } from '@app/app.routes';
+import { EXPORT_PROVIDER } from '@services/providers/export-provider.interface';
+import { PostmanProviderService } from '@services/providers/postman-provider.service';
+import { OpenApiV3ProviderService } from '@services/providers/openapi-v3-provider.service';
+import { OpenApiV2ProviderService } from '@services/providers/openapi-v2-provider.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

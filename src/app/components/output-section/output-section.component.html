@@ -75,14 +75,19 @@
         </div>
     </section>
 
-    <app-request-details-modal
-        [isOpen]="isDetailsModalOpen()"
-        [request]="selectedRequest()"
-        [originalRequest]="selectedOriginalRequest()"
-        [requestName]="selectedRequestName()"
-        [rawOutput]="selectedRawOutput()"
-        (close)="closeDetailsModal()"
-        (requestUpdated)="onModalRequestUpdated($event)"
-        (resetRequested)="onModalResetRequested()"
-    ></app-request-details-modal>
+    <app-modal
+        title="Request Details"
+        [show]="isDetailsModalOpen()"
+        (closeClicked)="closeDetailsModal()"
+    >
+        <app-request-details-editor
+            [request]="selectedRequest()"
+            [originalRequest]="selectedOriginalRequest()"
+            [requestName]="selectedRequestName()"
+            [rawOutput]="selectedRawOutput()"
+            (close)="closeDetailsModal()"
+            (requestUpdated)="onModalRequestUpdated($event)"
+            (resetRequested)="onModalResetRequested()"
+        ></app-request-details-editor>
+    </app-modal>
 </div>

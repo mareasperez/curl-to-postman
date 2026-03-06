@@ -1,10 +1,10 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StatsGridComponent } from '../../shared/stats-grid/stats-grid.component';
-import { EditableListComponent } from '../../shared/editable-list/editable-list.component';
-import { Stat } from '../../../models/stat.model';
-import { EditableItem } from '../../../models/editable-item.model';
-import { SummaryData } from '../../../models/summary-data.model';
+import { StatsGridComponent } from '@components/shared/stats-grid/stats-grid.component';
+import { EditableListComponent } from '@components/shared/editable-list/editable-list.component';
+import { Stat } from '@models/stat.model';
+import { EditableItem } from '@models/editable-item.model';
+import { SummaryData } from '@models/summary-data.model';
 
 @Component({
   selector: 'app-summary-tab',

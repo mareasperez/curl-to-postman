@@ -1,0 +1,136 @@
+<div class="editor-shell">
+    <div class="request-meta">
+        <span [class]="'method-badge ' + request()?.method?.toLowerCase()">{{ request()?.method }}</span>
+        <span class="url-truncate" [title]="requestName()">{{ requestName() }}</span>
+    </div>
+
+    <div class="modal-tabs">
+        <button class="tab-btn" [class.active]="activeTab() === 'parsed'" (click)="setTab('parsed')">
+            Edit Details
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'raw'" (click)="setTab('raw')">
+            Raw Export
+        </button>
+    </div>
+
+    <div class="modal-body">
+        @if (activeTab() === 'parsed') {
+        <div class="details-section h-full flex flex-col">
+            <div class="internal-tabs">
+                <button class="internal-tab-btn" [class.active]="internalTab() === 'general'" (click)="setInternalTab('general')">
+                    General
+                </button>
+                <button class="internal-tab-btn" [class.active]="internalTab() === 'headers'" (click)="setInternalTab('headers')">
+                    Headers <span class="count-pill">{{ editHeaders().length }}</span>
+                </button>
+                <button class="internal-tab-btn" [class.active]="internalTab() === 'body'" (click)="setInternalTab('body')">
+                    Body
+                </button>
+            </div>
+
+            @if (internalTab() === 'general') {
+            <div class="h-full flex flex-col min-h-0">
+                <div class="form-row flex-shrink-0 mb-4">
+                    <div class="form-group method-group">
+                        <label class="label">Method</label>
+                        <select [ngModel]="editMethod()" (ngModelChange)="editMethod.set($event)" class="input-control method-select">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="OPTIONS">OPTIONS</option>
+                            <option value="HEAD">HEAD</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group url-group">
+                        <label class="label">URL</label>
+                        <input [ngModel]="editUrl()" (ngModelChange)="updateUrl($event)" class="input-control font-mono" />
+                    </div>
+                </div>
+
+                <div class="form-group flex-1 flex flex-col min-h-0">
+                    <div class="flex justify-between items-center mb-2 flex-shrink-0">
+                        <label class="label mb-0">Query Parameters</label>
+                        <button class="btn-xs" (click)="addQueryParam()">+ Add Param</button>
+                    </div>
+
+                    <div class="headers-editor flex-1 min-h-0 overflow-y-auto">
+                        @if (editQueryParams().length === 0) {
+                        <div class="flex flex-col items-center justify-center h-32 text-slate-500 border border-dashed border-slate-700 rounded-lg">
+                            <p class="mb-2">No query parameters</p>
+                            <button class="btn-link" (click)="addQueryParam()">Add one now</button>
+                        </div>
+                        }
+                        @for (param of editQueryParams(); track $index) {
+                        <div class="header-row mb-2 last:mb-0">
+                            <input [(ngModel)]="param.key" (ngModelChange)="updateQueryParam()" placeholder="Key" class="input-control header-key" />
+                            <input [(ngModel)]="param.value" (ngModelChange)="updateQueryParam()" placeholder="Value" class="input-control header-value" />
+                            <button class="btn-remove" (click)="removeQueryParam($index)" title="Remove">&times;</button>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+
+            @if (internalTab() === 'headers') {
+            <div class="form-group h-full flex flex-col min-h-0">
+                <div class="flex justify-between items-center mb-2 flex-shrink-0">
+                    <label class="label mb-0">Headers</label>
+                    <button class="btn-xs" (click)="addHeader()">+ Add Header</button>
+                </div>
+
+                <div class="headers-editor flex-1 min-h-0 overflow-y-auto">
+                    @if (editHeaders().length === 0) {
+                    <div class="flex flex-col items-center justify-center h-32 text-slate-500 border border-dashed border-slate-700 rounded-lg">
+                        <p class="mb-2">No headers defined</p>
+                        <button class="btn-link" (click)="addHeader()">Add one now</button>
+                    </div>
+                    }
+                    @for (header of editHeaders(); track $index) {
+                    <div class="header-row mb-2 last:mb-0">
+                        <input [(ngModel)]="header.key" placeholder="Key" class="input-control header-key" />
+                        <input [(ngModel)]="header.value" placeholder="Value" class="input-control header-value" />
+                        <button class="btn-remove" (click)="removeHeader($index)" title="Remove">&times;</button>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            @if (internalTab() === 'body') {
+            <div class="form-group h-full flex flex-col min-h-0">
+                <div class="flex justify-between items-center mb-2 flex-shrink-0">
+                    <label class="label mb-0">Body Content</label>
+                </div>
+                <textarea [ngModel]="editBody()" (ngModelChange)="editBody.set($event)" class="input-control code-area flex-1 min-h-0 resize-none" placeholder="No body content"></textarea>
+            </div>
+            }
+        </div>
+        }
+
+        @if (activeTab() === 'raw') {
+        <div class="details-section">
+            <pre class="code-block">{{ rawOutputJson() }}</pre>
+        </div>
+        }
+    </div>
+
+    <div class="modal-actions">
+        @if (activeTab() === 'parsed') {
+        @if (hasChanges()) {
+        <button class="btn-reset" (click)="discardChanges()">Undo Draft</button>
+        } @else if (isModifiedFromOriginal()) {
+        <button class="btn-reset" (click)="reset()">Reset to Original</button>
+        }
+        <div class="flex gap-4 ml-auto">
+            <button class="btn-cancel" (click)="onClose()">Cancel</button>
+            <button class="btn-save" (click)="save()">Save Changes</button>
+        </div>
+        } @else {
+        <button class="btn-cancel ml-auto" (click)="onClose()">Close</button>
+        }
+    </div>
+</div>

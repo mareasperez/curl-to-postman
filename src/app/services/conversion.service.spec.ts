@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { ConversionService } from './conversion.service';
-import { CurlParserService } from './curl-parser.service';
-import { VariableDetectorService } from './variable-detector.service';
-import { ExportProviderService } from './providers/export-provider.service';
+import { ConversionService } from '@services/conversion.service';
+import { CurlParserService } from '@services/curl-parser.service';
+import { VariableDetectorService } from '@services/variable-detector.service';
+import { ExportProviderService } from '@services/providers/export-provider.service';
 
 describe('ConversionService', () => {
     let service: ConversionService;

@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ExportFormat } from '../../../services/providers/export-provider.interface';
+import { ExportFormat } from '@services/providers/export-provider.interface';
 
 @Component({
   selector: 'app-format-selector',

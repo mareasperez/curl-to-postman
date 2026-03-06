@@ -1,9 +1,9 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Variable } from '../../../models/variable.model';
+import { Variable } from '@models/variable.model';
 
 // Re-export for backwards compatibility
-export type { Variable } from '../../../models/variable.model';
+export type { Variable } from '@models/variable.model';
 
 @Component({
   selector: 'app-variables-tab',

@@ -1,9 +1,9 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditableItem } from '../../../models/editable-item.model';
+import { EditableItem } from '@models/editable-item.model';
 
 // Re-export for backwards compatibility
-export type { EditableItem } from '../../../models/editable-item.model';
+export type { EditableItem } from '@models/editable-item.model';
 
 @Component({
   selector: 'app-editable-list',

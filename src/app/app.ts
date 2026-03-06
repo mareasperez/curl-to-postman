@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
 // Import components
-import { HeaderComponent } from './components/header/header.component';
-import { ToastComponent } from './components/shared/toast/toast.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { ModalComponent } from './components/shared/modal/modal.component';
-import { AppStateService } from './services/app-state.service';
+import { HeaderComponent } from '@components/header/header.component';
+import { ToastComponent } from '@components/shared/toast/toast.component';
+import { FooterComponent } from '@components/footer/footer.component';
+import { ModalComponent } from '@components/shared/modal/modal.component';
+import { AppStateService } from '@services/app-state.service';
 
 /**
  * Root application component

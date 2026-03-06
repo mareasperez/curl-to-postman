@@ -2,8 +2,8 @@ import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AppStateService } from '../../services/app-state.service';
-import { ConversionService } from '../../services/conversion.service';
+import { AppStateService } from '@services/app-state.service';
+import { ConversionService } from '@services/conversion.service';
 
 /**
  * Input section component - handles cURL input and processing

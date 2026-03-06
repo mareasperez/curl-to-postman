@@ -4,8 +4,8 @@ import {
     ExportFormat,
     ExportResult,
     ExportInput
-} from './export-provider.interface';
-import { OpenApiGeneratorService } from '../openapi-generator.service';
+} from '@services/providers/export-provider.interface';
+import { OpenApiGeneratorService } from '@services/openapi-generator.service';
 
 /**
  * Export provider for OpenAPI 3.0.3 specification

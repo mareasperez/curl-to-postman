@@ -1,4 +1,4 @@
-import type { VariableAnalysis, ParsedRequest, ExportOutput, AdditionalFile } from './index';
+import type { VariableAnalysis, ParsedRequest, ExportOutput, AdditionalFile } from '@models/index';
 
 export interface ConversionRequest {
     input: string;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { ParsedRequest, VariableAnalysis, PostmanCollection, PostmanItem, PostmanHeader, PostmanVariable, PostmanEnvironment } from '../models';
+import type { ParsedRequest, VariableAnalysis, PostmanCollection, PostmanItem, PostmanHeader, PostmanVariable, PostmanEnvironment } from '@app/models';
 
 @Injectable({
   providedIn: 'root'

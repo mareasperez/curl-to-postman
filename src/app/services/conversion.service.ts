@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CurlParserService } from './curl-parser.service';
-import { VariableDetectorService } from './variable-detector.service';
-import { ExportProviderService } from './providers/export-provider.service';
-import { ConversionRequest, ConversionResult } from '../models/conversion.model';
-import { PostmanGeneratorService } from './postman-generator.service';
-import { ParsedRequest } from '../models';
+import { CurlParserService } from '@services/curl-parser.service';
+import { VariableDetectorService } from '@services/variable-detector.service';
+import { ExportProviderService } from '@services/providers/export-provider.service';
+import { ConversionRequest, ConversionResult } from '@models/conversion.model';
+import { PostmanGeneratorService } from '@services/postman-generator.service';
+import { ParsedRequest } from '@app/models';
 
 @Injectable({
     providedIn: 'root'

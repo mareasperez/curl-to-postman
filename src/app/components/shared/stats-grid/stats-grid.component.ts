@@ -1,9 +1,9 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Stat } from '../../../models/stat.model';
+import { Stat } from '@models/stat.model';
 
 // Re-export for backwards compatibility
-export type { Stat } from '../../../models/stat.model';
+export type { Stat } from '@models/stat.model';
 
 @Component({
   selector: 'app-stats-grid',

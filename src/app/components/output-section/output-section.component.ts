@@ -1,16 +1,17 @@
 import { Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormatSelectorComponent } from '../shared/format-selector/format-selector.component';
-import { SummaryTabComponent } from '../tabs/summary-tab/summary-tab.component';
-import { OutputViewerTabComponent } from '../tabs/output-viewer-tab/output-viewer-tab.component';
-import { VariablesTabComponent } from '../tabs/variables-tab/variables-tab.component';
-import { AdditionalFilesTabComponent } from '../tabs/additional-files-tab/additional-files-tab.component';
-import { RequestDetailsModalComponent } from '../shared/request-details-modal/request-details-modal.component';
-import { ExportFormat } from '../../services/providers/export-provider.interface';
-import { VariableAnalysis, ParsedRequest } from '../../models';
-import { Variable } from '../../models/variable.model';
-import { SummaryData } from '../../models/summary-data.model';
-import { AdditionalFile } from '../../models/additional-file.model';
+import { FormatSelectorComponent } from '@components/shared/format-selector/format-selector.component';
+import { SummaryTabComponent } from '@components/tabs/summary-tab/summary-tab.component';
+import { OutputViewerTabComponent } from '@components/tabs/output-viewer-tab/output-viewer-tab.component';
+import { VariablesTabComponent } from '@components/tabs/variables-tab/variables-tab.component';
+import { AdditionalFilesTabComponent } from '@components/tabs/additional-files-tab/additional-files-tab.component';
+import { RequestDetailsEditorComponent } from '@components/shared/request-details-editor/request-details-editor.component';
+import { ModalComponent } from '@components/shared/modal/modal.component';
+import { ExportFormat } from '@services/providers/export-provider.interface';
+import { VariableAnalysis, ParsedRequest } from '@models/index';
+import { Variable } from '@models/variable.model';
+import { SummaryData } from '@models/summary-data.model';
+import { AdditionalFile } from '@models/additional-file.model';
 
 @Component({
   selector: 'app-output-section',
@@ -21,7 +22,8 @@ import { AdditionalFile } from '../../models/additional-file.model';
     OutputViewerTabComponent,
     VariablesTabComponent,
     AdditionalFilesTabComponent,
-    RequestDetailsModalComponent
+    ModalComponent,
+    RequestDetailsEditorComponent
   ],
   templateUrl: './output-section.component.html',
   styleUrl: './output-section.component.css'

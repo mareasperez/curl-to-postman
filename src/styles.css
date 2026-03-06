@@ -158,3 +158,15 @@ a:focus-visible {
 .animate-fadeIn {
     animation: fadeIn 280ms ease-out forwards;
 }
+
+.request-details-overlay-panel {
+    width: min(920px, calc(100vw - 2rem));
+    max-height: calc(100vh - 2rem);
+}
+
+@media (max-width: 740px) {
+    .request-details-overlay-panel {
+        width: calc(100vw - 1rem);
+        max-height: calc(100vh - 1rem);
+    }
+}

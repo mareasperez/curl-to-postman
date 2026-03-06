@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
-// import { ParsedRequest } from '../curl-parser.service';
-// import { VariableAnalysis } from '../variable-detector.service';
+// import { ParsedRequest } from '@services/curl-parser.service';
+// import { VariableAnalysis } from '@services/variable-detector.service';
 import { ParsedRequest } from '@models/index';
 import { VariableAnalysis } from '@models/index';
 

@@ -1,13 +1,13 @@
 import { Component, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { OutputSectionComponent } from '../components/output-section/output-section.component';
-import { AppStateService } from '../services/app-state.service';
-import { ExportProviderService } from '../services/providers/export-provider.service';
-import { ConversionService } from '../services/conversion.service';
-import { ExportFormat } from '../services/providers/export-provider.interface';
-import { AdditionalFile } from '../models/additional-file.model';
-import { ParsedRequest } from '../models';
+import { OutputSectionComponent } from '@components/output-section/output-section.component';
+import { AppStateService } from '@services/app-state.service';
+import { ExportProviderService } from '@services/providers/export-provider.service';
+import { ConversionService } from '@services/conversion.service';
+import { ExportFormat } from '@services/providers/export-provider.interface';
+import { AdditionalFile } from '@models/additional-file.model';
+import { ParsedRequest } from '@models/index';
 
 @Component({
   selector: 'app-results-page',

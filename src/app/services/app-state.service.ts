@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import type { ConversionState, UIState, EditableState, ParsedRequest } from '../models';
+import type { ConversionState, UIState, EditableState, ParsedRequest } from '@app/models';
 
 /**
  * Centralized state management service using Angular signals

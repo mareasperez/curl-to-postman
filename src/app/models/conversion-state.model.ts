@@ -1,4 +1,4 @@
-import type { ParsedRequest, VariableAnalysis, ExportOutput, AdditionalFile } from './index';
+import type { ParsedRequest, VariableAnalysis, ExportOutput, AdditionalFile } from '@models/index';
 
 
 /**

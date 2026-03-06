@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { InputSectionComponent } from '../components/input-section/input-section.component';
+import { InputSectionComponent } from '@components/input-section/input-section.component';
 
 @Component({
   selector: 'app-home-page',
