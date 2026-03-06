@@ -37,6 +37,9 @@ export class OutputSectionComponent {
   duplicateNames = input<Map<string, number[]>>(new Map());
   editableEnvNames = input<Map<string, string>>(new Map());
   hasModifiedRequests = input<boolean>(false);
+  hostVariableOverrides = input<Map<string, string>>(new Map());
+  tokenVariableOverrides = input<Map<string, string>>(new Map());
+  removedTokenKeys = input<Set<string>>(new Set());
   currentFormat = input<ExportFormat>({ id: '', name: '', version: '', extension: '', mimeType: '', description: '' });
   availableFormats = input<ExportFormat[]>([]);
   currentTab = input<'collection' | 'environment' | 'variables' | 'summary'>('summary');
@@ -51,6 +54,11 @@ export class OutputSectionComponent {
   copyRequested = output<string>();
   downloadRequested = output<{ format: ExportFormat; data: unknown; additionalFiles: AdditionalFile[] }>();
   requestDetailsUpdated = output<{ index: number; request: ParsedRequest }>();
+  hostVariableUpdated = output<{ name: string; value: string }>();
+  tokenVariableUpdated = output<{ name: string; value: string }>();
+  tokenSanitized = output<string>();
+  tokenCleared = output<string>();
+  tokenRemoveToggled = output<{ name: string; removed: boolean }>();
 
   // Local state for active tab
 
@@ -125,7 +133,7 @@ export class OutputSectionComponent {
 
     return Array.from(vars.hosts.entries()).map(([host, indices]) => ({
       name: `{{${host.replace(/[^a-zA-Z0-9]/g, '_')}_host}}`,
-      value: host,
+      value: this.hostVariableOverrides().get(`{{${host.replace(/[^a-zA-Z0-9]/g, '_')}_host}}`) ?? host,
       count: indices.length
     }));
   };
@@ -136,8 +144,9 @@ export class OutputSectionComponent {
 
     return Array.from(vars.tokens.entries()).map(([key, data]) => ({
       name: key,
-      value: data.value.substring(0, 50) + (data.value.length > 50 ? '...' : ''),
-      count: data.requests.length
+      value: this.tokenVariableOverrides().get(key) ?? data.value,
+      count: data.requests.length,
+      removed: this.removedTokenKeys().has(key)
     }));
   };
 
@@ -189,6 +198,26 @@ export class OutputSectionComponent {
     if (label === 'Environments') {
       this.switchTab('environment');
     }
+  }
+
+  onHostVariableUpdated(event: { name: string; value: string }) {
+    this.hostVariableUpdated.emit(event);
+  }
+
+  onTokenVariableUpdated(event: { name: string; value: string }) {
+    this.tokenVariableUpdated.emit(event);
+  }
+
+  onTokenSanitized(name: string) {
+    this.tokenSanitized.emit(name);
+  }
+
+  onTokenCleared(name: string) {
+    this.tokenCleared.emit(name);
+  }
+
+  onTokenRemoveToggled(event: { name: string; removed: boolean }) {
+    this.tokenRemoveToggled.emit(event);
   }
 
   closeDetailsModal() {

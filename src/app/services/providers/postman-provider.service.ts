@@ -29,21 +29,36 @@ export class PostmanProviderService implements ExportProvider {
     }
 
     generate(input: ExportInput): ExportResult {
-        const { requests, variables, getHostVariable, customRequestNames, customEnvNames } = input;
+        const {
+            requests,
+            variables,
+            getHostVariable,
+            customRequestNames,
+            customEnvNames,
+            customHostVariables,
+            customTokenVariables,
+            removedTokenKeys
+        } = input;
 
         // Generate collection
         const collection = this.postmanGenerator.generate(
             requests,
             variables,
             getHostVariable,
-            customRequestNames
+            customRequestNames,
+            customHostVariables,
+            customTokenVariables,
+            removedTokenKeys
         );
 
         // Generate environments
         const environments = this.postmanGenerator.generateEnvironments(
             variables,
             getHostVariable,
-            customEnvNames
+            customEnvNames,
+            customHostVariables,
+            customTokenVariables,
+            removedTokenKeys
         );
 
         // Return collection with environments as additional files

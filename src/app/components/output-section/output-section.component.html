@@ -62,7 +62,15 @@
             }
 
             @if (activeTab() === 'variables') {
-            <app-variables-tab [hostVariables]="hostVariables()" [tokenVariables]="tokenVariables()"></app-variables-tab>
+            <app-variables-tab
+                [hostVariables]="hostVariables()"
+                [tokenVariables]="tokenVariables()"
+                (hostValueChanged)="onHostVariableUpdated($event)"
+                (tokenValueChanged)="onTokenVariableUpdated($event)"
+                (tokenSanitized)="onTokenSanitized($event)"
+                (tokenCleared)="onTokenCleared($event)"
+                (tokenRemoveToggled)="onTokenRemoveToggled($event)"
+            ></app-variables-tab>
             }
         </div>
     </section>

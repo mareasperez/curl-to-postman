@@ -54,7 +54,10 @@ export class ConversionService {
                 variables,
                 getHostVariable: (host) => this.variableDetector.getHostVariable(host),
                 customRequestNames: request.customRequestNames || new Map(),
-                customEnvNames: request.customEnvNames || new Map()
+                customEnvNames: request.customEnvNames || new Map(),
+                customHostVariables: request.customHostVariables || new Map(),
+                customTokenVariables: request.customTokenVariables || new Map(),
+                removedTokenKeys: request.removedTokenKeys || new Set()
             });
 
             if (!result) {
@@ -86,7 +89,10 @@ export class ConversionService {
         requests: ParsedRequest[],
         formatId: string,
         customRequestNames?: Map<number, string>,
-        customEnvNames?: Map<string, string>
+        customEnvNames?: Map<string, string>,
+        customHostVariables?: Map<string, string>,
+        customTokenVariables?: Map<string, string>,
+        removedTokenKeys?: Set<string>
     ): ConversionResult {
         try {
             // Re-analyze variables as content might have changed
@@ -104,7 +110,10 @@ export class ConversionService {
                 variables,
                 getHostVariable: (host) => this.variableDetector.getHostVariable(host),
                 customRequestNames: customRequestNames || new Map(),
-                customEnvNames: customEnvNames || new Map()
+                customEnvNames: customEnvNames || new Map(),
+                customHostVariables: customHostVariables || new Map(),
+                customTokenVariables: customTokenVariables || new Map(),
+                removedTokenKeys: removedTokenKeys || new Set()
             });
 
             if (!result) {

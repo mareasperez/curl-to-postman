@@ -5,6 +5,9 @@ export interface ConversionRequest {
     formatId: string;
     customRequestNames?: Map<number, string>;
     customEnvNames?: Map<string, string>;
+    customHostVariables?: Map<string, string>;
+    customTokenVariables?: Map<string, string>;
+    removedTokenKeys?: Set<string>;
 }
 
 export interface ConversionResult {

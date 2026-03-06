@@ -38,6 +38,9 @@ export interface ExportInput {
     getHostVariable: (host: string) => string;
     customRequestNames?: Map<number, string>;
     customEnvNames?: Map<string, string>;
+    customHostVariables?: Map<string, string>;
+    customTokenVariables?: Map<string, string>;
+    removedTokenKeys?: Set<string>;
 }
 
 /**

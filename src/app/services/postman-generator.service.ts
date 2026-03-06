@@ -5,12 +5,24 @@ import type { ParsedRequest, VariableAnalysis, PostmanCollection, PostmanItem, P
   providedIn: 'root'
 })
 export class PostmanGeneratorService {
+  private normalizeHostValue(value: string): string {
+    if (!value) return value;
+    try {
+      const parsed = new URL(value);
+      return parsed.host;
+    } catch {
+      return value.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+    }
+  }
 
   generate(
     requests: ParsedRequest[],
     variables: VariableAnalysis,
     getHostVariable: (host: string) => string,
-    customNames?: Map<number, string>
+    customNames?: Map<number, string>,
+    customHostVariables?: Map<string, string>,
+    customTokenVariables?: Map<string, string>,
+    removedTokenKeys?: Set<string>
   ): PostmanCollection {
     const collection: PostmanCollection = {
       info: {
@@ -22,21 +34,17 @@ export class PostmanGeneratorService {
       variable: []
     };
 
-    // Add collection-level variables for hosts
-    variables.hosts.forEach((requestIndices, host) => {
-      if (requestIndices.length > 1) {
-        const varName = getHostVariable(host);
-        collection.variable.push({
-          key: varName,
-          value: host,
-          type: "string"
-        });
-      }
-    });
-
     // Generate requests
     requests.forEach((request, index) => {
-      const item = this.createPostmanItem(request, index, variables, getHostVariable, customNames);
+      const item = this.createPostmanItem(
+        request,
+        index,
+        variables,
+        getHostVariable,
+        customNames,
+        customTokenVariables,
+        removedTokenKeys
+      );
       collection.item.push(item);
     });
 
@@ -48,7 +56,9 @@ export class PostmanGeneratorService {
     index: number,
     variables: VariableAnalysis,
     getHostVariable: (host: string) => string,
-    customNames?: Map<number, string>
+    customNames?: Map<number, string>,
+    customTokenVariables?: Map<string, string>,
+    removedTokenKeys?: Set<string>
   ): PostmanItem {
     let url = request.url;
     let protocol = 'https';
@@ -61,12 +71,11 @@ export class PostmanGeneratorService {
       const host = urlObj.origin;
 
       variables.hosts.forEach((requestIndices, hostValue) => {
-        if (hostValue === host && requestIndices.length > 1) {
+        if (hostValue === host) {
           const varName = getHostVariable(host);
           useVariable = true;
-          // Replace the entire origin (protocol + host) with just the variable
-          // This creates: {{varName}}/path instead of https://{{varName}}/path
-          url = `{{${varName}}}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+          // Keep protocol in request URL and host in env variable.
+          url = `${protocol}://{{${varName}}}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
         }
       });
     } catch (e) {
@@ -97,13 +106,30 @@ export class PostmanGeneratorService {
     // Add headers with variable replacement
     Object.entries(request.headers).forEach(([key, value]) => {
       let headerValue = value;
+      let matchedTokenKey: string | null = null;
+      let matchedTokenRequestsCount: number | null = null;
 
       // Replace token with variable if applicable
       variables.tokens.forEach((tokenData, tokenKey) => {
-        if (tokenData.value === value && tokenData.requests.length > 1) {
-          headerValue = `{{${tokenKey}}}`;
+        if (tokenData.value === value && !matchedTokenKey) {
+          matchedTokenKey = tokenKey;
+          matchedTokenRequestsCount = tokenData.requests.length;
         }
       });
+
+      if (matchedTokenKey) {
+        const tokenKey = matchedTokenKey;
+        const isRemoved = removedTokenKeys?.has(tokenKey) ?? false;
+        const customValue = customTokenVariables?.get(tokenKey);
+
+        if (isRemoved) {
+          headerValue = '';
+        } else if (customValue !== undefined) {
+          headerValue = `{{${tokenKey}}}`;
+        } else if ((matchedTokenRequestsCount ?? 0) >= 1) {
+          headerValue = `{{${tokenKey}}}`;
+        }
+      }
 
       item.request.header.push({
         key: key,
@@ -217,7 +243,10 @@ export class PostmanGeneratorService {
   generateEnvironments(
     variables: VariableAnalysis,
     getHostVariable: (host: string) => string,
-    customEnvNames?: Map<string, string>
+    customEnvNames?: Map<string, string>,
+    customHostVariables?: Map<string, string>,
+    customTokenVariables?: Map<string, string>,
+    removedTokenKeys?: Set<string>
   ): PostmanEnvironment[] {
     const environments: PostmanEnvironment[] = [];
 
@@ -240,18 +269,23 @@ export class PostmanGeneratorService {
 
       // Add host variable
       const hostVarName = getHostVariable(env.host);
+      const hostValue = customHostVariables?.get(`{{${hostVarName}}}`) ?? env.host;
       environment.values.push({
         key: hostVarName,
-        value: env.host,
+        value: this.normalizeHostValue(hostValue),
         type: "default",
         enabled: true
       });
 
-      // Add token variables for this environment
+      // Add token variables per environment
       variables.tokens.forEach((tokenData, tokenKey) => {
+        if (removedTokenKeys?.has(tokenKey)) {
+          return;
+        }
+
         environment.values.push({
           key: tokenKey,
-          value: tokenData.value,
+          value: customTokenVariables?.get(tokenKey) ?? tokenData.value,
           type: "secret",
           enabled: true
         });

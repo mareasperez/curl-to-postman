@@ -22,6 +22,9 @@ export class ResultsPageComponent {
   private router = inject(Router);
 
   availableFormats = this.exportProvider.getAvailableFormats();
+  hostVariableOverrides = new Map<string, string>();
+  tokenVariableOverrides = new Map<string, string>();
+  removedTokenKeys = new Set<string>();
 
   currentFormat = computed(() => {
     const formatId = this.appState.uiState().selectedFormatId;
@@ -72,20 +75,78 @@ export class ResultsPageComponent {
   }
 
   onDownload(event: { format: ExportFormat; data: unknown; additionalFiles: AdditionalFile[] }) {
-    // Implement download logic or delegate to a service
-    console.log('Download requested', event);
-    // Simple implementation
-    const blob = new Blob([JSON.stringify(event.data, null, 2)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `curl-export.${event.format.extension}`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    this.downloadJsonFile(`curl-export.${event.format.extension}`, event.data);
+
+    // Download additional files too (e.g., Postman environments)
+    event.additionalFiles.forEach(file => {
+      this.downloadJsonFile(file.name, file.data);
+    });
+  }
+
+  onHostVariableUpdated(event: { name: string; value: string }) {
+    const next = new Map(this.hostVariableOverrides);
+    next.set(event.name, event.value);
+    this.hostVariableOverrides = next;
+    this.regenerate();
+  }
+
+  onTokenVariableUpdated(event: { name: string; value: string }) {
+    const next = new Map(this.tokenVariableOverrides);
+    next.set(event.name, event.value);
+    this.tokenVariableOverrides = next;
+
+    // If user edits value manually, ensure token is considered active
+    const removed = new Set(this.removedTokenKeys);
+    removed.delete(event.name);
+    this.removedTokenKeys = removed;
+    this.regenerate();
+  }
+
+  onTokenSanitized(name: string) {
+    const next = new Map(this.tokenVariableOverrides);
+    next.set(name, '[REDACTED]');
+    this.tokenVariableOverrides = next;
+
+    const removed = new Set(this.removedTokenKeys);
+    removed.delete(name);
+    this.removedTokenKeys = removed;
+    this.regenerate();
+  }
+
+  onTokenCleared(name: string) {
+    const next = new Map(this.tokenVariableOverrides);
+    next.set(name, '');
+    this.tokenVariableOverrides = next;
+
+    const removed = new Set(this.removedTokenKeys);
+    removed.delete(name);
+    this.removedTokenKeys = removed;
+    this.regenerate();
+  }
+
+  onTokenRemoveToggled(event: { name: string; removed: boolean }) {
+    const removed = new Set(this.removedTokenKeys);
+    if (event.removed) {
+      removed.add(event.name);
+    } else {
+      removed.delete(event.name);
+    }
+    this.removedTokenKeys = removed;
+    this.regenerate();
   }
 
   private reconvert() {
     this.regenerate();
+  }
+
+  private downloadJsonFile(filename: string, data: unknown) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   private regenerate() {
@@ -103,7 +164,10 @@ export class ResultsPageComponent {
         input,
         formatId,
         customRequestNames: requestNames,
-        customEnvNames: envNames
+        customEnvNames: envNames,
+        customHostVariables: this.hostVariableOverrides,
+        customTokenVariables: this.tokenVariableOverrides,
+        removedTokenKeys: this.removedTokenKeys
       });
       if (result.success) {
         this.appState.setConversionResult(result);
@@ -115,7 +179,10 @@ export class ResultsPageComponent {
       currentState.requests,
       formatId,
       this.appState.editableState().requestNames,
-      this.appState.editableState().envNames
+      this.appState.editableState().envNames,
+      this.hostVariableOverrides,
+      this.tokenVariableOverrides,
+      this.removedTokenKeys
     );
 
     if (result.success) {
