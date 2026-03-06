@@ -1,389 +1,389 @@
 .modal-content {
-    width: min(920px, 100%);
-    height: min(86vh, 820px);
-    display: flex;
-    flex-direction: column;
-    border-radius: 1rem;
-    border: 1px solid var(--border-strong);
-    background: var(--surface-solid);
-    box-shadow: var(--shadow-md);
-    overflow: hidden;
+  width: min(920px, 100%);
+  height: min(86vh, 820px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
 }
 
 .animate-slideUp {
-    animation: slideUp 0.24s ease-out;
+  animation: slideUp 0.24s ease-out;
 }
 
 @keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px) scale(0.985);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modal-header {
-    padding: 1rem 1.1rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem;
-    background: color-mix(in srgb, var(--surface-2) 92%, transparent 8%);
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  background: color-mix(in srgb, var(--surface-2) 92%, transparent 8%);
 }
 
 .modal-header h3 {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    min-width: 0;
-    font-size: 0.96rem;
-    font-weight: 760;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  font-size: 0.96rem;
+  font-weight: 760;
 }
 
 .url-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-muted);
-    font-family: "Consolas", "Menlo", monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-family: 'Consolas', 'Menlo', monospace;
 }
 
 .modal-close {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text-muted);
-    font-size: 1.15rem;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-close:hover {
-    border-color: var(--border-strong);
-    color: var(--text);
+  border-color: var(--border-strong);
+  color: var(--text);
 }
 
 .modal-tabs {
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.72rem 1.1rem;
-    border-bottom: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface-2) 90%, transparent 10%);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.72rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent 10%);
 }
 
 .tab-btn {
-    height: 2rem;
-    padding: 0 0.8rem;
-    border-radius: 0.55rem;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 0.76rem;
-    font-weight: 700;
-    cursor: pointer;
+  height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: 0.55rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .tab-btn.active {
-    border-color: color-mix(in srgb, var(--brand) 62%, var(--border) 38%);
-    color: var(--brand);
-    background: color-mix(in srgb, var(--brand) 14%, var(--surface-2) 86%);
+  border-color: color-mix(in srgb, var(--brand) 62%, var(--border) 38%);
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 14%, var(--surface-2) 86%);
 }
 
 .modal-body {
-    padding: 1rem 1.1rem;
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  padding: 1rem 1.1rem;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .details-section {
-    flex: 1;
-    min-height: 0;
+  flex: 1;
+  min-height: 0;
 }
 
 .internal-tabs {
-    display: flex;
-    gap: 0.4rem;
-    margin-bottom: 0.8rem;
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
 }
 
 .internal-tab-btn {
-    height: 1.9rem;
-    padding: 0 0.7rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 0.74rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
+  height: 1.9rem;
+  padding: 0 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .internal-tab-btn.active {
-    border-color: color-mix(in srgb, var(--brand) 62%, var(--border) 38%);
-    color: var(--brand);
-    background: color-mix(in srgb, var(--brand) 14%, var(--surface-2) 86%);
+  border-color: color-mix(in srgb, var(--brand) 62%, var(--border) 38%);
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 14%, var(--surface-2) 86%);
 }
 
 .count-pill {
-    padding: 0.1rem 0.35rem;
-    border-radius: 999px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    font-size: 0.67rem;
-    line-height: 1;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 0.67rem;
+  line-height: 1;
 }
 
 .form-row {
-    display: flex;
-    gap: 0.7rem;
+  display: flex;
+  gap: 0.7rem;
 }
 
 .method-group {
-    width: 118px;
-    flex-shrink: 0;
+  width: 118px;
+  flex-shrink: 0;
 }
 
 .url-group {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .label {
-    display: block;
-    margin-bottom: 0.36rem;
-    color: var(--text-muted);
-    font-size: 0.69rem;
-    font-weight: 760;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.36rem;
+  color: var(--text-muted);
+  font-size: 0.69rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .input-control {
-    width: 100%;
-    height: 2.25rem;
-    padding: 0 0.7rem;
-    border-radius: 0.55rem;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface-2) 90%, transparent 10%);
-    color: var(--text);
-    font-size: 0.84rem;
+  width: 100%;
+  height: 2.25rem;
+  padding: 0 0.7rem;
+  border-radius: 0.55rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent 10%);
+  color: var(--text);
+  font-size: 0.84rem;
 }
 
 .input-control:focus {
-    outline: 0;
-    border-color: var(--brand);
-    box-shadow: 0 0 0 3px var(--focus);
+  outline: 0;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--focus);
 }
 
 .font-mono {
-    font-family: "Consolas", "Menlo", monospace;
+  font-family: 'Consolas', 'Menlo', monospace;
 }
 
 .code-area {
-    min-height: 180px;
-    height: auto;
-    padding: 0.7rem;
-    line-height: 1.45;
-    resize: none;
+  min-height: 180px;
+  height: auto;
+  padding: 0.7rem;
+  line-height: 1.45;
+  resize: none;
 }
 
 .headers-editor {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    border: 1px solid var(--border);
-    border-radius: 0.62rem;
-    background: color-mix(in srgb, var(--surface-2) 88%, transparent 12%);
-    padding: 0.72rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.62rem;
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent 12%);
+  padding: 0.72rem;
 }
 
 .header-row {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .header-key {
-    flex: 1;
-    font-family: "Consolas", "Menlo", monospace;
+  flex: 1;
+  font-family: 'Consolas', 'Menlo', monospace;
 }
 
 .header-value {
-    flex: 1.8;
-    font-family: "Consolas", "Menlo", monospace;
+  flex: 1.8;
+  font-family: 'Consolas', 'Menlo', monospace;
 }
 
 .btn-xs {
-    height: 1.9rem;
-    padding: 0 0.62rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text);
-    font-size: 0.72rem;
-    font-weight: 700;
-    cursor: pointer;
+  height: 1.9rem;
+  padding: 0 0.62rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .btn-remove {
-    width: 1.9rem;
-    height: 1.9rem;
-    border-radius: 0.5rem;
-    border: 1px solid color-mix(in srgb, var(--danger) 34%, var(--border) 66%);
-    background: transparent;
-    color: var(--danger);
-    font-size: 1.1rem;
-    cursor: pointer;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--danger) 34%, var(--border) 66%);
+  background: transparent;
+  color: var(--danger);
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 
 .btn-link {
-    border: 0;
-    background: transparent;
-    color: var(--brand);
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .modal-actions {
-    padding: 0.95rem 1.1rem;
-    border-top: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface-2) 90%, transparent 10%);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  padding: 0.95rem 1.1rem;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent 10%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .btn-cancel,
 .btn-reset,
 .btn-save {
-    height: 2.2rem;
-    padding: 0 0.88rem;
-    border-radius: 0.58rem;
-    font-size: 0.78rem;
-    font-weight: 760;
-    cursor: pointer;
+  height: 2.2rem;
+  padding: 0 0.88rem;
+  border-radius: 0.58rem;
+  font-size: 0.78rem;
+  font-weight: 760;
+  cursor: pointer;
 }
 
 .btn-cancel {
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-muted);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
 }
 
 .btn-reset {
-    border: 1px solid color-mix(in srgb, var(--warning) 50%, var(--border) 50%);
-    background: transparent;
-    color: var(--warning);
-    margin-right: auto;
+  border: 1px solid color-mix(in srgb, var(--warning) 50%, var(--border) 50%);
+  background: transparent;
+  color: var(--warning);
+  margin-right: auto;
 }
 
 .btn-save {
-    border: 0;
-    color: #f8fafc;
-    background: linear-gradient(135deg, var(--brand), var(--accent));
+  border: 0;
+  color: #f8fafc;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
 }
 
 .code-block {
-    margin: 0;
-    height: 100%;
-    overflow: auto;
-    padding: 0.75rem;
-    border-radius: 0.62rem;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface-2) 92%, transparent 8%);
-    color: var(--text);
-    font-family: "Consolas", "Menlo", monospace;
-    font-size: 0.8rem;
-    line-height: 1.45;
-    white-space: pre-wrap;
-    word-break: break-word;
+  margin: 0;
+  height: 100%;
+  overflow: auto;
+  padding: 0.75rem;
+  border-radius: 0.62rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 92%, transparent 8%);
+  color: var(--text);
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .method-badge {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 3.45rem;
-    height: 1.5rem;
-    border-radius: 999px;
-    font-size: 0.67rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    border: 1px solid transparent;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 3.45rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  border: 1px solid transparent;
 }
 
 .method-badge.get {
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.42);
-    background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.42);
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .method-badge.post {
-    color: #3b82f6;
-    border-color: rgba(59, 130, 246, 0.42);
-    background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.42);
+  background: rgba(59, 130, 246, 0.12);
 }
 
 .method-badge.put {
-    color: #f59e0b;
-    border-color: rgba(245, 158, 11, 0.42);
-    background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.42);
+  background: rgba(245, 158, 11, 0.12);
 }
 
 .method-badge.patch {
-    color: #a855f7;
-    border-color: rgba(168, 85, 247, 0.42);
-    background: rgba(168, 85, 247, 0.12);
+  color: #a855f7;
+  border-color: rgba(168, 85, 247, 0.42);
+  background: rgba(168, 85, 247, 0.12);
 }
 
 .method-badge.delete {
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.42);
-    background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.42);
+  background: rgba(239, 68, 68, 0.12);
 }
 
 @media (max-width: 740px) {
-    .modal-content {
-        width: 100%;
-        height: min(92vh, 860px);
-        margin-top: 0.25rem;
-        border-radius: 0.85rem;
-    }
+  .modal-content {
+    width: 100%;
+    height: min(92vh, 860px);
+    margin-top: 0.25rem;
+    border-radius: 0.85rem;
+  }
 
-    .modal-header,
-    .modal-tabs,
-    .modal-body,
-    .modal-actions {
-        padding-left: 0.8rem;
-        padding-right: 0.8rem;
-    }
+  .modal-header,
+  .modal-tabs,
+  .modal-body,
+  .modal-actions {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
 
-    .form-row {
-        flex-direction: column;
-    }
+  .form-row {
+    flex-direction: column;
+  }
 
-    .method-group {
-        width: 100%;
-    }
+  .method-group {
+    width: 100%;
+  }
 
-    .modal-actions {
-        flex-wrap: wrap;
-    }
+  .modal-actions {
+    flex-wrap: wrap;
+  }
 }

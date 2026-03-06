@@ -7,179 +7,178 @@ import { PostmanGeneratorService } from '@services/postman-generator.service';
 import { ParsedRequest } from '@app/models';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConversionService {
-    constructor(
-        private curlParser: CurlParserService,
-        private variableDetector: VariableDetectorService,
-        private exportProvider: ExportProviderService,
-        private nameGenerator: PostmanGeneratorService
-    ) { }
+  constructor(
+    private curlParser: CurlParserService,
+    private variableDetector: VariableDetectorService,
+    private exportProvider: ExportProviderService,
+    private nameGenerator: PostmanGeneratorService,
+  ) {}
 
-    convert(request: ConversionRequest): ConversionResult {
-        try {
-            const input = request.input.trim();
+  convert(request: ConversionRequest): ConversionResult {
+    try {
+      const input = request.input.trim();
 
-            // Validate input
-            if (!input) {
-                return {
-                    success: false,
-                    error: 'Please enter at least one cURL command'
-                };
-            }
+      // Validate input
+      if (!input) {
+        return {
+          success: false,
+          error: 'Please enter at least one cURL command',
+        };
+      }
 
-            // Parse cURL commands
-            const requests = this.curlParser.parseMultiple(input);
+      // Parse cURL commands
+      const requests = this.curlParser.parseMultiple(input);
 
-            if (requests.length === 0) {
-                return {
-                    success: false,
-                    error: 'No valid cURL commands detected'
-                };
-            }
+      if (requests.length === 0) {
+        return {
+          success: false,
+          error: 'No valid cURL commands detected',
+        };
+      }
 
-            // Detect variables
-            const variables = this.variableDetector.analyze(requests);
+      // Detect variables
+      const variables = this.variableDetector.analyze(requests);
 
-            // Generate names and detect duplicates
-            const { generatedNames, duplicateNames } = this.generateNamesAndDuplicates(
-                requests,
-                request.customRequestNames
-            );
+      // Generate names and detect duplicates
+      const { generatedNames, duplicateNames } = this.generateNamesAndDuplicates(
+        requests,
+        request.customRequestNames,
+      );
 
-            // Export using selected format
-            const result = this.exportProvider.export(request.formatId, {
-                requests,
-                variables,
-                getHostVariable: (host) => this.variableDetector.getHostVariable(host),
-                customRequestNames: request.customRequestNames || new Map(),
-                customEnvNames: request.customEnvNames || new Map(),
-                customHostVariables: request.customHostVariables || new Map(),
-                customTokenVariables: request.customTokenVariables || new Map(),
-                removedTokenKeys: request.removedTokenKeys || new Set()
-            });
+      // Export using selected format
+      const result = this.exportProvider.export(request.formatId, {
+        requests,
+        variables,
+        getHostVariable: (host) => this.variableDetector.getHostVariable(host),
+        customRequestNames: request.customRequestNames || new Map(),
+        customEnvNames: request.customEnvNames || new Map(),
+        customHostVariables: request.customHostVariables || new Map(),
+        customTokenVariables: request.customTokenVariables || new Map(),
+        removedTokenKeys: request.removedTokenKeys || new Set(),
+      });
 
-            if (!result) {
-                return {
-                    success: false,
-                    error: 'Export failed: format not found'
-                };
-            }
+      if (!result) {
+        return {
+          success: false,
+          error: 'Export failed: format not found',
+        };
+      }
 
-            return {
-                success: true,
-                data: result.data,
-                additionalFiles: result.additionalFiles || [],
-                variables,
-                requests,
-                generatedNames,
-                duplicateNames
-            };
-        } catch (error) {
-            console.error('Conversion error:', error);
-            return {
-                success: false,
-                error: (error as Error).message
-            };
-        }
+      return {
+        success: true,
+        data: result.data,
+        additionalFiles: result.additionalFiles || [],
+        variables,
+        requests,
+        generatedNames,
+        duplicateNames,
+      };
+    } catch (error) {
+      console.error('Conversion error:', error);
+      return {
+        success: false,
+        error: (error as Error).message,
+      };
     }
+  }
 
-    regenerate(
-        requests: ParsedRequest[],
-        formatId: string,
-        customRequestNames?: Map<number, string>,
-        customEnvNames?: Map<string, string>,
-        customHostVariables?: Map<string, string>,
-        customTokenVariables?: Map<string, string>,
-        removedTokenKeys?: Set<string>
-    ): ConversionResult {
-        try {
-            // Re-analyze variables as content might have changed
-            const variables = this.variableDetector.analyze(requests);
+  regenerate(
+    requests: ParsedRequest[],
+    formatId: string,
+    customRequestNames?: Map<number, string>,
+    customEnvNames?: Map<string, string>,
+    customHostVariables?: Map<string, string>,
+    customTokenVariables?: Map<string, string>,
+    removedTokenKeys?: Set<string>,
+  ): ConversionResult {
+    try {
+      // Re-analyze variables as content might have changed
+      const variables = this.variableDetector.analyze(requests);
 
-            // Re-calculate names and duplicates
-            const { generatedNames, duplicateNames } = this.generateNamesAndDuplicates(
-                requests,
-                customRequestNames
-            );
+      // Re-calculate names and duplicates
+      const { generatedNames, duplicateNames } = this.generateNamesAndDuplicates(
+        requests,
+        customRequestNames,
+      );
 
-            // Export using selected format
-            const result = this.exportProvider.export(formatId, {
-                requests,
-                variables,
-                getHostVariable: (host) => this.variableDetector.getHostVariable(host),
-                customRequestNames: customRequestNames || new Map(),
-                customEnvNames: customEnvNames || new Map(),
-                customHostVariables: customHostVariables || new Map(),
-                customTokenVariables: customTokenVariables || new Map(),
-                removedTokenKeys: removedTokenKeys || new Set()
-            });
+      // Export using selected format
+      const result = this.exportProvider.export(formatId, {
+        requests,
+        variables,
+        getHostVariable: (host) => this.variableDetector.getHostVariable(host),
+        customRequestNames: customRequestNames || new Map(),
+        customEnvNames: customEnvNames || new Map(),
+        customHostVariables: customHostVariables || new Map(),
+        customTokenVariables: customTokenVariables || new Map(),
+        removedTokenKeys: removedTokenKeys || new Set(),
+      });
 
-            if (!result) {
-                return {
-                    success: false,
-                    error: 'Regeneration failed: format not found'
-                };
-            }
+      if (!result) {
+        return {
+          success: false,
+          error: 'Regeneration failed: format not found',
+        };
+      }
 
-            return {
-                success: true,
-                data: result.data,
-                additionalFiles: result.additionalFiles || [],
-                variables,
-                requests,
-                generatedNames,
-                duplicateNames
-            };
-        } catch (error) {
-            console.error('Regeneration error:', error);
-            return {
-                success: false,
-                error: (error as Error).message
-            };
-        }
+      return {
+        success: true,
+        data: result.data,
+        additionalFiles: result.additionalFiles || [],
+        variables,
+        requests,
+        generatedNames,
+        duplicateNames,
+      };
+    } catch (error) {
+      console.error('Regeneration error:', error);
+      return {
+        success: false,
+        error: (error as Error).message,
+      };
     }
+  }
 
-    validateInput(input: string): boolean {
-        return input.trim().length > 0 && input.includes('curl');
-    }
+  validateInput(input: string): boolean {
+    return input.trim().length > 0 && input.includes('curl');
+  }
 
-    countCommands(input: string): number {
-        return (input.match(/curl\s+/g) || []).length;
-    }
+  countCommands(input: string): number {
+    return (input.match(/curl\s+/g) || []).length;
+  }
 
-    private generateNamesAndDuplicates(
-        requests: ParsedRequest[],
-        customNames: Map<number, string> | undefined
-    ): {
-        generatedNames: Map<number, string>;
-        duplicateNames: Map<string, number[]>;
-    } {
-        const generatedNames = new Map<number, string>();
-        const nameToIndices = new Map<string, number[]>();
-        const duplicateNames = new Map<string, number[]>();
+  private generateNamesAndDuplicates(
+    requests: ParsedRequest[],
+    customNames: Map<number, string> | undefined,
+  ): {
+    generatedNames: Map<number, string>;
+    duplicateNames: Map<string, number[]>;
+  } {
+    const generatedNames = new Map<number, string>();
+    const nameToIndices = new Map<string, number[]>();
+    const duplicateNames = new Map<string, number[]>();
 
-        requests.forEach((req, index) => {
-            // Use custom name if provided, otherwise generate one
-            const name = customNames?.get(index) ||
-                this.nameGenerator.generateRequestName(req, index);
+    requests.forEach((req, index) => {
+      // Use custom name if provided, otherwise generate one
+      const name = customNames?.get(index) || this.nameGenerator.generateRequestName(req, index);
 
-            generatedNames.set(index, name);
+      generatedNames.set(index, name);
 
-            // Track indices for each name
-            const indices = nameToIndices.get(name) || [];
-            indices.push(index);
-            nameToIndices.set(name, indices);
-        });
+      // Track indices for each name
+      const indices = nameToIndices.get(name) || [];
+      indices.push(index);
+      nameToIndices.set(name, indices);
+    });
 
-        // Filter for duplicates (names appearing more than once)
-        nameToIndices.forEach((indices, name) => {
-            if (indices.length > 1) {
-                duplicateNames.set(name, indices);
-            }
-        });
+    // Filter for duplicates (names appearing more than once)
+    nameToIndices.forEach((indices, name) => {
+      if (indices.length > 1) {
+        duplicateNames.set(name, indices);
+      }
+    });
 
-        return { generatedNames, duplicateNames };
-    }
+    return { generatedNames, duplicateNames };
+  }
 }

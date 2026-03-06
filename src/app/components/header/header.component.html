@@ -1,32 +1,39 @@
 <header class="header-wrap">
-    <div class="header-shell">
-        <button class="brand" (click)="goHome()">
-            <span class="brand-mark">CTP</span>
-            <span class="brand-copy">
-                <span class="brand-title">cURL to Postman</span>
-                <span class="brand-subtitle">Fast local converter</span>
-            </span>
-        </button>
+  <div class="header-shell">
+    <button class="brand" (click)="goHome()">
+      <span class="brand-mark">CTP</span>
+      <span class="brand-copy">
+        <span class="brand-title">cURL to Postman</span>
+        <span class="brand-subtitle">Fast local converter</span>
+      </span>
+    </button>
 
-        <nav class="header-links">
-            <a href="https://github.com/mareasperez/curl-to-postman" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://linkedin.com/in/mauricio-areas" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        </nav>
+    <nav class="header-links">
+      <a
+        href="https://github.com/mareasperez/curl-to-postman"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub</a
+      >
+      <a href="https://linkedin.com/in/mauricio-areas" target="_blank" rel="noopener noreferrer"
+        >LinkedIn</a
+      >
+    </nav>
 
-        <div class="header-actions">
-            <button type="button" class="action-btn" (click)="onInfoClick()" title="Privacy details">
-                <span aria-hidden="true">🔒</span>
-                <span>Privacy</span>
-            </button>
-            <button
-                type="button"
-                class="action-btn strong"
-                (click)="toggleTheme()"
-                [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
-            >
-                <span aria-hidden="true">{{ isDark() ? '☀️' : '🌙' }}</span>
-                <span>{{ isDark() ? 'Light mode' : 'Dark mode' }}</span>
-            </button>
-        </div>
+    <div class="header-actions">
+      <button type="button" class="action-btn" (click)="onInfoClick()" title="Privacy details">
+        <span aria-hidden="true">🔒</span>
+        <span>Privacy</span>
+      </button>
+      <button
+        type="button"
+        class="action-btn strong"
+        (click)="toggleTheme()"
+        [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+      >
+        <span aria-hidden="true">{{ isDark() ? '☀️' : '🌙' }}</span>
+        <span>{{ isDark() ? 'Light mode' : 'Dark mode' }}</span>
+      </button>
     </div>
+  </div>
 </header>

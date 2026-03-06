@@ -14,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     // Register export providers
     { provide: EXPORT_PROVIDER, useClass: PostmanProviderService, multi: true },
     { provide: EXPORT_PROVIDER, useClass: OpenApiV3ProviderService, multi: true },
-    { provide: EXPORT_PROVIDER, useClass: OpenApiV2ProviderService, multi: true }
-  ]
+    { provide: EXPORT_PROVIDER, useClass: OpenApiV2ProviderService, multi: true },
+  ],
 };

@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ParsedRequest } from '@app/models';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CurlParserService {
-
   parse(curlCommand: string): ParsedRequest {
-    const lines = curlCommand.trim().split('\n').map(line => line.trim());
+    const lines = curlCommand
+      .trim()
+      .split('\n')
+      .map((line) => line.trim());
     const fullCommand = lines.join(' ').replace(/\\\s+/g, ' ');
 
     const request: ParsedRequest = {
       method: 'GET',
       url: '',
       headers: {},
-      body: null
+      body: null,
     };
 
     // Extract URL - look for URL after curl command, skipping flags
@@ -57,7 +58,8 @@ export class CurlParserService {
 
     // Extract body data - handle both single and double quotes
     // Match content within quotes, allowing escaped quotes inside
-    let dataMatch = fullCommand.match(/(?:--data-raw|--data|-d)\s+'([^']*)'/) ||
+    let dataMatch =
+      fullCommand.match(/(?:--data-raw|--data|-d)\s+'([^']*)'/) ||
       fullCommand.match(/(?:--data-raw|--data|-d)\s+"([^"]*)"/);
     if (!dataMatch) {
       // Try without quotes
@@ -71,7 +73,7 @@ export class CurlParserService {
   }
 
   parseMultiple(input: string): ParsedRequest[] {
-    const curlCommands = input.split(/(?=curl\s+)/g).filter(cmd => cmd.trim().startsWith('curl'));
-    return curlCommands.map(cmd => this.parse(cmd));
+    const curlCommands = input.split(/(?=curl\s+)/g).filter((cmd) => cmd.trim().startsWith('curl'));
+    return curlCommands.map((cmd) => this.parse(cmd));
   }
 }

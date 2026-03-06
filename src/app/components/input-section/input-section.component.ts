@@ -13,7 +13,7 @@ import { ConversionService } from '@services/conversion.service';
   selector: 'app-input-section',
   imports: [CommonModule, FormsModule],
   templateUrl: './input-section.component.html',
-  styleUrl: './input-section.component.css'
+  styleUrl: './input-section.component.css',
 })
 export class InputSectionComponent {
   readonly EXAMPLE_CURL = `curl 'https://api.example.com/users' \\
@@ -67,7 +67,7 @@ curl 'http://localhost:3000/health' \\
       this.onPasteExample();
       this.appState.showNotification(
         'An example was pasted. Click Convert now to preview the flow.',
-        'success'
+        'success',
       );
       return;
     }
@@ -76,7 +76,7 @@ curl 'http://localhost:3000/health' \\
       input: input,
       formatId: this.appState.uiState().selectedFormatId,
       customRequestNames: this.appState.editableState().requestNames,
-      customEnvNames: this.appState.editableState().envNames
+      customEnvNames: this.appState.editableState().envNames,
     });
 
     if (!result.success) {
@@ -86,14 +86,17 @@ curl 'http://localhost:3000/health' \\
     }
 
     // Update state with conversion results
-    this.appState.setConversionResult({
-      output: result.data,
-      additionalFiles: result.additionalFiles || [],
-      variables: result.variables || null,
-      requests: result.requests || [],
-      generatedNames: result.generatedNames || new Map(),
-      duplicateNames: result.duplicateNames || new Map()
-    }, true);
+    this.appState.setConversionResult(
+      {
+        output: result.data,
+        additionalFiles: result.additionalFiles || [],
+        variables: result.variables || null,
+        requests: result.requests || [],
+        generatedNames: result.generatedNames || new Map(),
+        duplicateNames: result.duplicateNames || new Map(),
+      },
+      true,
+    );
 
     // Initialize editable names if empty
     if (this.appState.editableState().requestNames.size === 0 && result.generatedNames) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
@@ -21,11 +21,11 @@ import { AppStateService } from '@services/app-state.service';
     HeaderComponent,
     ToastComponent,
     FooterComponent,
-    ModalComponent
+    ModalComponent,
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
-  constructor(public appState: AppStateService) {}
+  public appState = inject(AppStateService);
 }

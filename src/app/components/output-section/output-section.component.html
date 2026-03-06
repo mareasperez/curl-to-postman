@@ -1,93 +1,117 @@
 <div class="results-layout animate-fadeIn">
-    <section class="results-card">
-        <div class="results-head">
-            <div>
-                <p class="eyebrow">Results</p>
-                <h2>Conversion summary</h2>
-            </div>
-            <app-format-selector
-                [formats]="availableFormats()"
-                [selectedFormatId]="currentFormat().id"
-                (formatChanged)="onFormatChange($event)"
-            ></app-format-selector>
-        </div>
+  <section class="results-card">
+    <div class="results-head">
+      <div>
+        <p class="eyebrow">Results</p>
+        <h2>Conversion summary</h2>
+      </div>
+      <app-format-selector
+        [formats]="availableFormats()"
+        [selectedFormatId]="currentFormat().id"
+        (formatChanged)="onFormatChange($event)"
+      ></app-format-selector>
+    </div>
 
-        <div class="toolbar">
-            <div class="tabs-bar">
-                <button type="button" (click)="switchTab('summary')" [class.active]="activeTab() === 'summary'">
-                    <span aria-hidden="true">📊</span>
-                    <span>Summary</span>
-                </button>
-                <button type="button" (click)="switchTab('collection')" [class.active]="activeTab() === 'collection'">
-                    <span aria-hidden="true">🧩</span>
-                    <span>{{ currentFormat().name }}</span>
-                </button>
-                <button type="button" (click)="switchTab('environment')" [class.active]="activeTab() === 'environment'">
-                    <span aria-hidden="true">🗂️</span>
-                    <span>Files</span>
-                </button>
-                <button type="button" (click)="switchTab('variables')" [class.active]="activeTab() === 'variables'">
-                    <span aria-hidden="true">🔑</span>
-                    <span>Variables</span>
-                </button>
-            </div>
-            <div class="quick-actions">
-                <button type="button" (click)="onCopyToClipboard()"><span aria-hidden="true">📋</span><span>Copy</span></button>
-                <button type="button" (click)="onResetAll()" [disabled]="!hasModifiedRequests()"><span aria-hidden="true">↩</span><span>Reset</span></button>
-                <button type="button" (click)="onNewConversion()"><span aria-hidden="true">➕</span><span>New</span></button>
-                <button type="button" class="download-inline" (click)="onDownload()"><span aria-hidden="true">⬇</span><span>Download</span></button>
-            </div>
-        </div>
+    <div class="toolbar">
+      <div class="tabs-bar">
+        <button
+          type="button"
+          (click)="switchTab('summary')"
+          [class.active]="activeTab() === 'summary'"
+        >
+          <span aria-hidden="true">📊</span>
+          <span>Summary</span>
+        </button>
+        <button
+          type="button"
+          (click)="switchTab('collection')"
+          [class.active]="activeTab() === 'collection'"
+        >
+          <span aria-hidden="true">🧩</span>
+          <span>{{ currentFormat().name }}</span>
+        </button>
+        <button
+          type="button"
+          (click)="switchTab('environment')"
+          [class.active]="activeTab() === 'environment'"
+        >
+          <span aria-hidden="true">🗂️</span>
+          <span>Files</span>
+        </button>
+        <button
+          type="button"
+          (click)="switchTab('variables')"
+          [class.active]="activeTab() === 'variables'"
+        >
+          <span aria-hidden="true">🔑</span>
+          <span>Variables</span>
+        </button>
+      </div>
+      <div class="quick-actions">
+        <button type="button" (click)="onCopyToClipboard()">
+          <span aria-hidden="true">📋</span><span>Copy</span>
+        </button>
+        <button type="button" (click)="onResetAll()" [disabled]="!hasModifiedRequests()">
+          <span aria-hidden="true">↩</span><span>Reset</span>
+        </button>
+        <button type="button" (click)="onNewConversion()">
+          <span aria-hidden="true">➕</span><span>New</span>
+        </button>
+        <button type="button" class="download-inline" (click)="onDownload()">
+          <span aria-hidden="true">⬇</span><span>Download</span>
+        </button>
+      </div>
+    </div>
 
-        <div class="content-surface custom-scrollbar">
-            @if (activeTab() === 'summary') {
-            <app-summary-tab
-                [summaryData]="summaryData()"
-                [editableRequestNames]="editableRequestNames()"
-                [editableEnvNames]="editableEnvNames()"
-                [duplicateNames]="duplicateNames()"
-                (requestNameChanged)="onRequestNameChanged($event)"
-                (envNameChanged)="onEnvNameChanged($event)"
-                (requestClicked)="onRequestClick($event)"
-                (statClicked)="onSummaryStatClick($event)"
-            ></app-summary-tab>
-            }
+    <div class="content-surface custom-scrollbar">
+      @if (activeTab() === 'summary') {
+        <app-summary-tab
+          [summaryData]="summaryData()"
+          [editableRequestNames]="editableRequestNames()"
+          [editableEnvNames]="editableEnvNames()"
+          [duplicateNames]="duplicateNames()"
+          (requestNameChanged)="onRequestNameChanged($event)"
+          (envNameChanged)="onEnvNameChanged($event)"
+          (requestClicked)="onRequestClick($event)"
+          (statClicked)="onSummaryStatClick($event)"
+        ></app-summary-tab>
+      }
 
-            @if (activeTab() === 'collection') {
-            <app-output-viewer-tab [content]="outputJson()"></app-output-viewer-tab>
-            }
+      @if (activeTab() === 'collection') {
+        <app-output-viewer-tab [content]="outputJson()"></app-output-viewer-tab>
+      }
 
-            @if (activeTab() === 'environment') {
-            <app-additional-files-tab [files]="additionalFiles()"></app-additional-files-tab>
-            }
+      @if (activeTab() === 'environment') {
+        <app-additional-files-tab [files]="additionalFiles()"></app-additional-files-tab>
+      }
 
-            @if (activeTab() === 'variables') {
-            <app-variables-tab
-                [hostVariables]="hostVariables()"
-                [tokenVariables]="tokenVariables()"
-                (hostValueChanged)="onHostVariableUpdated($event)"
-                (tokenValueChanged)="onTokenVariableUpdated($event)"
-                (tokenSanitized)="onTokenSanitized($event)"
-                (tokenCleared)="onTokenCleared($event)"
-                (tokenRemoveToggled)="onTokenRemoveToggled($event)"
-            ></app-variables-tab>
-            }
-        </div>
-    </section>
+      @if (activeTab() === 'variables') {
+        <app-variables-tab
+          [hostVariables]="hostVariables()"
+          [tokenVariables]="tokenVariables()"
+          (hostValueChanged)="onHostVariableUpdated($event)"
+          (tokenValueChanged)="onTokenVariableUpdated($event)"
+          (tokenSanitized)="onTokenSanitized($event)"
+          (tokenCleared)="onTokenCleared($event)"
+          (tokenRemoveToggled)="onTokenRemoveToggled($event)"
+        ></app-variables-tab>
+      }
+    </div>
+  </section>
 
-    <app-modal
-        title="Request Details"
-        [show]="isDetailsModalOpen()"
-        (closeClicked)="closeDetailsModal()"
-    >
-        <app-request-details-editor
-            [request]="selectedRequest()"
-            [originalRequest]="selectedOriginalRequest()"
-            [requestName]="selectedRequestName()"
-            [rawOutput]="selectedRawOutput()"
-            (close)="closeDetailsModal()"
-            (requestUpdated)="onModalRequestUpdated($event)"
-            (resetRequested)="onModalResetRequested()"
-        ></app-request-details-editor>
-    </app-modal>
+  <app-modal
+    title="Request Details"
+    [show]="isDetailsModalOpen()"
+    (closeClicked)="closeDetailsModal()"
+  >
+    <app-request-details-editor
+      [request]="selectedRequest()"
+      [originalRequest]="selectedOriginalRequest()"
+      [requestName]="selectedRequestName()"
+      [rawOutput]="selectedRawOutput()"
+      (close)="closeDetailsModal()"
+      (requestUpdated)="onModalRequestUpdated($event)"
+      (resetRequested)="onModalResetRequested()"
+    ></app-request-details-editor>
+  </app-modal>
 </div>

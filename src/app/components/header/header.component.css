@@ -1,178 +1,190 @@
 :host {
-    display: block;
-    width: 100%;
-    padding: 0.9rem 1.25rem 0.6rem;
-    z-index: 100;
-    position: sticky;
-    top: 0;
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1.25rem 0.6rem;
+  z-index: 100;
+  position: sticky;
+  top: 0;
 }
 
 .header-wrap {
-    width: 100%;
+  width: 100%;
 }
 
 .header-shell {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.75rem 0.9rem;
-    border-radius: 1.1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(14px);
-    box-shadow: var(--shadow-sm);
-    position: relative;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
 }
 
 .header-shell::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.08) 35%, transparent 70%);
-    pointer-events: none;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 35%,
+    transparent 70%
+  );
+  pointer-events: none;
 }
 
 .brand {
-    border: 0;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    color: inherit;
-    cursor: pointer;
-    text-align: left;
-    padding: 0.2rem;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  padding: 0.2rem;
 }
 
 .brand-mark {
-    width: 2.35rem;
-    height: 2.35rem;
-    border-radius: 0.75rem;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg, var(--brand), var(--accent));
-    color: #f8fafc;
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.75rem;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  color: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
 }
 
 .brand-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
 
 .brand-title {
-    font-size: 0.98rem;
-    font-weight: 800;
-    letter-spacing: 0.01em;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 .brand-subtitle {
-    font-size: 0.72rem;
-    color: var(--text-muted);
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
 
 .header-links {
-    display: none;
-    align-items: center;
-    gap: 0.9rem;
+  display: none;
+  align-items: center;
+  gap: 0.9rem;
 }
 
 .header-links a {
-    color: var(--text-muted);
-    font-size: 0.84rem;
-    text-decoration: none;
-    font-weight: 700;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  text-decoration: none;
+  font-weight: 700;
 }
 
 .header-links a:hover {
-    color: var(--text);
+  color: var(--text);
 }
 
 .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
 }
 
 .action-btn {
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text);
-    border-radius: 0.65rem;
-    height: 2.35rem;
-    padding: 0 0.85rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  border-radius: 0.65rem;
+  height: 2.35rem;
+  padding: 0 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .action-btn:hover {
-    border-color: var(--border-strong);
-    transform: translateY(-1px);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
 }
 
 .action-btn.strong {
-    border-color: transparent;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 30%, var(--surface-2) 70%), color-mix(in srgb, var(--accent) 22%, var(--surface-2) 78%));
+  border-color: transparent;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--brand) 30%, var(--surface-2) 70%),
+    color-mix(in srgb, var(--accent) 22%, var(--surface-2) 78%)
+  );
 }
 
 @media (min-width: 900px) {
-    :host {
-        padding-inline: 2rem;
-    }
+  :host {
+    padding-inline: 2rem;
+  }
 
-    .header-links {
-        display: flex;
-    }
+  .header-links {
+    display: flex;
+  }
 }
 
 @media (max-width: 640px) {
-    :host {
-        padding: 0.4rem 0.3rem 0.45rem;
-    }
+  :host {
+    padding: 0.4rem 0.3rem 0.45rem;
+  }
 
-    .header-shell {
-        border-radius: 0.85rem;
-        padding: 0.62rem 0.65rem;
-        gap: 0.5rem;
-    }
+  .header-shell {
+    border-radius: 0.85rem;
+    padding: 0.62rem 0.65rem;
+    gap: 0.5rem;
+  }
 
-    .brand {
-        gap: 0.5rem;
-    }
+  .brand {
+    gap: 0.5rem;
+  }
 
-    .brand-mark {
-        width: 2rem;
-        height: 2rem;
-        border-radius: 0.6rem;
-        font-size: 0.65rem;
-    }
+  .brand-mark {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.6rem;
+    font-size: 0.65rem;
+  }
 
-    .brand-title {
-        font-size: 0.86rem;
-    }
+  .brand-title {
+    font-size: 0.86rem;
+  }
 
-    .brand-subtitle {
-        display: none;
-    }
+  .brand-subtitle {
+    display: none;
+  }
 
-    .header-actions {
-        gap: 0.35rem;
-    }
+  .header-actions {
+    gap: 0.35rem;
+  }
 
-    .action-btn {
-        height: 2.1rem;
-        padding: 0 0.58rem;
-        font-size: 0.72rem;
-        border-radius: 0.58rem;
-    }
+  .action-btn {
+    height: 2.1rem;
+    padding: 0 0.58rem;
+    font-size: 0.72rem;
+    border-radius: 0.58rem;
+  }
 }

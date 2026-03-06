@@ -1,169 +1,179 @@
 :host {
-    display: block;
-    min-height: 0;
-    height: 100%;
+  display: block;
+  min-height: 0;
+  height: 100%;
 }
 
 .results-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 0.95rem;
-    min-height: 0;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  min-height: 0;
+  height: 100%;
 }
 
 .results-card {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.95rem;
-    border-radius: 1.15rem;
-    background:
-        radial-gradient(120% 140% at 95% -25%, color-mix(in srgb, var(--accent) 12%, transparent 88%), transparent 60%),
-        var(--surface);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(14px);
-    padding: 1rem;
-    overflow: hidden;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  border-radius: 1.15rem;
+  background:
+    radial-gradient(
+      120% 140% at 95% -25%,
+      color-mix(in srgb, var(--accent) 12%, transparent 88%),
+      transparent 60%
+    ),
+    var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(14px);
+  padding: 1rem;
+  overflow: hidden;
 }
 
 .results-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.9rem;
-    align-items: flex-start;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.9rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .eyebrow {
-    margin: 0 0 0.35rem;
-    color: var(--brand);
-    font-weight: 800;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+  margin: 0 0 0.35rem;
+  color: var(--brand);
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    line-height: 1.2;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.2;
 }
 
 .toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .tabs-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
 }
 
 .tabs-bar button,
 .quick-actions button {
-    height: 2.15rem;
-    border-radius: 0.62rem;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text);
-    padding: 0 0.85rem;
-    font-size: 0.77rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+  height: 2.15rem;
+  border-radius: 0.62rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0 0.85rem;
+  font-size: 0.77rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .tabs-bar button:hover,
 .quick-actions button:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--accent) 55%, var(--border) 45%);
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border) 45%);
 }
 
 .tabs-bar button.active {
-    border-color: color-mix(in srgb, var(--brand) 65%, var(--border) 35%);
-    color: var(--brand);
-    background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 16%, var(--surface-2) 84%), color-mix(in srgb, var(--accent) 12%, var(--surface-2) 88%));
+  border-color: color-mix(in srgb, var(--brand) 65%, var(--border) 35%);
+  color: var(--brand);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--brand) 16%, var(--surface-2) 84%),
+    color-mix(in srgb, var(--accent) 12%, var(--surface-2) 88%)
+  );
 }
 
 .quick-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
 }
 
 .quick-actions button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .content-surface {
-    flex: 1 1 0;
-    height: 0;
-    min-height: 0;
-    border-radius: 0.92rem;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--surface-solid) 88%, transparent 12%);
-    padding: 0.85rem;
-    overflow-y: auto;
+  flex: 1 1 0;
+  height: 0;
+  min-height: 0;
+  border-radius: 0.92rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-solid) 88%, transparent 12%);
+  padding: 0.85rem;
+  overflow-y: auto;
 }
 
 .quick-actions .download-inline {
-    border-color: transparent;
-    color: #f8fafc;
-    background: linear-gradient(135deg, var(--brand), var(--accent));
-    box-shadow: var(--shadow-sm);
+  border-color: transparent;
+  color: #f8fafc;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  box-shadow: var(--shadow-sm);
 }
 
 @media (min-width: 900px) {
-    .results-card {
-        padding: 1.35rem;
-    }
+  .results-card {
+    padding: 1.35rem;
+  }
 
-    h2 {
-        font-size: 1.5rem;
-    }
+  h2 {
+    font-size: 1.5rem;
+  }
 }
 
 @media (max-width: 640px) {
-    .results-layout {
-        gap: 0.55rem;
-    }
+  .results-layout {
+    gap: 0.55rem;
+  }
 
-    .results-card {
-        border-radius: 0.9rem;
-        padding: 0.75rem;
-    }
+  .results-card {
+    border-radius: 0.9rem;
+    padding: 0.75rem;
+  }
 
-    h2 {
-        font-size: 1.1rem;
-    }
+  h2 {
+    font-size: 1.1rem;
+  }
 
-    .tabs-bar button,
-    .quick-actions button {
-        height: 2rem;
-        border-radius: 0.55rem;
-        font-size: 0.72rem;
-        padding: 0 0.62rem;
-    }
+  .tabs-bar button,
+  .quick-actions button {
+    height: 2rem;
+    border-radius: 0.55rem;
+    font-size: 0.72rem;
+    padding: 0 0.62rem;
+  }
 
-    .content-surface {
-        border-radius: 0.75rem;
-        padding: 0.65rem;
-    }
+  .content-surface {
+    border-radius: 0.75rem;
+    padding: 0.65rem;
+  }
 
-    .quick-actions .download-inline {
-        width: 100%;
-        justify-content: center;
-    }
+  .quick-actions .download-inline {
+    width: 100%;
+    justify-content: center;
+  }
 }

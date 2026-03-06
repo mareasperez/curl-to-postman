@@ -20,10 +20,13 @@ export interface OpenAPISpec {
 export interface OpenAPIServer {
   url: string;
   description: string;
-  variables?: Record<string, {
-    default: string;
-    description?: string;
-  }>;
+  variables?: Record<
+    string,
+    {
+      default: string;
+      description?: string;
+    }
+  >;
 }
 
 export interface OpenAPIPath {
@@ -73,27 +76,26 @@ export interface OpenAPISecurity {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OpenApiGeneratorService {
-
   generate(
     requests: ParsedRequest[],
     variables: VariableAnalysis,
-    customNames?: Map<number, string>
+    customNames?: Map<number, string>,
   ): OpenAPISpec {
     const spec: OpenAPISpec = {
       openapi: '3.0.3',
       info: {
         title: 'API Specification',
         description: 'Auto-generated from cURL commands',
-        version: '1.0.0'
+        version: '1.0.0',
       },
       servers: this.generateServers(variables),
       paths: {},
       components: {
-        securitySchemes: this.generateSecuritySchemes(variables)
-      }
+        securitySchemes: this.generateSecuritySchemes(variables),
+      },
     };
 
     // Add security if tokens exist
@@ -119,13 +121,13 @@ export class OpenApiGeneratorService {
         variables: {
           protocol: {
             default: env.protocol,
-            description: 'Protocol (http or https)'
+            description: 'Protocol (http or https)',
           },
           host: {
             default: env.host,
-            description: 'Server host and port'
-          }
-        }
+            description: 'Server host and port',
+          },
+        },
       };
       servers.push(server);
     });
@@ -133,7 +135,9 @@ export class OpenApiGeneratorService {
     return servers;
   }
 
-  private generateSecuritySchemes(variables: VariableAnalysis): Record<string, OpenAPISecurityScheme> | undefined {
+  private generateSecuritySchemes(
+    variables: VariableAnalysis,
+  ): Record<string, OpenAPISecurityScheme> | undefined {
     if (variables.tokens.size === 0) return undefined;
 
     const schemes: Record<string, OpenAPISecurityScheme> = {};
@@ -145,19 +149,19 @@ export class OpenApiGeneratorService {
         schemes[tokenKey] = {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT'
+          bearerFormat: 'JWT',
         };
       } else if (headerName.includes('api-key') || headerName.includes('apikey')) {
         schemes[tokenKey] = {
           type: 'apiKey',
           in: 'header',
-          name: tokenData.header
+          name: tokenData.header,
         };
       } else {
         schemes[tokenKey] = {
           type: 'apiKey',
           in: 'header',
-          name: tokenData.header
+          name: tokenData.header,
         };
       }
     });
@@ -180,7 +184,7 @@ export class OpenApiGeneratorService {
     request: ParsedRequest,
     index: number,
     variables: VariableAnalysis,
-    customNames?: Map<number, string>
+    customNames?: Map<number, string>,
   ): void {
     try {
       const url = new URL(request.url);
@@ -201,9 +205,9 @@ export class OpenApiGeneratorService {
         operationId: operationId,
         responses: {
           '200': {
-            description: 'Successful response'
-          }
-        }
+            description: 'Successful response',
+          },
+        },
       };
 
       // Add query parameters
@@ -223,9 +227,9 @@ export class OpenApiGeneratorService {
         operation.requestBody = {
           content: {
             'application/json': {
-              schema: this.inferSchemaFromBody(request.body)
-            }
-          }
+              schema: this.inferSchemaFromBody(request.body),
+            },
+          },
         };
       }
 
@@ -238,11 +242,9 @@ export class OpenApiGeneratorService {
   private generateOperationId(request: ParsedRequest, index: number): string {
     try {
       const urlObj = new URL(request.url);
-      const pathSegments = urlObj.pathname.split('/').filter(p => p);
+      const pathSegments = urlObj.pathname.split('/').filter((p) => p);
 
-      let endpoint = pathSegments.length > 0
-        ? pathSegments[pathSegments.length - 1]
-        : 'root';
+      let endpoint = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : 'root';
 
       endpoint = endpoint
         .replace(/[^a-zA-Z0-9_-]/g, '_')
@@ -270,15 +272,18 @@ export class OpenApiGeneratorService {
         in: 'query',
         required: false,
         schema: {
-          type: this.inferType(value)
-        }
+          type: this.inferType(value),
+        },
       });
     });
 
     return params;
   }
 
-  private extractHeaderParameters(request: ParsedRequest, variables: VariableAnalysis): OpenAPIParameter[] {
+  private extractHeaderParameters(
+    request: ParsedRequest,
+    variables: VariableAnalysis,
+  ): OpenAPIParameter[] {
     const params: OpenAPIParameter[] = [];
     const authHeaders = new Set(['authorization', 'x-auth-token', 'x-api-key', 'api-key']);
 
@@ -286,7 +291,8 @@ export class OpenApiGeneratorService {
       const lowerKey = key.toLowerCase();
 
       // Skip auth headers as they're handled by security schemes
-      const isAuthHeader = authHeaders.has(lowerKey) ||
+      const isAuthHeader =
+        authHeaders.has(lowerKey) ||
         variables.tokens.has(`${lowerKey.replace(/[^a-z0-9]/g, '_')}_token`);
 
       if (!isAuthHeader && !['content-type', 'accept', 'user-agent'].includes(lowerKey)) {
@@ -295,8 +301,8 @@ export class OpenApiGeneratorService {
           in: 'header',
           required: false,
           schema: {
-            type: 'string'
-          }
+            type: 'string',
+          },
         });
       }
     });
@@ -311,7 +317,7 @@ export class OpenApiGeneratorService {
     } catch {
       return {
         type: 'string',
-        example: body
+        example: body,
       };
     }
   }
@@ -320,7 +326,7 @@ export class OpenApiGeneratorService {
     if (Array.isArray(obj)) {
       return {
         type: 'array',
-        items: obj.length > 0 ? this.generateSchemaFromObject(obj[0]) : { type: 'string' }
+        items: obj.length > 0 ? this.generateSchemaFromObject(obj[0]) : { type: 'string' },
       };
     }
 
@@ -331,13 +337,13 @@ export class OpenApiGeneratorService {
       });
       return {
         type: 'object',
-        properties
+        properties,
       };
     }
 
     return {
       type: this.inferType(obj),
-      example: obj
+      example: obj,
     };
   }
 

@@ -1,28 +1,27 @@
 import type { ParsedRequest, VariableAnalysis, ExportOutput, AdditionalFile } from '@models/index';
 
-
 /**
  * State related to conversion results
  */
 export interface ConversionState {
-    /** Generated output (Postman collection, OpenAPI spec, etc.) */
-    output: ExportOutput | null;
+  /** Generated output (Postman collection, OpenAPI spec, etc.) */
+  output: ExportOutput | null;
 
-    /** Additional files like environment files */
-    additionalFiles: AdditionalFile[];
+  /** Additional files like environment files */
+  additionalFiles: AdditionalFile[];
 
-    /** Detected variables (hosts, tokens, environments) */
-    variables: VariableAnalysis | null;
+  /** Detected variables (hosts, tokens, environments) */
+  variables: VariableAnalysis | null;
 
-    /** Parsed cURL requests */
-    requests: ParsedRequest[];
+  /** Parsed cURL requests */
+  requests: ParsedRequest[];
 
-    /** Auto-generated request names */
-    generatedNames: Map<number, string>;
+  /** Auto-generated request names */
+  generatedNames: Map<number, string>;
 
-    /** Duplicate request names detected */
-    duplicateNames: Map<string, number[]>;
+  /** Duplicate request names detected */
+  duplicateNames: Map<string, number[]>;
 
-    /** Original parsed requests for reset functionality */
-    originalRequests?: ParsedRequest[];
+  /** Original parsed requests for reset functionality */
+  originalRequests?: ParsedRequest[];
 }

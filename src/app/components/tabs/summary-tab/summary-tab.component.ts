@@ -10,7 +10,7 @@ import { SummaryData } from '@models/summary-data.model';
   selector: 'app-summary-tab',
   imports: [CommonModule, StatsGridComponent, EditableListComponent],
   templateUrl: './summary-tab.component.html',
-  styleUrl: './summary-tab.component.css'
+  styleUrl: './summary-tab.component.css',
 })
 export class SummaryTabComponent {
   summaryData = input<SummaryData>({
@@ -19,7 +19,7 @@ export class SummaryTabComponent {
     totalTokens: 0,
     totalEnvironments: 0,
     requests: [],
-    environments: []
+    environments: [],
   });
   editableRequestNames = input<Map<number, string>>(new Map());
   duplicateNames = input<Map<string, number[]>>(new Map());
@@ -36,7 +36,7 @@ export class SummaryTabComponent {
       { icon: '📊', value: data.totalRequests, label: 'Requests' },
       { icon: '🌐', value: data.totalHosts, label: 'Hosts' },
       { icon: '🔑', value: data.totalTokens, label: 'Tokens' },
-      { icon: '🌍', value: data.totalEnvironments, label: 'Environments' }
+      { icon: '🌍', value: data.totalEnvironments, label: 'Environments' },
     ];
   };
 
@@ -46,30 +46,29 @@ export class SummaryTabComponent {
     return this.summaryData().requests.map((request, index) => {
       const name = this.editableRequestNames().get(index) || request.name;
       // Check if this name is in the duplicates map AND if this index is one of the duplicate occurrences
-      const isDuplicate = duplicates.has(name) &&
-        (duplicates.get(name)?.includes(index) ?? false);
+      const isDuplicate = duplicates.has(name) && (duplicates.get(name)?.includes(index) ?? false);
 
       return {
         badge: {
           text: request.request.method,
-          class: request.request.method.toLowerCase()
+          class: request.request.method.toLowerCase(),
         },
         name: name,
         preview: request.request.url.raw,
         meta: `Headers (${Object.keys(request.request.headers || {}).length})`,
-        isDuplicate: isDuplicate
+        isDuplicate: isDuplicate,
       };
     });
   };
 
   environmentItems = (): EditableItem[] => {
-    return this.summaryData().environments.map(env => ({
+    return this.summaryData().environments.map((env) => ({
       badge: {
         text: env.isLocal ? 'Local' : 'Remote',
-        class: env.isLocal ? 'local' : 'remote'
+        class: env.isLocal ? 'local' : 'remote',
       },
       name: this.editableEnvNames().get(env.name) || env.name,
-      preview: `${env.protocol}://${env.host}`
+      preview: `${env.protocol}://${env.host}`,
     }));
   };
 

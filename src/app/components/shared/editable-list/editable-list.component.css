@@ -1,173 +1,173 @@
 .editable-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .editable-item {
-    display: grid;
-    grid-template-columns: auto 250px 1fr auto;
-    gap: 1rem;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background: color-mix(in srgb, var(--surface-solid) 86%, transparent 14%);
-    border-radius: 0.5rem;
-    border: 1px solid var(--border);
-    transition: all 0.2s ease;
+  display: grid;
+  grid-template-columns: auto 250px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: color-mix(in srgb, var(--surface-solid) 86%, transparent 14%);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
 }
 
 .editable-item.cursor-pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .editable-item:hover {
-    border-color: var(--border-strong);
-    background: color-mix(in srgb, var(--surface-solid) 84%, var(--brand) 16%);
+  border-color: var(--border-strong);
+  background: color-mix(in srgb, var(--surface-solid) 84%, var(--brand) 16%);
 }
 
 .editable-item.duplicate {
-    border-color: #fbbf24;
-    background: rgba(251, 191, 36, 0.05);
+  border-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.05);
 }
 
 .editable-item.duplicate:hover {
-    border-color: #f59e0b;
-    background: rgba(251, 191, 36, 0.1);
+  border-color: #f59e0b;
+  background: rgba(251, 191, 36, 0.1);
 }
 
 .header-section {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .editable-input {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 0.375rem;
-    padding: 0.4rem 0.6rem;
-    color: var(--text);
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.4rem 0.6rem;
+  color: var(--text);
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  width: 100%;
 }
 
 .editable-input:focus {
-    outline: none;
-    border-color: var(--brand);
-    box-shadow: 0 0 0 3px var(--focus);
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--focus);
 }
 
 .badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    font-weight: 700;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    min-width: 3.5rem;
-    text-align: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  min-width: 3.5rem;
+  text-align: center;
 }
 
 .duplicate-badge {
-    color: #fbbf24;
-    font-size: 0.75rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+  color: #fbbf24;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 /* Badge Colors */
 .badge.get {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10b981;
-    border: 1px solid #10b981;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid #10b981;
 }
 
 .badge.post {
-    background: rgba(59, 130, 246, 0.2);
-    color: #3b82f6;
-    border: 1px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
 }
 
 .badge.put {
-    background: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
-    border: 1px solid #f59e0b;
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid #f59e0b;
 }
 
 .badge.patch {
-    background: rgba(168, 85, 247, 0.2);
-    color: #a855f7;
-    border: 1px solid #a855f7;
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+  border: 1px solid #a855f7;
 }
 
 .badge.delete {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    border: 1px solid #ef4444;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid #ef4444;
 }
 
 .badge.local {
-    background: rgba(34, 197, 94, 0.2);
-    color: #22c55e;
-    border: 1px solid #22c55e;
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid #22c55e;
 }
 
 .badge.remote {
-    background: rgba(96, 165, 250, 0.2);
-    color: #60a5fa;
-    border: 1px solid #60a5fa;
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+  border: 1px solid #60a5fa;
 }
 
 .url-preview {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    font-family: 'Courier New', monospace;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    opacity: 0.8;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.8;
 }
 
 .meta-info {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    white-space: nowrap;
-    background: var(--surface-2);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--border);
-    font-family: 'Courier New', monospace;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  background: var(--surface-2);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  font-family: 'Courier New', monospace;
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .editable-item {
-        grid-template-columns: 1fr auto;
-        grid-template-rows: auto auto auto;
-        gap: 0.75rem;
-        align-items: start;
-    }
+  .editable-item {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto;
+    gap: 0.75rem;
+    align-items: start;
+  }
 
-    .header-section {
-        grid-column: 1;
-    }
+  .header-section {
+    grid-column: 1;
+  }
 
-    .meta-info {
-        grid-column: 2;
-        justify-self: end;
-    }
+  .meta-info {
+    grid-column: 2;
+    justify-self: end;
+  }
 
-    .editable-input {
-        grid-column: 1 / -1;
-    }
+  .editable-input {
+    grid-column: 1 / -1;
+  }
 
-    .url-preview {
-        grid-column: 1 / -1;
-        font-size: 0.75rem;
-    }
+  .url-preview {
+    grid-column: 1 / -1;
+    font-size: 0.75rem;
+  }
 }

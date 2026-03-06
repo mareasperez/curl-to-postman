@@ -13,7 +13,7 @@ import { ParsedRequest } from '@models/index';
   selector: 'app-results-page',
   imports: [CommonModule, OutputSectionComponent],
   templateUrl: './results-page.component.html',
-  styleUrl: './results-page.component.css'
+  styleUrl: './results-page.component.css',
 })
 export class ResultsPageComponent {
   public appState = inject(AppStateService);
@@ -38,7 +38,7 @@ export class ResultsPageComponent {
 
   onRequestNameChanged(event: { index: number; name: string }) {
     this.appState.setRequestName(event.index, event.name);
-    // Debounce reconversion or reconvert specific part? 
+    // Debounce reconversion or reconvert specific part?
     // Ideally we re-run export, but keep parsed requests.
     this.reconvert();
   }
@@ -78,7 +78,7 @@ export class ResultsPageComponent {
     this.downloadJsonFile(`curl-export.${event.format.extension}`, event.data);
 
     // Download additional files too (e.g., Postman environments)
-    event.additionalFiles.forEach(file => {
+    event.additionalFiles.forEach((file) => {
       this.downloadJsonFile(file.name, file.data);
     });
   }
@@ -167,7 +167,7 @@ export class ResultsPageComponent {
         customEnvNames: envNames,
         customHostVariables: this.hostVariableOverrides,
         customTokenVariables: this.tokenVariableOverrides,
-        removedTokenKeys: this.removedTokenKeys
+        removedTokenKeys: this.removedTokenKeys,
       });
       if (result.success) {
         this.appState.setConversionResult(result);
@@ -182,7 +182,7 @@ export class ResultsPageComponent {
       this.appState.editableState().envNames,
       this.hostVariableOverrides,
       this.tokenVariableOverrides,
-      this.removedTokenKeys
+      this.removedTokenKeys,
     );
 
     if (result.success) {

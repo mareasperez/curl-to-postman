@@ -9,7 +9,7 @@ export type { EditableItem } from '@models/editable-item.model';
   selector: 'app-editable-list',
   imports: [CommonModule],
   templateUrl: './editable-list.component.html',
-  styleUrl: './editable-list.component.css'
+  styleUrl: './editable-list.component.css',
 })
 export class EditableListComponent {
   items = input<EditableItem[]>([]);

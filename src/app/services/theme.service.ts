@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/common';
 export type ThemeMode = 'light' | 'dark';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private document = inject(DOCUMENT);

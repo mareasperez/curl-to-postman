@@ -1,5 +1,5 @@
 export interface Stat {
-    icon: string;
-    value: number;
-    label: string;
+  icon: string;
+  value: number;
+  label: string;
 }

@@ -2,22 +2,22 @@
  * UI-related state (tabs, modals, visibility)
  */
 export interface UIState {
-    /** Currently active tab in output section */
-    currentTab: 'collection' | 'environment' | 'variables' | 'summary' | 'requests';
+  /** Currently active tab in output section */
+  currentTab: 'collection' | 'environment' | 'variables' | 'summary' | 'requests';
 
-    /** Whether output section is visible */
-    showOutput: boolean;
+  /** Whether output section is visible */
+  showOutput: boolean;
 
-    /** Selected export format ID */
-    selectedFormatId: string;
+  /** Selected export format ID */
+  selectedFormatId: string;
 
-    /** Whether features modal is open */
-    showFeaturesModal: boolean;
+  /** Whether features modal is open */
+  showFeaturesModal: boolean;
 
-    /** Global toast notification state */
-    toast: {
-        show: boolean;
-        message: string;
-        type: 'success' | 'error';
-    };
+  /** Global toast notification state */
+  toast: {
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+  };
 }

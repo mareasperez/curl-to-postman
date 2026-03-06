@@ -1,36 +1,47 @@
 <div class="app-layout">
-    <app-header />
-    <router-outlet />
-    <app-modal title="Privacy and security" [show]="appState.uiState().showFeaturesModal"
-        (closeClicked)="appState.toggleFeaturesModal()">
-        <div class="privacy-content">
-            <div class="privacy-panel">
-                <p class="privacy-eyebrow">Client-side only</p>
-                <h4>Your data stays in your browser</h4>
-                <p>Conversion runs locally. No backend, no remote data transfer, and no server-side storage.</p>
-            </div>
+  <app-header />
+  <router-outlet />
+  <app-modal
+    title="Privacy and security"
+    [show]="appState.uiState().showFeaturesModal"
+    (closeClicked)="appState.toggleFeaturesModal()"
+  >
+    <div class="privacy-content">
+      <div class="privacy-panel">
+        <p class="privacy-eyebrow">Client-side only</p>
+        <h4>Your data stays in your browser</h4>
+        <p>
+          Conversion runs locally. No backend, no remote data transfer, and no server-side storage.
+        </p>
+      </div>
 
-            <div class="privacy-grid">
-                <div class="privacy-item">
-                    <h5>Local processing</h5>
-                    <p>Parsing and export generation happen in the current browser session.</p>
-                </div>
-                <div class="privacy-item">
-                    <h5>No external relay</h5>
-                    <p>Payloads and headers are not sent to third-party services.</p>
-                </div>
-            </div>
+      <div class="privacy-grid">
+        <div class="privacy-item">
+          <h5>Local processing</h5>
+          <p>Parsing and export generation happen in the current browser session.</p>
         </div>
+        <div class="privacy-item">
+          <h5>No external relay</h5>
+          <p>Payloads and headers are not sent to third-party services.</p>
+        </div>
+      </div>
+    </div>
 
-        <div modal-footer class="privacy-footer">
-            <a class="privacy-link"
-                href="https://github.com/mareasperez/curl-to-postman" target="_blank" rel="noopener noreferrer">
-                View source on GitHub
-            </a>
-        </div>
-    </app-modal>
-    <app-footer class="flex-shrink-0" />
-    <app-toast [show]="appState.uiState().toast.show" 
-               [message]="appState.uiState().toast.message" 
-               [type]="appState.uiState().toast.type" />
+    <div modal-footer class="privacy-footer">
+      <a
+        class="privacy-link"
+        href="https://github.com/mareasperez/curl-to-postman"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View source on GitHub
+      </a>
+    </div>
+  </app-modal>
+  <app-footer class="flex-shrink-0" />
+  <app-toast
+    [show]="appState.uiState().toast.show"
+    [message]="appState.uiState().toast.message"
+    [type]="appState.uiState().toast.type"
+  />
 </div>

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ParsedRequest, VariableAnalysis, TokenData, EnvironmentData } from '@app/models';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VariableDetectorService {
   private buildHostVariableNames(hosts: Map<string, number[]>): Map<string, string> {
     const byHost = new Map<string, string>();
 
-    Array.from(hosts.keys()).forEach(hostOrigin => {
+    Array.from(hosts.keys()).forEach((hostOrigin) => {
       let base = 'host_default';
       try {
         const u = new URL(hostOrigin);
@@ -40,7 +39,8 @@ export class VariableDetectorService {
         hosts.get(host)!.push(index);
 
         // Detect environment type
-        const isLocal = url.hostname === 'localhost' ||
+        const isLocal =
+          url.hostname === 'localhost' ||
           url.hostname === '127.0.0.1' ||
           url.hostname.endsWith('.local');
 
@@ -53,7 +53,7 @@ export class VariableDetectorService {
             protocol: url.protocol.replace(':', ''),
             host: url.host,
             variables: {},
-            requestIndices: []
+            requestIndices: [],
           });
         }
         environments.get(envName)!.requestIndices.push(index);
@@ -66,7 +66,7 @@ export class VariableDetectorService {
               tokens.set(tokenKey, {
                 header: key,
                 value: value,
-                requests: []
+                requests: [],
               });
             }
             tokens.get(tokenKey)!.requests.push(index);
@@ -84,8 +84,10 @@ export class VariableDetectorService {
   private isAuthHeader(key: string, value: string): boolean {
     const authHeaders = ['authorization', 'x-auth-token', 'x-api-key', 'api-key', 'token'];
     const lowerKey = key.toLowerCase();
-    const hasAuthHeader = authHeaders.some(header => lowerKey.includes(header));
-    const hasAuthValue = Boolean(value && (value.startsWith('Bearer ') || value.startsWith('Token ')));
+    const hasAuthHeader = authHeaders.some((header) => lowerKey.includes(header));
+    const hasAuthValue = Boolean(
+      value && (value.startsWith('Bearer ') || value.startsWith('Token ')),
+    );
     return hasAuthHeader || hasAuthValue;
   }
 

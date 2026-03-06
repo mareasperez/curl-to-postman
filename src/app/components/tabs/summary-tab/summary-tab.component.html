@@ -1,21 +1,26 @@
 <div class="animate-fadeIn">
-    <div class="summary-container">
-        <app-stats-grid [stats]="stats()" (statClicked)="onStatClick($event)"></app-stats-grid>
+  <div class="summary-container">
+    <app-stats-grid [stats]="stats()" (statClicked)="onStatClick($event)"></app-stats-grid>
 
-        @if (summaryData().requests.length > 0) {
-        <div class="section-card">
-            <h4 class="section-title">Requests</h4>
-            <app-editable-list [items]="requestItems()" (itemChanged)="onRequestNameChange($event)"
-                (itemClicked)="onRequestClick($event)"></app-editable-list>
-        </div>
-        }
+    @if (summaryData().requests.length > 0) {
+      <div class="section-card">
+        <h4 class="section-title">Requests</h4>
+        <app-editable-list
+          [items]="requestItems()"
+          (itemChanged)="onRequestNameChange($event)"
+          (itemClicked)="onRequestClick($event)"
+        ></app-editable-list>
+      </div>
+    }
 
-        @if (summaryData().environments.length > 0) {
-        <div class="section-card">
-            <h4 class="section-title">Environments</h4>
-            <app-editable-list [items]="environmentItems()"
-                (itemChanged)="onEnvironmentNameChange($event)"></app-editable-list>
-        </div>
-        }
-    </div>
+    @if (summaryData().environments.length > 0) {
+      <div class="section-card">
+        <h4 class="section-title">Environments</h4>
+        <app-editable-list
+          [items]="environmentItems()"
+          (itemChanged)="onEnvironmentNameChange($event)"
+        ></app-editable-list>
+      </div>
+    }
+  </div>
 </div>

@@ -23,10 +23,10 @@ import { AdditionalFile } from '@models/additional-file.model';
     VariablesTabComponent,
     AdditionalFilesTabComponent,
     ModalComponent,
-    RequestDetailsEditorComponent
+    RequestDetailsEditorComponent,
   ],
   templateUrl: './output-section.component.html',
-  styleUrl: './output-section.component.css'
+  styleUrl: './output-section.component.css',
 })
 export class OutputSectionComponent {
   // Inputs
@@ -42,7 +42,14 @@ export class OutputSectionComponent {
   hostVariableOverrides = input<Map<string, string>>(new Map());
   tokenVariableOverrides = input<Map<string, string>>(new Map());
   removedTokenKeys = input<Set<string>>(new Set());
-  currentFormat = input<ExportFormat>({ id: '', name: '', version: '', extension: '', mimeType: '', description: '' });
+  currentFormat = input<ExportFormat>({
+    id: '',
+    name: '',
+    version: '',
+    extension: '',
+    mimeType: '',
+    description: '',
+  });
   availableFormats = input<ExportFormat[]>([]);
   currentTab = input<'collection' | 'environment' | 'variables' | 'summary'>('summary');
 
@@ -54,7 +61,11 @@ export class OutputSectionComponent {
   requestResetRequested = output<{ index: number }>();
   resetAllRequested = output<void>();
   copyRequested = output<string>();
-  downloadRequested = output<{ format: ExportFormat; data: unknown; additionalFiles: AdditionalFile[] }>();
+  downloadRequested = output<{
+    format: ExportFormat;
+    data: unknown;
+    additionalFiles: AdditionalFile[];
+  }>();
   requestDetailsUpdated = output<{ index: number; request: ParsedRequest }>();
   hostVariableUpdated = output<{ name: string; value: string }>();
   tokenVariableUpdated = output<{ name: string; value: string }>();
@@ -123,9 +134,9 @@ export class OutputSectionComponent {
       totalEnvironments: vars ? vars.environments.size : 0,
       requests: reqs.map((req, index) => ({
         name: this.editableRequestNames().get(index) || `${req.method} ${req.url}`,
-        request: req
+        request: req,
       })),
-      environments: vars ? Array.from(vars.environments.values()) : []
+      environments: vars ? Array.from(vars.environments.values()) : [],
     };
   };
 
@@ -137,7 +148,7 @@ export class OutputSectionComponent {
       return {
         name: varName,
         value: this.hostVariableOverrides().get(varName) ?? host,
-        count: indices.length
+        count: indices.length,
       };
     });
   };
@@ -150,7 +161,7 @@ export class OutputSectionComponent {
       name: key,
       value: this.tokenVariableOverrides().get(key) ?? data.value,
       count: data.requests.length,
-      removed: this.removedTokenKeys().has(key)
+      removed: this.removedTokenKeys().has(key),
     }));
   };
 
@@ -182,7 +193,7 @@ export class OutputSectionComponent {
     this.downloadRequested.emit({
       format: this.currentFormat(),
       data: this.output(),
-      additionalFiles: this.additionalFiles()
+      additionalFiles: this.additionalFiles(),
     });
   }
 
@@ -232,7 +243,7 @@ export class OutputSectionComponent {
     if (this.selectedRequestIndex() !== -1) {
       this.requestDetailsUpdated.emit({
         index: this.selectedRequestIndex(),
-        request: updatedReq
+        request: updatedReq,
       });
     }
   }
@@ -240,7 +251,7 @@ export class OutputSectionComponent {
   onModalResetRequested() {
     if (this.selectedRequestIndex() !== -1) {
       this.requestResetRequested.emit({
-        index: this.selectedRequestIndex()
+        index: this.selectedRequestIndex(),
       });
     }
   }

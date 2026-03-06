@@ -11,7 +11,7 @@ import { ThemeService } from '@services/theme.service';
   selector: 'app-header',
   imports: [],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent {
   private appState = inject(AppStateService);

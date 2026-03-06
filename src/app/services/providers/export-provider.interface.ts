@@ -8,54 +8,54 @@ import { VariableAnalysis } from '@models/index';
  * Metadata describing an export format
  */
 export interface ExportFormat {
-    id: string;
-    name: string;
-    version: string;
-    extension: string;
-    mimeType: string;
-    description?: string;
+  id: string;
+  name: string;
+  version: string;
+  extension: string;
+  mimeType: string;
+  description?: string;
 }
 
 /**
  * Result of an export operation
  */
 export interface ExportResult {
+  data: any;
+  metadata: ExportFormat;
+  additionalFiles?: {
+    name: string;
     data: any;
-    metadata: ExportFormat;
-    additionalFiles?: {
-        name: string;
-        data: any;
-        mimeType: string;
-    }[];
+    mimeType: string;
+  }[];
 }
 
 /**
  * Input parameters for export generation
  */
 export interface ExportInput {
-    requests: ParsedRequest[];
-    variables: VariableAnalysis;
-    getHostVariable: (host: string) => string;
-    customRequestNames?: Map<number, string>;
-    customEnvNames?: Map<string, string>;
-    customHostVariables?: Map<string, string>;
-    customTokenVariables?: Map<string, string>;
-    removedTokenKeys?: Set<string>;
+  requests: ParsedRequest[];
+  variables: VariableAnalysis;
+  getHostVariable: (host: string) => string;
+  customRequestNames?: Map<number, string>;
+  customEnvNames?: Map<string, string>;
+  customHostVariables?: Map<string, string>;
+  customTokenVariables?: Map<string, string>;
+  removedTokenKeys?: Set<string>;
 }
 
 /**
  * Base interface that all export providers must implement
  */
 export interface ExportProvider {
-    /**
-     * Generate export output from parsed requests
-     */
-    generate(input: ExportInput): ExportResult;
+  /**
+   * Generate export output from parsed requests
+   */
+  generate(input: ExportInput): ExportResult;
 
-    /**
-     * Get metadata about this export format
-     */
-    getMetadata(): ExportFormat;
+  /**
+   * Get metadata about this export format
+   */
+  getMetadata(): ExportFormat;
 }
 
 /**

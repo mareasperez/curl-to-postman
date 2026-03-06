@@ -4,5 +4,5 @@ import { ResultsPageComponent } from '@pages/results-page.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
-  { path: 'results', component: ResultsPageComponent }
+  { path: 'results', component: ResultsPageComponent },
 ];

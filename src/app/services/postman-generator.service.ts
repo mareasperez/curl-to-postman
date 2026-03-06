@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core';
-import type { ParsedRequest, VariableAnalysis, PostmanCollection, PostmanItem, PostmanHeader, PostmanVariable, PostmanEnvironment } from '@app/models';
+import type {
+  ParsedRequest,
+  VariableAnalysis,
+  PostmanCollection,
+  PostmanItem,
+  PostmanHeader,
+  PostmanVariable,
+  PostmanEnvironment,
+} from '@app/models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PostmanGeneratorService {
   private normalizeBaseUrl(value: string): string {
@@ -24,16 +32,16 @@ export class PostmanGeneratorService {
     customNames?: Map<number, string>,
     customHostVariables?: Map<string, string>,
     customTokenVariables?: Map<string, string>,
-    removedTokenKeys?: Set<string>
+    removedTokenKeys?: Set<string>,
   ): PostmanCollection {
     const collection: PostmanCollection = {
       info: {
-        name: "Converted from cURL",
-        description: "Auto-generated collection from cURL commands",
-        schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+        name: 'Converted from cURL',
+        description: 'Auto-generated collection from cURL commands',
+        schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
       },
       item: [],
-      variable: []
+      variable: [],
     };
 
     // Generate requests
@@ -45,7 +53,7 @@ export class PostmanGeneratorService {
         getHostVariable,
         customNames,
         customTokenVariables,
-        removedTokenKeys
+        removedTokenKeys,
       );
       collection.item.push(item);
     });
@@ -60,7 +68,7 @@ export class PostmanGeneratorService {
     getHostVariable: (host: string) => string,
     customNames?: Map<number, string>,
     customTokenVariables?: Map<string, string>,
-    removedTokenKeys?: Set<string>
+    removedTokenKeys?: Set<string>,
   ): PostmanItem {
     let url = request.url;
     let protocol = 'https';
@@ -70,7 +78,8 @@ export class PostmanGeneratorService {
     try {
       const urlObj = new URL(request.url);
       protocol = urlObj.protocol.replace(':', '');
-      const hostVarName = variables.hostVariableNames.get(urlObj.origin) ?? getHostVariable(urlObj.origin);
+      const hostVarName =
+        variables.hostVariableNames.get(urlObj.origin) ?? getHostVariable(urlObj.origin);
       url = `{{${hostVarName}}}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
       usesHostVariable = true;
     } catch (e) {
@@ -93,9 +102,9 @@ export class PostmanGeneratorService {
           raw: url,
           protocol: usesHostVariable ? '' : protocol,
           host: this.parseHost(url),
-          path: this.parsePath(url)
-        }
-      }
+          path: this.parsePath(url),
+        },
+      },
     };
 
     // Add headers with variable replacement
@@ -126,20 +135,20 @@ export class PostmanGeneratorService {
       item.request.header.push({
         key: key,
         value: headerValue,
-        type: "text"
+        type: 'text',
       });
     });
 
     // Add body if present
     if (request.body) {
       item.request.body = {
-        mode: "raw",
+        mode: 'raw',
         raw: request.body,
         options: {
           raw: {
-            language: "json"
-          }
-        }
+            language: 'json',
+          },
+        },
       };
     }
 
@@ -166,7 +175,7 @@ export class PostmanGeneratorService {
         }
       }
 
-      const pathSegments = pathname.split('/').filter(p => p);
+      const pathSegments = pathname.split('/').filter((p) => p);
 
       // If we couldn't extract any path, throw error to use fallback
       if (!pathname && !request.url.startsWith('http')) {
@@ -174,9 +183,7 @@ export class PostmanGeneratorService {
       }
 
       // Get the last meaningful segment or use a default
-      let endpoint = pathSegments.length > 0
-        ? pathSegments[pathSegments.length - 1]
-        : 'root';
+      let endpoint = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : 'root';
 
       // Remove common file extensions and query parameters
       endpoint = endpoint.replace(/\.(json|xml|html)$/i, '');
@@ -220,13 +227,13 @@ export class PostmanGeneratorService {
     try {
       // Try standard URL parsing first
       const urlObj = new URL(url);
-      return urlObj.pathname.split('/').filter(p => p);
+      return urlObj.pathname.split('/').filter((p) => p);
     } catch (e) {
       // If URL contains variables like {{api}}, extract path manually
       // Match everything after }}/ or after host/
       const pathMatch = url.match(/(?:}}|\/\/[^\/]+)(\/[^?#]*)/);
       if (pathMatch && pathMatch[1]) {
-        return pathMatch[1].split('/').filter(p => p);
+        return pathMatch[1].split('/').filter((p) => p);
       }
       return [];
     }
@@ -238,19 +245,19 @@ export class PostmanGeneratorService {
     customEnvNames?: Map<string, string>,
     customHostVariables?: Map<string, string>,
     customTokenVariables?: Map<string, string>,
-    removedTokenKeys?: Set<string>
+    removedTokenKeys?: Set<string>,
   ): PostmanEnvironment[] {
     const envEntries = Array.from(variables.environments.entries());
     const defaultName = envEntries.length === 1 ? envEntries[0][0] : 'multi_environment';
     const envName = customEnvNames?.get(defaultName) || defaultName;
 
-    const valuesMap = new Map<string, { value: string; type: "default" | "secret" }>();
+    const valuesMap = new Map<string, { value: string; type: 'default' | 'secret' }>();
 
-    Array.from(variables.hosts.keys()).forEach(host => {
+    Array.from(variables.hosts.keys()).forEach((host) => {
       const hostVarName = variables.hostVariableNames.get(host) ?? getHostVariable(host);
       valuesMap.set(hostVarName, {
         value: this.normalizeBaseUrl(customHostVariables?.get(hostVarName) ?? host),
-        type: "default"
+        type: 'default',
       });
     });
 
@@ -260,7 +267,7 @@ export class PostmanGeneratorService {
       }
       valuesMap.set(tokenKey, {
         value: customTokenVariables?.get(tokenKey) ?? tokenData.value,
-        type: "secret"
+        type: 'secret',
       });
     });
 
@@ -270,8 +277,8 @@ export class PostmanGeneratorService {
         key,
         value: data.value,
         type: data.type,
-        enabled: true
-      }))
+        enabled: true,
+      })),
     };
 
     return [environment];

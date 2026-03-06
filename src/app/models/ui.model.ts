@@ -1,6 +1,6 @@
 export interface KeyValueItem {
-    key: string;
-    value: string;
+  key: string;
+  value: string;
 }
 
 export type HeaderItem = KeyValueItem;

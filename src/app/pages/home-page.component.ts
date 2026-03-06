@@ -5,6 +5,6 @@ import { InputSectionComponent } from '@components/input-section/input-section.c
   selector: 'app-home-page',
   imports: [InputSectionComponent],
   templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.css'
+  styleUrl: './home-page.component.css',
 })
-export class HomePageComponent { }
+export class HomePageComponent {}
