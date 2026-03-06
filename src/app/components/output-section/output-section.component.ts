@@ -130,12 +130,14 @@ export class OutputSectionComponent {
   hostVariables = (): Variable[] => {
     const vars = this.variables();
     if (!vars) return [];
-
-    return Array.from(vars.hosts.entries()).map(([host, indices]) => ({
-      name: `{{${host.replace(/[^a-zA-Z0-9]/g, '_')}_host}}`,
-      value: this.hostVariableOverrides().get(`{{${host.replace(/[^a-zA-Z0-9]/g, '_')}_host}}`) ?? host,
-      count: indices.length
-    }));
+    return Array.from(vars.hosts.entries()).map(([host, indices]) => {
+      const varName = vars.hostVariableNames.get(host) ?? 'host__default';
+      return {
+        name: varName,
+        value: this.hostVariableOverrides().get(varName) ?? host,
+        count: indices.length
+      };
+    });
   };
 
   tokenVariables = (): Variable[] => {

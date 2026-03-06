@@ -6,6 +6,22 @@ import { ParsedRequest, VariableAnalysis, TokenData, EnvironmentData } from '../
   providedIn: 'root'
 })
 export class VariableDetectorService {
+  private buildHostVariableNames(hosts: Map<string, number[]>): Map<string, string> {
+    const byHost = new Map<string, string>();
+
+    Array.from(hosts.keys()).forEach(hostOrigin => {
+      let base = 'host<default>';
+      try {
+        const u = new URL(hostOrigin);
+        base = `host<${u.host.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}>`;
+      } catch {
+        base = `host<${hostOrigin.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}>`;
+      }
+      byHost.set(hostOrigin, base);
+    });
+
+    return byHost;
+  }
 
   analyze(requests: ParsedRequest[]): VariableAnalysis {
     const hosts = new Map<string, number[]>();
@@ -36,14 +52,16 @@ export class VariableDetectorService {
             isLocal: isLocal,
             protocol: url.protocol.replace(':', ''),
             host: url.host,
-            variables: {}
+            variables: {},
+            requestIndices: []
           });
         }
+        environments.get(envName)!.requestIndices.push(index);
 
         // Detect tokens
         Object.entries(request.headers).forEach(([key, value]) => {
           if (this.isAuthHeader(key, value)) {
-            const tokenKey = `${key.toLowerCase().replace(/[^a-z0-9]/g, '_')}_token`;
+            const tokenKey = `${envName}_${key.toLowerCase().replace(/[^a-z0-9]/g, '_')}_token`;
             if (!tokens.has(tokenKey)) {
               tokens.set(tokenKey, {
                 header: key,
@@ -59,7 +77,8 @@ export class VariableDetectorService {
       }
     });
 
-    return { hosts, tokens, environments };
+    const hostVariableNames = this.buildHostVariableNames(hosts);
+    return { hosts, hostVariableNames, tokens, environments };
   }
 
   private isAuthHeader(key: string, value: string): boolean {
@@ -73,9 +92,10 @@ export class VariableDetectorService {
   getHostVariable(host: string): string {
     try {
       const url = new URL(host);
-      return url.hostname.replace(/\./g, '_') + '_host';
+      const normalized = url.host.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
+      return `host<${normalized}>`;
     } catch {
-      return 'host';
+      return 'host<default>';
     }
   }
 }

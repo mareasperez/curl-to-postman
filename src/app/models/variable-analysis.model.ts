@@ -16,6 +16,7 @@ export interface EnvironmentData {
     protocol: string;
     host: string;
     variables: Record<string, string>;
+    requestIndices: number[];
 }
 
 /**
@@ -23,6 +24,7 @@ export interface EnvironmentData {
  */
 export interface VariableAnalysis {
     hosts: Map<string, number[]>;
+    hostVariableNames: Map<string, string>;
     tokens: Map<string, TokenData>;
     environments: Map<string, EnvironmentData>;
 }

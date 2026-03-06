@@ -5,13 +5,15 @@ import type { ParsedRequest, VariableAnalysis, PostmanCollection, PostmanItem, P
   providedIn: 'root'
 })
 export class PostmanGeneratorService {
-  private normalizeHostValue(value: string): string {
+  private normalizeBaseUrl(value: string): string {
     if (!value) return value;
     try {
       const parsed = new URL(value);
-      return parsed.host;
+      return parsed.origin;
     } catch {
-      return value.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+      const trimmed = value.replace(/\/+$/, '');
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+      return `https://${trimmed}`;
     }
   }
 
@@ -62,22 +64,13 @@ export class PostmanGeneratorService {
   ): PostmanItem {
     let url = request.url;
     let protocol = 'https';
-    let useVariable = false;
 
     // Replace host with variable if applicable
     try {
       const urlObj = new URL(request.url);
       protocol = urlObj.protocol.replace(':', '');
-      const host = urlObj.origin;
-
-      variables.hosts.forEach((requestIndices, hostValue) => {
-        if (hostValue === host) {
-          const varName = getHostVariable(host);
-          useVariable = true;
-          // Keep protocol in request URL and host in env variable.
-          url = `${protocol}://{{${varName}}}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
-        }
-      });
+      const hostVarName = variables.hostVariableNames.get(urlObj.origin) ?? getHostVariable(urlObj.origin);
+      url = `{{${hostVarName}}}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
     } catch (e) {
       console.error('Error processing URL:', e);
       // Try to extract protocol from URL string if parsing failed
@@ -107,26 +100,23 @@ export class PostmanGeneratorService {
     Object.entries(request.headers).forEach(([key, value]) => {
       let headerValue = value;
       let matchedTokenKey: string | null = null;
-      let matchedTokenRequestsCount: number | null = null;
 
       // Replace token with variable if applicable
       variables.tokens.forEach((tokenData, tokenKey) => {
-        if (tokenData.value === value && !matchedTokenKey) {
+        const isSameHeader = tokenData.header.toLowerCase() === key.toLowerCase();
+        const isSameRequest = tokenData.requests.includes(index);
+        if (isSameHeader && isSameRequest && tokenData.value === value && !matchedTokenKey) {
           matchedTokenKey = tokenKey;
-          matchedTokenRequestsCount = tokenData.requests.length;
         }
       });
 
       if (matchedTokenKey) {
         const tokenKey = matchedTokenKey;
         const isRemoved = removedTokenKeys?.has(tokenKey) ?? false;
-        const customValue = customTokenVariables?.get(tokenKey);
 
         if (isRemoved) {
           headerValue = '';
-        } else if (customValue !== undefined) {
-          headerValue = `{{${tokenKey}}}`;
-        } else if ((matchedTokenRequestsCount ?? 0) >= 1) {
+        } else {
           headerValue = `{{${tokenKey}}}`;
         }
       }
@@ -248,52 +238,40 @@ export class PostmanGeneratorService {
     customTokenVariables?: Map<string, string>,
     removedTokenKeys?: Set<string>
   ): PostmanEnvironment[] {
-    const environments: PostmanEnvironment[] = [];
+    const envEntries = Array.from(variables.environments.entries());
+    const defaultName = envEntries.length === 1 ? envEntries[0][0] : 'multi_environment';
+    const envName = customEnvNames?.get(defaultName) || defaultName;
 
-    variables.environments.forEach((env, envName) => {
-      const finalEnvName = customEnvNames?.get(envName) || envName;
+    const valuesMap = new Map<string, { value: string; type: "default" | "secret" }>();
 
-      const environment: PostmanEnvironment = {
-        name: finalEnvName,
-        values: []
-      };
-
-      // Add protocol variable
-      const protocolVarName = `${envName}_protocol`;
-      environment.values.push({
-        key: protocolVarName,
-        value: env.protocol,
-        type: "default",
-        enabled: true
+    Array.from(variables.hosts.keys()).forEach(host => {
+      const hostVarName = variables.hostVariableNames.get(host) ?? getHostVariable(host);
+      valuesMap.set(hostVarName, {
+        value: this.normalizeBaseUrl(customHostVariables?.get(hostVarName) ?? host),
+        type: "default"
       });
-
-      // Add host variable
-      const hostVarName = getHostVariable(env.host);
-      const hostValue = customHostVariables?.get(`{{${hostVarName}}}`) ?? env.host;
-      environment.values.push({
-        key: hostVarName,
-        value: this.normalizeHostValue(hostValue),
-        type: "default",
-        enabled: true
-      });
-
-      // Add token variables per environment
-      variables.tokens.forEach((tokenData, tokenKey) => {
-        if (removedTokenKeys?.has(tokenKey)) {
-          return;
-        }
-
-        environment.values.push({
-          key: tokenKey,
-          value: customTokenVariables?.get(tokenKey) ?? tokenData.value,
-          type: "secret",
-          enabled: true
-        });
-      });
-
-      environments.push(environment);
     });
 
-    return environments;
+    variables.tokens.forEach((tokenData, tokenKey) => {
+      if (removedTokenKeys?.has(tokenKey)) {
+        return;
+      }
+      valuesMap.set(tokenKey, {
+        value: customTokenVariables?.get(tokenKey) ?? tokenData.value,
+        type: "secret"
+      });
+    });
+
+    const environment: PostmanEnvironment = {
+      name: envName,
+      values: Array.from(valuesMap.entries()).map(([key, data]) => ({
+        key,
+        value: data.value,
+        type: data.type,
+        enabled: true
+      }))
+    };
+
+    return [environment];
   }
 }

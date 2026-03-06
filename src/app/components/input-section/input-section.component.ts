@@ -17,11 +17,23 @@ import { ConversionService } from '../../services/conversion.service';
 })
 export class InputSectionComponent {
   readonly EXAMPLE_CURL = `curl 'https://api.example.com/users' \\
-  -H 'Authorization: Bearer eyJhbGc...' \\
+  -H 'Authorization: Bearer prod-token-abc123' \\
   -H 'Content-Type: application/json'
 
 curl 'https://api.example.com/posts' \\
-  -H 'Authorization: Bearer eyJhbGc...'`;
+  -H 'Authorization: Bearer prod-token-abc123' \\
+  -H 'X-Api-Key: prod-key-789'
+
+curl 'https://staging-api.example.net/orders' \\
+  -H 'Authorization: Bearer stg-token-xyz987' \\
+  -H 'Content-Type: application/json'
+
+curl 'https://dev.api.example.com/internal/metrics' \\
+  -H 'Authorization: Bearer dev-token-555' \\
+  -H 'X-Api-Key: dev-key-321'
+
+curl 'http://localhost:3000/health' \\
+  -H 'Authorization: Bearer local-token-456'`;
 
   private appState = inject(AppStateService);
   private conversionService = inject(ConversionService);
