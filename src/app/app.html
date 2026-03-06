@@ -36,5 +36,7 @@
         </div>
     </app-modal>
     <app-footer class="flex-shrink-0" />
-    <app-toast />
+    <app-toast [show]="appState.uiState().toast.show" 
+               [message]="appState.uiState().toast.message" 
+               [type]="appState.uiState().toast.type" />
 </div>

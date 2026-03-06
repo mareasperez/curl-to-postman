@@ -33,7 +33,12 @@ export class AppStateService {
         currentTab: 'summary',
         showOutput: false,
         selectedFormatId: 'postman',
-        showFeaturesModal: false
+        showFeaturesModal: false,
+        toast: {
+            show: false,
+            message: '',
+            type: 'success' as 'success' | 'error'
+        }
     });
     readonly uiState = this._uiState.asReadonly();
 
@@ -202,6 +207,20 @@ export class AppStateService {
             ...state,
             showFeaturesModal: !state.showFeaturesModal
         }));
+    }
+
+    showNotification(message: string, type: 'success' | 'error' = 'success', duration: number = 4000): void {
+        this._uiState.update(state => ({
+            ...state,
+            toast: { show: true, message, type }
+        }));
+
+        setTimeout(() => {
+            this._uiState.update(state => ({
+                ...state,
+                toast: { ...state.toast, show: false }
+            }));
+        }, duration);
     }
 
     // ==================== ACTIONS - EDITABLE ====================

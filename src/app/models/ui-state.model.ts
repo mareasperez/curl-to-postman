@@ -13,4 +13,11 @@ export interface UIState {
 
     /** Whether features modal is open */
     showFeaturesModal: boolean;
+
+    /** Global toast notification state */
+    toast: {
+        show: boolean;
+        message: string;
+        type: 'success' | 'error';
+    };
 }

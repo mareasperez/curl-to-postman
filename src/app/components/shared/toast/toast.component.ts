@@ -14,40 +14,54 @@ import { CommonModule } from '@angular/common';
     styles: [`
     .toast {
       position: fixed;
-      bottom: 2rem;
+      top: 2rem;
       right: 2rem;
       max-width: 24rem;
-      padding: 1rem 1.5rem;
-      background: #1e293b;
-      color: #f1f5f9;
-      border-radius: 0.5rem;
-      box-shadow: 0 20px 25px rgba(0, 0, 0, 0.5);
-      border: 1px solid #475569;
+      padding: 0.85rem 1.25rem;
+      background: rgba(28, 28, 30, 0.95);
+      color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 1000;
-      animation: fadeIn 0.25s ease;
+      backdrop-filter: blur(20px);
+      animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
 
-    @keyframes fadeIn {
+    :root[data-theme='light'] .toast {
+      background: rgba(255, 255, 255, 0.95);
+      color: #000000;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes slideIn {
       from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateX(100%) scale(0.9);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0) scale(1);
       }
     }
 
     .toast.success {
-      border-left: 4px solid #10b981;
+      border-left: 4px solid #34c759;
     }
 
     .toast.error {
-      border-left: 4px solid #ef4444;
+      border-left: 4px solid #ff3b30;
     }
 
     @media (max-width: 768px) {
       .toast {
+        top: 1rem;
         right: 1rem;
         left: 1rem;
         max-width: none;

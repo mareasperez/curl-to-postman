@@ -49,8 +49,19 @@ curl 'https://api.example.com/posts' \\
   }
 
   onProcess(): void {
+    const input = this.curlInput().trim();
+
+    if (!input) {
+      this.onPasteExample();
+      this.appState.showNotification(
+        'Hemos pegado un ejemplo. Haz clic de nuevo para ver la app funcionando',
+        'success'
+      );
+      return;
+    }
+
     const result = this.conversionService.convert({
-      input: this.curlInput(),
+      input: input,
       formatId: this.appState.uiState().selectedFormatId,
       customRequestNames: this.appState.editableState().requestNames,
       customEnvNames: this.appState.editableState().envNames
