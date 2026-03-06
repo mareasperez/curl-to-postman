@@ -1,37 +1,31 @@
 <div class="app-layout">
     <app-header />
     <router-outlet />
-    <app-modal title="Privacy & Info" [show]="appState.uiState().showFeaturesModal"
+    <app-modal title="Privacy and security" [show]="appState.uiState().showFeaturesModal"
         (closeClicked)="appState.toggleFeaturesModal()">
-        <div class="flex flex-col gap-6 text-[var(--text)] items-center text-center">
-            <!-- Hero Section -->
-            <div class="flex flex-col gap-3 items-center">
-                <div class="flex items-center gap-3">
-                     <span class="inline-flex items-center rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-500 ring-1 ring-emerald-500/20">
-                        100% Client-Side
-                    </span>
-                </div>
-                <h4 class="text-2xl font-bold text-[var(--text)]">Your data stays on your device</h4>
-                <p class="text-[var(--text-muted)] leading-relaxed">
-                    All conversions run locally in your browser. No backend is used and no data is stored.
-                </p>
+        <div class="privacy-content">
+            <div class="privacy-panel">
+                <p class="privacy-eyebrow">Client-side only</p>
+                <h4>Your data stays in your browser</h4>
+                <p>Conversion runs locally. No backend, no remote data transfer, and no server-side storage.</p>
             </div>
-            <ul class="space-y-2 text-sm text-[var(--text-muted)]">
-                <li class="flex items-start gap-2"><span class="text-[var(--accent)]">•</span> cURL input never
-                    leaves this device.</li>
-                <li class="flex items-start gap-2"><span class="text-[var(--accent)]">•</span> Collections and
-                    environments are generated in the frontend.</li>
-                <li class="flex items-start gap-2"><span class="text-[var(--accent)]">•</span> Close the tab to clear
-                    local session state.</li>
-            </ul>
+
+            <div class="privacy-grid">
+                <div class="privacy-item">
+                    <h5>Local processing</h5>
+                    <p>Parsing and export generation happen in the current browser session.</p>
+                </div>
+                <div class="privacy-item">
+                    <h5>No external relay</h5>
+                    <p>Payloads and headers are not sent to third-party services.</p>
+                </div>
+            </div>
         </div>
-        <!-- Footer Content -->
-        <div modal-footer class="flex items-center justify-center gap-3">
-            <span class="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Check Source</span>
-            <a class="text-sm font-semibold text-[var(--accent)] hover:text-[var(--primary)] transition-colors flex items-center gap-1"
+
+        <div modal-footer class="privacy-footer">
+            <a class="privacy-link"
                 href="https://github.com/mareasperez/curl-to-postman" target="_blank" rel="noopener noreferrer">
-                github.com/mareasperez
-                <span class="text-xs">↗</span>
+                View source on GitHub
             </a>
         </div>
     </app-modal>

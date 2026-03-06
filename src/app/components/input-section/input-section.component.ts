@@ -54,7 +54,7 @@ curl 'https://api.example.com/posts' \\
     if (!input) {
       this.onPasteExample();
       this.appState.showNotification(
-        'Hemos pegado un ejemplo. Haz clic de nuevo para ver la app funcionando',
+        'An example was pasted. Click Convert now to preview the flow.',
         'success'
       );
       return;

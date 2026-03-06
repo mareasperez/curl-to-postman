@@ -12,7 +12,7 @@ export type { Variable } from '../../../models/variable.model';
     <div class="flex flex-col gap-6 animate-fadeIn">
       @if (hostVariables().length > 0) {
       <div class="var-group">
-        <h4 class="text-gray-100 mb-4 text-lg font-semibold">🌐 Host Variables</h4>
+        <h4 class="title">Host Variables</h4>
         <ul class="var-list">
           @for (variable of hostVariables(); track variable.name) {
           <li class="var-item">
@@ -26,7 +26,7 @@ export type { Variable } from '../../../models/variable.model';
 
       @if (tokenVariables().length > 0) {
       <div class="var-group">
-        <h4 class="text-gray-100 mb-4 text-lg font-semibold">🔑 Token Variables</h4>
+        <h4 class="title">Token Variables</h4>
         <ul class="var-list">
           @for (variable of tokenVariables(); track variable.name) {
           <li class="var-item">
@@ -68,10 +68,10 @@ export type { Variable } from '../../../models/variable.model';
     }
 
     .var-group {
-      background: #0f172a;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      border-left: 4px solid #8b5cf6;
+      background: color-mix(in srgb, var(--surface-solid) 88%, transparent 12%);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
     }
 
     .var-list {
@@ -82,7 +82,7 @@ export type { Variable } from '../../../models/variable.model';
 
     .var-item {
       padding: 0.5rem 0;
-      border-bottom: 1px solid #334155;
+      border-bottom: 1px solid var(--border);
       display: flex;
       flex-direction: column; /* Mobile first: Stack */
       align-items: flex-start;
@@ -108,32 +108,23 @@ export type { Variable } from '../../../models/variable.model';
 
     .var-name {
       font-weight: 600;
-      color: #60a5fa;
+      color: var(--brand);
       font-family: 'Courier New', monospace;
       word-break: break-all;
     }
 
     .var-value {
-      color: #94a3b8;
+      color: var(--text-muted);
       font-size: 0.875rem;
       word-break: break-all;
       width: 100%; /* Ensure it breaks properly */
     }
 
-    .text-gray-100 {
-      color: #f1f5f9;
-    }
-
-    .mb-4 {
-      margin-bottom: 1rem;
-    }
-
-    .text-lg {
-      font-size: 1.125rem;
-    }
-
-    .font-semibold {
-      font-weight: 600;
+    .title {
+      margin: 0 0 0.75rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 750;
     }
   `]
 })

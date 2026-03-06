@@ -19,31 +19,32 @@ import { ExportFormat } from '../../../services/providers/export-provider.interf
   `,
   styles: [`
     .format-selector {
-      padding: 0.5rem 1rem;
-      background: #0f172a;
-      border: 2px solid #334155;
-      border-radius: 0.5rem;
-      color: #f1f5f9;
+      height: 2.2rem;
+      padding: 0 0.75rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 0.62rem;
+      color: var(--text);
       font-family: inherit;
-      font-size: 0.875rem;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.25s ease;
       outline: none;
     }
 
     .format-selector:hover {
-      border-color: #8b5cf6;
+      border-color: var(--border-strong);
     }
 
     .format-selector:focus {
-      border-color: #8b5cf6;
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--focus);
     }
 
     .format-selector option {
-      background: #1e293b;
-      color: #f1f5f9;
+      background: var(--surface-solid);
+      color: var(--text);
       padding: 0.5rem;
     }
   `]

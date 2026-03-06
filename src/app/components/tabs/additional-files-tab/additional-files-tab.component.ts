@@ -13,12 +13,12 @@ export type { AdditionalFile } from '../../../models/additional-file.model';
       @if (files().length > 0) {
         @for (file of files(); track file.name) {
         <div class="env-card">
-          <h4>🌍 {{ file.name }}</h4>
+          <h4>{{ file.name }}</h4>
           <pre class="code-block"><code>{{ file.data | json }}</code></pre>
         </div>
         }
       } @else {
-        <div class="text-center text-gray-400 py-8">
+        <div class="text-center text-muted py-8">
           <p>No additional files for this format</p>
         </div>
       }
@@ -53,26 +53,27 @@ export type { AdditionalFile } from '../../../models/additional-file.model';
     }
 
     .env-card {
-      background: #0f172a;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      border: 1px solid #334155;
+      background: color-mix(in srgb, var(--surface-solid) 88%, transparent 12%);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
     }
 
     .env-card h4 {
-      color: #a78bfa;
-      margin-bottom: 1rem;
-      font-size: 1.25rem;
+      color: var(--text);
+      margin-bottom: 0.65rem;
+      font-size: 0.95rem;
       margin-top: 0;
     }
 
     .code-block {
-      padding: 1.5rem;
-      background: #0f172a;
-      border-radius: 0.5rem;
-      color: #f1f5f9;
+      padding: 1rem;
+      background: color-mix(in srgb, var(--surface-2) 92%, transparent 8%);
+      border-radius: 0.62rem;
+      border: 1px solid var(--border);
+      color: var(--text);
       font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       /* Desktop: Standard scroll */
       overflow-x: auto;
       white-space: pre-wrap;
@@ -93,8 +94,8 @@ export type { AdditionalFile } from '../../../models/additional-file.model';
       text-align: center;
     }
 
-    .text-gray-400 {
-      color: #94a3b8;
+    .text-muted {
+      color: var(--text-muted);
     }
 
     .py-8 {

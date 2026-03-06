@@ -27,18 +27,17 @@ export type { Stat } from '../../../models/stat.model';
     }
 
     .stat-card {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
+      background: color-mix(in srgb, var(--surface-solid) 88%, transparent 12%);
       padding: 1rem;
       border-radius: 0.75rem;
-      border: 1px solid #334155;
+      border: 1px solid var(--border);
       text-align: center;
       transition: all 0.25s ease;
     }
 
     .stat-card:hover {
-      transform: translateY(-4px);
-      border-color: #8b5cf6;
-      box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
     }
 
     .stat-icon {
@@ -49,13 +48,13 @@ export type { Stat } from '../../../models/stat.model';
     .stat-value {
       font-size: 1.75rem;
       font-weight: 700;
-      color: #a78bfa;
+      color: var(--brand);
       margin-bottom: 0.125rem;
     }
 
     .stat-label {
       font-size: 0.75rem;
-      color: #94a3b8;
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }

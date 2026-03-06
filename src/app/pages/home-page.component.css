@@ -1,11 +1,9 @@
-.flex {
+:host {
     display: flex;
-}
-
-.flex-col {
     flex-direction: column;
+    height: 100%;
+    width: 100%;
 }
-
 .gap-8 {
     gap: 2rem;
 }

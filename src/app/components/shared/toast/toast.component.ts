@@ -6,66 +6,27 @@ import { CommonModule } from '@angular/common';
     imports: [CommonModule],
     template: `
     @if (show) {
-    <div [class]="'toast ' + type">
-      {{ message }}
+    <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[2000] animate-bounce-in">
+        <div class="px-8 py-3.5 rounded-full bg-white/80 dark:bg-black/70 backdrop-blur-2xl border border-white/40 shadow-soft-lg flex items-center gap-4 min-w-[300px] max-w-[90vw]">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                 [class.bg-green-100]="type === 'success'" [class.text-green-600]="type === 'success'"
+                 [class.bg-red-100]="type === 'error'" [class.text-red-600]="type === 'error'">
+                @if (type === 'success') { <span>✓</span> }
+                @else { <span>!</span> }
+            </div>
+            <span class="text-sm font-bold text-text truncate">{{ message }}</span>
+        </div>
     </div>
     }
   `,
     styles: [`
-    .toast {
-      position: fixed;
-      top: 2rem;
-      right: 2rem;
-      max-width: 24rem;
-      padding: 0.85rem 1.25rem;
-      background: rgba(28, 28, 30, 0.95);
-      color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      z-index: 1000;
-      backdrop-filter: blur(20px);
-      animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.9rem;
-      font-weight: 500;
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: translate(-50%, -20px) scale(0.9); }
+      70% { opacity: 1; transform: translate(-50%, 5px) scale(1.02); }
+      100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
     }
-
-    :root[data-theme='light'] .toast {
-      background: rgba(255, 255, 255, 0.95);
-      color: #000000;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(100%) scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-      }
-    }
-
-    .toast.success {
-      border-left: 4px solid #34c759;
-    }
-
-    .toast.error {
-      border-left: 4px solid #ff3b30;
-    }
-
-    @media (max-width: 768px) {
-      .toast {
-        top: 1rem;
-        right: 1rem;
-        left: 1rem;
-        max-width: none;
-      }
+    .animate-bounce-in {
+      animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
   `]
 })

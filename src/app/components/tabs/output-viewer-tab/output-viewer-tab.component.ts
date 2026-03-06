@@ -26,12 +26,13 @@ import { CommonModule } from '@angular/common';
     }
 
     .code-block {
-      padding: 1.5rem;
-      background: #0f172a;
-      border-radius: 0.5rem;
-      color: #f1f5f9;
+      padding: 1rem;
+      background: color-mix(in srgb, var(--surface-solid) 90%, transparent 10%);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      color: var(--text);
       font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       overflow-x: hidden; /* Force wrap, no horizontal scroll */
       white-space: pre-wrap;
       word-break: break-all;

@@ -1,13 +1,120 @@
-.header {
-    margin-bottom: 0;
-    padding: 0.75rem 1.5rem;
-    background: var(--header-bg);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
-    z-index: 50;
-}
 :host {
     display: block;
+    width: 100%;
+    padding: 0.9rem 1.25rem 0.6rem;
+    z-index: 100;
+}
+
+.header-wrap {
+    width: 100%;
+}
+
+.header-shell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-sm);
+}
+
+.brand {
+    border: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    padding: 0.2rem;
+}
+
+.brand-mark {
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 0.75rem;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--brand), var(--brand-strong));
+    color: #f8fafc;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.brand-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.brand-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.brand-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.header-links {
+    display: none;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.header-links a {
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.header-links a:hover {
+    color: var(--text);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.action-btn {
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    border-radius: 0.65rem;
+    height: 2.35rem;
+    padding: 0 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.action-btn:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+}
+
+.action-btn.strong {
+    border-color: color-mix(in srgb, var(--brand) 55%, var(--border) 45%);
+}
+
+@media (min-width: 900px) {
+    :host {
+        padding-inline: 2rem;
+    }
+
+    .header-links {
+        display: flex;
+    }
 }
